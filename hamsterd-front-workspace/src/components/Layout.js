@@ -8,7 +8,7 @@ const LayoutTest = styled.div`
 
  background-color: rgba(242,242,240); 
  height: 200vh;
-
+//
   }
   .main-page {
     display: flex;
