@@ -2,6 +2,7 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import profile from "../../resource/오리.jpg"
+import { useState } from "react";
 const MypageTest = styled.div`
 
 .maincontain{
@@ -134,17 +135,38 @@ const MypageTest = styled.div`
     color: white;
   }
 
-
+ 
 
 `;
 
+
 const MyPage = () => {
+
+
+const [isOpen, setIsOpen] = useState(true);
+  const navigate = useNavigate();
+
+
+  const handleStudyClick = () => {
+    // 내 스터디 클릭시 내 스터디그룹' 경로로 이동
+    navigate("/studygroup");
+   
+  };
+  
+  const handleScheduleClick = () => {
+    // 내 스터디 클릭시 내 스터디그룹' 경로로 이동
+    navigate("/schedule");
+   
+  };
+  
+
   return (
     <MypageTest>
     <div className=" maincontain">
     
     <div className="photo-line">
      <div className="photo">
+     
     <img className="profileimg" src={profile} alt="Profile" />
     </div>
     </div> 
@@ -177,7 +199,7 @@ const MyPage = () => {
 
 
     <div className="schedule-btn"> 
-    <button type="button" id="btn1" > 나의 스터디 그룹 </button>    <button type="button" id="btn2" > 나의 일정 </button> 
+    <button type="button" id="btn1" onClick={handleStudyClick}  > 나의 스터디 그룹 </button>    <button type="button" id="btn2" onClick={handleScheduleClick} > 나의 일정 </button> 
     </div>
 
 

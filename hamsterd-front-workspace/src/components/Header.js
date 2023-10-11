@@ -71,6 +71,11 @@ const Test = styled.div`
     justify-content: space-around;
   }
 
+  .logout{
+
+    margin-top: -150px;
+    margin-left: 200px;
+  }
   /* 사이드바 CSS */
 `;
 
@@ -98,7 +103,7 @@ const Header = () => {
               <div className="submenu">
                 <a href="#">마이페이지</a>
                 <Link to="/changeinfo">개인정보수정</Link>
-                <a href="#">탈퇴</a>
+                <Link to="/fire">탈퇴</Link>
               </div>
             </div>
             <div className="menu" id="board">
@@ -128,8 +133,20 @@ const Header = () => {
                 <a href="#">서브메뉴 1</a>
                 <a href="#">서브메뉴 2</a>
                 <a href="#">서브메뉴 3</a>
-              </div>
+              </div>  
             </div>
+            <div className="menu" id="logout">
+              <div className="logout">
+              <button
+                type="button"
+                id="signUpbtn"
+                className="btn btn-danger" 
+              >
+                로그아웃
+              </button>
+              </div>
+           
+          </div>
           </div>
         </div>
       </div>

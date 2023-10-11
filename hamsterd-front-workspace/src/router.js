@@ -11,6 +11,7 @@ import GroupEval from "./pages/studygroup/GroupEval";
 import BoardList from "./pages/board/BoardList";
 import Board from "./pages/board/Board";
 import SignUp from "./pages/member/SignUp";
+import Fire from "./pages/member/Fire";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +60,11 @@ const router = createBrowserRouter([
         path: "/board",
         element: <Board />,
       },
+      {
+        path: "/fire",
+        element: <Fire />,
+      },
+      
     ],
   },
 ]);
