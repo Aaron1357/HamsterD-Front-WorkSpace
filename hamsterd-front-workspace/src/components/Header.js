@@ -1,15 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import styled from "styled-components";
 import logo from "../resource/logo.jpg";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Link,
-  useNavigate,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import ModalSub from "../components/ModalSub";
-// import Modal from "react-modal";
 
 const Test = styled.div`
   .header-section {
@@ -17,7 +10,7 @@ const Test = styled.div`
     width: 100%;
     height: 120px;
   }
-  ////
+
   .header {
     display: flex;
     align-items: center;
@@ -83,11 +76,9 @@ const Test = styled.div`
 const Sub = styled.div``;
 
 const Header = () => {
-  const navigate = useNavigate();
-
   const logout = () => {
-    window.sessionStorage.clear();
-    window.location.reload(true);
+    window.sessionStorage.clear(); // 세션 제거
+    window.location.reload(true); // 새로고침
   };
 
   return (

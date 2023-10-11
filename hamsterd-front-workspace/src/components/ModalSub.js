@@ -83,7 +83,8 @@ function ModalSub() {
   const session = () => {
     return window.sessionStorage.getItem("member");
   };
-  const [isOpen, setIsOpen] = useState(true);
+  console.log(session());
+  const [isOpen, setIsOpen] = useState(true); // Modal 표시여부
   const navigate = useNavigate();
 
   const closeTab = () => {
@@ -122,7 +123,12 @@ function ModalSub() {
   };
 
   return (
-    <Modal isOpen={isOpen} style={customStyles} contentLabel="modal">
+    <Modal
+      isOpen={isOpen}
+      style={customStyles}
+      contentLabel="modal"
+      ariaHideApp={false}
+    >
       <StyleTest>
         <div className="mainModal">
           <br></br>

@@ -48,21 +48,37 @@ const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("id", e.target.elements.id.value);
-    formData.append("nickname", e.target.elements.nickname.value);
-    formData.append("password", e.target.elements.password.value);
-    formData.append("name", e.target.elements.name.value);
-    formData.append("birth", convertToDate(e.target.elements.birth.value));
-    formData.append("gender", e.target.elements.gender.value);
-    formData.append("phone", e.target.elements.phone.value);
-    formData.append("academy", e.target.elements.academy.value);
-    formData.append("address", e.target.elements.address.value);
-    console.log(formData.get("birth"));
+    const formData2 = {
+      id: e.target.id.value,
+      nickname: e.target.nickname.value,
+      password: e.target.password.value,
+      name: e.target.name.value,
+      birth: e.target.birth.value,
+      gender: e.target.gender.value,
+      phone: e.target.phone.value,
+      academy: e.target.academy.value,
+      address: e.target.address.value,
+    };
 
-    formData.set("birth", convertToDate(formData.get("birth")));
-    addMember(formData);
-    // navigate("/");
+    console.log(formData2);
+
+    // const formData = new FormData();
+    // formData.append("id", e.target.elements.id.value);
+    // formData.append("nickname", e.target.elements.nickname.value);
+    // formData.append("password", e.target.elements.password.value);
+    // formData.append("name", e.target.elements.name.value);
+    // formData.append("birth", convertToDate(e.target.elements.birth.value));
+    // formData.append("gender", e.target.elements.gender.value);
+    // formData.append("phone", e.target.elements.phone.value);
+    // formData.append("academy", e.target.elements.academy.value);
+    // formData.append("address", e.target.elements.address.value);
+    // console.log(formData.get("birth"));
+
+    // formData.set("birth", convertToDate(formData.get("birth")));
+    addMember(formData2).then((response) => {
+      console.log(response);
+    });
+    navigate("/");
   };
 
   return (
@@ -203,6 +219,7 @@ const SignUp = () => {
                   name="gender"
                   id="flexRadioDefault1"
                   value="man"
+                  readOnly
                   // if (checked) {
                   //   onChange={(e) => {
                   //     setGender(e.target.value);
@@ -221,6 +238,7 @@ const SignUp = () => {
                   value="woman"
                   id="flexRadioDefault2"
                   checked
+                  readOnly
                 />
                 <label className="form-check-label" htmlFor="flexRadioDefault2">
                   여자
