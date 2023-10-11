@@ -66,24 +66,27 @@ const ScheduleStyle = styled.div`
 const Schedule = () => {
   const [title, setTitle] = useState([]);
   const [content, setContent] = useState([]);
-  // const [date, setDate] = useState([]);
+  const [date, setDate] = useState([]);
 
   const navigate = useNavigate();
 
-  const onClick = (e) => {
-    e.preventDefault();
-
+  const onClick = async () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
-    // formData.append("date", date);
+    formData.append("date", date);
 
     console.log("title : " + formData.get("title"));
     console.log("content : " + formData.get("content"));
-    // console.log("date : " + formData.get("date"));
+    console.log("date : " + formData.get("date"));
 
-    addSchedule(formData);
-    navigate("/scheduleMain");
+    try {
+      await addSchedule(formData); // 비동기 작업 완료 대기
+      navigate("/scheduleMain"); // 파일 업로드가 완료되면 페이지 이동
+    } catch (error) {
+      // 에러 처리
+      console.error("파일 업로드 중 오류 발생:", error);
+    }
   };
 
   return (
@@ -92,7 +95,7 @@ const Schedule = () => {
         <div className="scheduleContent">
           <form className="registerSchedule">
             <div className="add">
-              {/* <div className="mb-3">
+              <div className="mb-3">
                 <input
                   type="date"
                   className="form-control"
@@ -100,7 +103,7 @@ const Schedule = () => {
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                 />
-              </div> */}
+              </div>
               {/* <button onClick={onClick}>추가</button> */}
               <FontAwesomeIcon icon={faPlus} onClick={onClick} />
               <FontAwesomeIcon icon={faXmark} />

@@ -2,6 +2,7 @@ import styled from "styled-components";
 import profile from "../../resource/종빈22.png";
 import groupimg from "../../resource/오리.jpg";
 import { useNavigate } from "react-router-dom";
+import ScheduleMain from "./ScheduleMain";
 
 const GroupPageTest = styled.div`
   .mainsection {
@@ -237,6 +238,7 @@ const GroupPage = () => {
           <div>
             <div id="schedule">스케쥴</div>
             <div className="horizonline"></div>
+            <ScheduleMain className="scheduleMain" />
           </div>
           <div>
             <div id="comments">Comments</div>

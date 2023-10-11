@@ -5,14 +5,11 @@ const instance = axios.create({
 });
 
 // 스케줄 등록
-// export const addSchedule = async (data) => {
-//   return await instance.post("schedule", data);
-// };
-
 export const addSchedule = async (data) => {
-  return await instance.post("schedule", data, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  return await instance.post("schedule", data);
+};
+
+// 스케줄 목록 받아오기
+export const getScheduleList = async () => {
+  return await instance.get("schedule");
 };

@@ -1,31 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import moment from "moment";
 import "react-calendar/dist/Calendar.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-//import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-//import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
+import { getScheduleList } from "../../api/schedule";
+import { useNavigate } from "react-router-dom";
 
 const ScheduleStyle = styled.div`
   .content {
+    /* width: 700px; */
+    height: 500px;
     display: flex;
     justify-content: center;
+    /* background-color: white; */
   }
   .left-section {
     width: 500px;
-    height: 100vh;
+    /* height: 100vh; */
     margin: 10px;
     /* border: 1px solid lightcoral; */
   }
 
-  .studyGroup {
-    height: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* border: 1px solid gray; */
-  }
   .calendar {
     height: 500px;
     display: flex;
@@ -41,13 +39,13 @@ const ScheduleStyle = styled.div`
 
   .right-section {
     width: 500px;
-    height: 100vh;
+    /* height: 100vh; */
     margin: 10px;
     /* border: 1px solid lightcoral; */
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 80px;
+    padding-top: 20px;
   }
 
   .right-section table {
@@ -70,7 +68,27 @@ const ScheduleStyle = styled.div`
 `;
 
 const ScheduleMain = () => {
+  // Calendar 관련
   const [value, onChange] = useState(new Date());
+
+  // 추가 버튼 누르면 Schedule 페이지로 이동
+  const navigate = useNavigate();
+
+  const onClick = (e) => {
+    navigate("/Schedule");
+  };
+
+  // schedule 목록 받아오기
+  const [schedules, setSchedules] = useState([]);
+
+  const scheduleListAPI = async () => {
+    const result = await getScheduleList();
+    setSchedules(result.data);
+  };
+
+  useEffect(() => {
+    scheduleListAPI();
+  }, []);
 
   return (
     <ScheduleStyle>
@@ -91,39 +109,24 @@ const ScheduleMain = () => {
           <table className="table">
             <thead>
               <tr>
-                <th scope="col">번호</th>
-                <th scope="col">제목</th>
+                <th scope="col" width="50">
+                  번호
+                </th>
+                <th scope="col" width="200">
+                  제목
+                </th>
+                <th scope="col" width="10">
+                  <FontAwesomeIcon icon={faPlus} onClick={onClick} />
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>캘린더 디자인 다듬기</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>멤버 프로필 가져오기</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>DB 수정</td>
-              </tr>
-              <tr>
-                <th scope="row">4</th>
-                <td>파일 첨부하기 기능</td>
-              </tr>
-              <tr>
-                <th scope="row">5</th>
-                <td>휴일엔 쉬기</td>
-              </tr>
-              <tr>
-                <th scope="row">6</th>
-                <td>주말엔 엽떡먹기</td>
-              </tr>
-              <tr>
-                <th scope="row">7</th>
-                <td>휴...</td>
-              </tr>
+              {schedules.map((item) => (
+                <tr key={item.scheduleNo}>
+                  <th scope="row">{item.scheduleNo}</th>
+                  <td colSpan={2}>{item.scheduleContent}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
