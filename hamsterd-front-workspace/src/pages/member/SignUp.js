@@ -3,11 +3,11 @@ import { addMember } from "../../api/signup";
 
 const SignUpStyle = styled.div`
   .mainsection {
-    border: 1px solid  rgba(211,157,87);;
+    border: 1px solid rgba(211, 157, 87);
     border-radius: 20px;
     width: 1600px;
     margin-top: 30px;
-    color: rgba(211,157,87);
+    color: rgba(211, 157, 87);
     //
   }
   .section {
@@ -31,7 +31,7 @@ const SignUp = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    
+
     formData.set("birth", convertToDate(formData.get("birth")));
     addMember(formData);
   };
@@ -42,13 +42,13 @@ const SignUp = () => {
         <div className="section" id="section2">
           <form className="signup" onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="inputPassword6" className="form-label">
+              <label htmlFor="id" className="form-label">
                 아이디
               </label>
               <div className="input-group">
                 <input
                   type="text"
-                  id="inputPassword6"
+                  id="id"
                   className="form-control"
                   aria-describedby="passwordHelpInline"
                   name="id"
@@ -58,6 +58,7 @@ const SignUp = () => {
                   type="button"
                   id="signupbtn"
                   className="btn btn-primary"
+                  style={{ zIndex: "0" }}
                 >
                   중복확인
                 </button>
@@ -65,13 +66,13 @@ const SignUp = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="inputPassword6" className="form-label">
+              <label htmlFor="nickName" className="form-label">
                 닉네임
               </label>
               <div className="input-group">
                 <input
                   type="text"
-                  id="inputPassword6"
+                  id="nickName"
                   className="form-control"
                   aria-describedby="passwordHelpInline"
                   name="nickname"
@@ -81,6 +82,7 @@ const SignUp = () => {
                   type="button"
                   id="signupbtn"
                   className="btn btn-primary"
+                  style={{ zIndex: "0" }}
                 >
                   중복확인
                 </button>
@@ -88,12 +90,12 @@ const SignUp = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="inputPassword6" className="form-label">
+              <label htmlFor="inputPassword" className="form-label">
                 비밀번호
               </label>
               <input
                 type="password"
-                id="inputPassword6"
+                id="inputPassword"
                 className="form-control"
                 aria-describedby="passwordHelpInline"
                 required
@@ -121,12 +123,12 @@ const SignUp = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="inputPassword6" className="form-label">
+              <label htmlFor="name" className="form-label">
                 이름
               </label>
               <input
                 type="text"
-                id="inputPassword6"
+                id="name"
                 className="form-control"
                 aria-describedby="passwordHelpInline"
                 required
@@ -135,11 +137,12 @@ const SignUp = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="inputPassword6" className="form-label">
+              <label htmlFor="birth" className="form-label">
                 생일
               </label>
               <input
                 className="form-control"
+                id="birth"
                 type="date"
                 placeholder="생일"
                 required
@@ -177,12 +180,12 @@ const SignUp = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="inputPassword6" className="form-label">
+              <label htmlFor="phone" className="form-label">
                 전화번호
               </label>
               <input
                 type="tel"
-                id="inputPassword6"
+                id="phone"
                 className="form-control"
                 aria-describedby="passwordHelpInline"
                 required
@@ -194,12 +197,12 @@ const SignUp = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="inputPassword6" className="form-label">
+              <label htmlFor="academy" className="form-label">
                 학원 이름
               </label>
               <input
                 type="text"
-                id="inputPassword6"
+                id="academy"
                 className="form-control"
                 aria-describedby="passwordHelpInline"
                 required
@@ -211,12 +214,12 @@ const SignUp = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="inputPassword6" className="form-label">
+              <label htmlFor="addr" className="form-label">
                 주소
               </label>
               <input
                 type="text"
-                id="inputPassword6"
+                id="addr"
                 className="form-control"
                 aria-describedby="passwordHelpInline"
                 required
