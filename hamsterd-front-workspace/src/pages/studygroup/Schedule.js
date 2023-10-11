@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { addSchedule } from "../../api/schedule";
 import { useNavigate } from "react-router-dom";
-//import scheduleMain from "./ScheduleMain";
+import scheduleMain from "./ScheduleMain";
 
 const ScheduleStyle = styled.div`
   .scheduleBody {
@@ -66,7 +66,7 @@ const ScheduleStyle = styled.div`
 const Schedule = () => {
   const [title, setTitle] = useState([]);
   const [content, setContent] = useState([]);
-  const [date, setDate] = useState([]);
+  // const [date, setDate] = useState([]);
 
   const navigate = useNavigate();
 
@@ -76,11 +76,11 @@ const Schedule = () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
-    formData.append("date", date);
+    // formData.append("date", date);
 
     console.log("title : " + formData.get("title"));
     console.log("content : " + formData.get("content"));
-    console.log("date : " + formData.get("date"));
+    // console.log("date : " + formData.get("date"));
 
     addSchedule(formData);
     navigate("/scheduleMain");
@@ -92,7 +92,7 @@ const Schedule = () => {
         <div className="scheduleContent">
           <form className="registerSchedule">
             <div className="add">
-              <div className="mb-3">
+              {/* <div className="mb-3">
                 <input
                   type="date"
                   className="form-control"
@@ -100,7 +100,7 @@ const Schedule = () => {
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                 />
-              </div>
+              </div> */}
               {/* <button onClick={onClick}>추가</button> */}
               <FontAwesomeIcon icon={faPlus} onClick={onClick} />
               <FontAwesomeIcon icon={faXmark} />
