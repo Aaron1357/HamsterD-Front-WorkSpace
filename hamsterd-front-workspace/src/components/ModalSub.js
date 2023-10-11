@@ -3,6 +3,8 @@ import Modal from "react-modal";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/login";
+import { useEffect } from "react";
+
 const customStyles = {
   overlay: {
     backgroundColor: "rgb(0, 0, 0, 0.6)", // 모달이 열릴 때 뒷 배경의 색상과 투명도
@@ -78,12 +80,20 @@ const StyleTest = styled.div`
 `;
 
 function ModalSub() {
+  const session = () => {
+    return window.sessionStorage.getItem("member");
+  };
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
 
   const closeTab = () => {
     setIsOpen(false);
   };
+  useEffect(() => {
+    if (session() != null) {
+      closeTab();
+    }
+  }, [sessionStorage]);
 
   const handleSignUpClick = () => {
     // 회원가입 버튼 클릭 시 '/signup' 경로로 이동
@@ -105,6 +115,7 @@ function ModalSub() {
       result.then(function (data) {
         // console.log(data);
         window.sessionStorage.setItem("member", JSON.stringify(data));
+        setIsOpen(false);
       });
     }
     navigate("/");

@@ -160,10 +160,14 @@ const HomeTest = styled.div`
 `;
 
 const Home = () => {
-  const session = window.sessionStorage.getItem("member");
+  // const session = window.sessionStorage.getItem("member");
 
-  console.log(JSON.parse(session).id);
-  console.log(Object.values(sessionStorage));
+  // useEffect(() => {
+  //   session;
+  // }, []);
+
+  // console.log(JSON.parse(session).id);
+  // console.log(Object.values(sessionStorage));
   return (
     <HomeTest>
       <div className="section" id="section2">

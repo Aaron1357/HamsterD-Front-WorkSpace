@@ -1,7 +1,13 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import styled from "styled-components";
 import logo from "../resource/logo.jpg";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+} from "react-router-dom";
 import ModalSub from "../components/ModalSub";
 // import Modal from "react-modal";
 
@@ -77,6 +83,13 @@ const Test = styled.div`
 const Sub = styled.div``;
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const logout = () => {
+    window.sessionStorage.clear();
+    window.location.reload(true);
+  };
+
   return (
     <Test>
       <Sub>
@@ -129,6 +142,9 @@ const Header = () => {
                 <a href="#">서브메뉴 2</a>
                 <a href="#">서브메뉴 3</a>
               </div>
+            </div>
+            <div>
+              <button onClick={logout}>로그아웃</button>
             </div>
           </div>
         </div>
