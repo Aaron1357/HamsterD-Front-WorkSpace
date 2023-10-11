@@ -25,15 +25,15 @@ const SignUpStyle = styled.div`
 `;
 
 const SignUp = () => {
-  const [id, setId] = useState([]);
-  const [nickname, setNickname] = useState([]);
-  const [password, setPw] = useState([]);
-  const [name, setName] = useState([]);
-  const [birth, setBirth] = useState([]);
-  const [gender, setGender] = useState([]);
-  const [phone, setPhone] = useState([]);
-  const [academy, setAcademy] = useState([]);
-  const [address, setAddr] = useState([]);
+  // const [id, setId] = useState([]);
+  // const [nickname, setNickname] = useState([]);
+  // const [password, setPw] = useState([]);
+  // const [name, setName] = useState([]);
+  // const [birth, setBirth] = useState([]);
+  // const [gender, setGender] = useState([]);
+  // const [phone, setPhone] = useState([]);
+  // const [academy, setAcademy] = useState([]);
+  // const [address, setAddr] = useState([]);
 
   const navigate = useNavigate();
 
@@ -44,11 +44,21 @@ const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
+    const formData = new FormData();
+    formData.append("id", e.target.elements.id.value);
+    formData.append("nickname", e.target.elements.nickname.value);
+    formData.append("password", e.target.elements.password.value);
+    formData.append("name", e.target.elements.name.value);
+    formData.append("birth", convertToDate(e.target.elements.birth.value));
+    formData.append("gender", e.target.elements.gender.value);
+    formData.append("phone", e.target.elements.phone.value);
+    formData.append("academy", e.target.elements.academy.value);
+    formData.append("address", e.target.elements.address.value);
+    console.log(formData.get("birth"));
 
     formData.set("birth", convertToDate(formData.get("birth")));
     addMember(formData);
-    navigate("/");
+    // navigate("/");
   };
 
   return (
@@ -67,9 +77,9 @@ const SignUp = () => {
                   className="form-control"
                   aria-describedby="passwordHelpInline"
                   name="id"
-                  onChange={(e) => {
-                    setId(e.target.value);
-                  }}
+                  // onChange={(e) => {
+                  //   setId(e.target.value);
+                  // }}
                   required
                 />
                 <button
@@ -94,9 +104,9 @@ const SignUp = () => {
                   className="form-control"
                   aria-describedby="passwordHelpInline"
                   name="nickname"
-                  onChange={(e) => {
-                    setNickname(e.target.value);
-                  }}
+                  // onChange={(e) => {
+                  //   setNickname(e.target.value);
+                  // }}
                   required
                 />
                 <button
@@ -120,9 +130,9 @@ const SignUp = () => {
                 className="form-control"
                 aria-describedby="passwordHelpInline"
                 name="password"
-                onChange={(e) => {
-                  setPw(e.target.value);
-                }}
+                // onChange={(e) => {
+                //   setPw(e.target.value);
+                // }}
                 required
               />
               <span id="passwordHelpInline" className="form-text">
@@ -155,9 +165,9 @@ const SignUp = () => {
                 id="name"
                 className="form-control"
                 aria-describedby="passwordHelpInline"
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
+                // onChange={(e) => {
+                //   setName(e.target.value);
+                // }}
                 required
                 name="name"
               />
@@ -172,9 +182,9 @@ const SignUp = () => {
                 id="birth"
                 type="date"
                 placeholder="생일"
-                onChange={(e) => {
-                  setBirth(e.target.value);
-                }}
+                // onChange={(e) => {
+                //   setBirth(e.target.value);
+                // }}
                 required
                 name="birth"
               />
@@ -189,11 +199,11 @@ const SignUp = () => {
                   name="gender"
                   id="flexRadioDefault1"
                   value="man"
-                  if (checked) {
-                    onChange={(e) => {
-                      setGender(e.target.value);
-                    }}
-                  }
+                  // if (checked) {
+                  //   onChange={(e) => {
+                  //     setGender(e.target.value);
+                  //   }}
+                  // }
                 />
                 <label className="form-check-label" htmlFor="flexRadioDefault1">
                   남자

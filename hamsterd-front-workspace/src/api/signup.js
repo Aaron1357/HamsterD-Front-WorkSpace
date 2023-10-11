@@ -5,6 +5,10 @@ const instance = axios.create({
 });
 
 export const addMember = async (member) => {
-  return await instance.post("member", member);
+  return await instance.post("member", member, {
+    headers: {
+      "Content-Type": `application/json`,
+    },
+  });
 };
 //
