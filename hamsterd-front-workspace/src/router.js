@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Home from "./pages/Home";
 import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
-import MyPage from "./pages/MyPage";
+import MyPage from "./pages/member/MyPage";
 import StudyGroup from "./pages/studygroup/StudyGroup";
 import Social from "./pages/social/Social";
 import Schedule from "./pages/studygroup/Schedule";
