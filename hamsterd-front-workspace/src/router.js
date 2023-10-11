@@ -6,6 +6,7 @@ import MyPage from "./pages/MyPage";
 import StudyGroup from "./pages/studygroup/StudyGroup";
 import Social from "./pages/social/Social";
 import Schedule from "./pages/studygroup/Schedule";
+import ScheduleMain from "./pages/studygroup/ScheduleMain";
 import GroupEval from "./pages/studygroup/GroupEval";
 import BoardList from "./pages/board/BoardList";
 import Board from "./pages/board/Board";
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: "/schedule",
         element: <Schedule />,
+      },
+      {
+        path: "/scheduleMain",
+        element: <ScheduleMain />,
       },
       {
         path: "/groupeval",
