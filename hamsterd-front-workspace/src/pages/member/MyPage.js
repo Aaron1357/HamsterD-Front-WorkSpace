@@ -109,6 +109,31 @@ const MypageTest = styled.div`
 
 
 
+.schedule-btn{
+
+  padding: 20px;
+}
+
+
+  #btn1 {
+    height: 40px;
+    width: 150px;
+    background-color: purple;
+    border: 0px;
+    font-weight: bold;
+    padding-right: 10px;
+    color: white;
+  }
+
+  #btn2 {
+    height: 40px;
+    width: 150px;
+    background-color: orange;
+    border: 0px;
+    font-weight: bold;
+    color: white;
+  }
+
 
 
 `;
@@ -128,7 +153,7 @@ const MyPage = () => {
 
     <div className="nickname">
       <div className="nickname-font">
-    내 닉네임 : 공부하러오리  
+    내 닉네임 : 오리84 
     </div>
     <div className="nickname-btn">
     <button type="button" id="signUpbtn"  className="btn btn-danger"> 수정 </button>
@@ -151,9 +176,11 @@ const MyPage = () => {
     {/* 아이디+ 수정부분 */}
 
 
-    <div className="schedule">
-    나의 일정
+    <div className="schedule-btn"> 
+    <button type="button" id="btn1" > 나의 스터디 그룹 </button>    <button type="button" id="btn2" > 나의 일정 </button> 
     </div>
+
+
 
     </div>
     </MypageTest>
