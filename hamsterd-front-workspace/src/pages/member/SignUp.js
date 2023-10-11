@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { addMember } from "../../api/signup";
-
 const SignUpStyle = styled.div`
   .mainsection {
     border: 1px solid rgba(211, 157, 87);
