@@ -16,7 +16,7 @@ const customStyles = {
     width: "500px",
     height: "500px",
   },
-};//
+}; //
 
 const StyleTest = styled.div`
   .mainModal {
@@ -96,9 +96,8 @@ function ModalSub() {
     e.preventDefault();
     const idValue = e.target.elements.id.value; //아이디
     const passwordValue = e.target.elements.password.value; //비번
-    const formData = new FormData(e.target);
-    //  console.log (idValue,passwordValue);
-    login(formData);
+    const formData2 = { idValue, passwordValue };
+    login(formData2);
   };
 
   return (
