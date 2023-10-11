@@ -133,6 +133,14 @@ const GroupPageTest = styled.div`
   .photo {
     width: 70px;
   }
+  #schedule {
+    font-size: 25px;
+    font-weight: bold;
+  }
+  #comments {
+    font-size: 25px;
+    font-weight: bold;
+  }
 `;
 
 const GroupPage = () => {
@@ -224,8 +232,16 @@ const GroupPage = () => {
               </div>
             </div>
           </div>
-          <div>스케쥴</div>
-          <div>Comments</div>
+          <br />
+          <br />
+          <div>
+            <div id="schedule">스케쥴</div>
+            <div className="horizonline"></div>
+          </div>
+          <div>
+            <div id="comments">Comments</div>
+            <div className="horizonline"></div>
+          </div>
         </div>
       </div>
     </GroupPageTest>
