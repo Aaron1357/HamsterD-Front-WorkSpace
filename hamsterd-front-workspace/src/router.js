@@ -4,6 +4,7 @@ import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
 import MyPage from "./pages/MyPage";
 import StudyGroup from "./pages/studygroup/StudyGroup";
+import GroupPage from "./pages/studygroup/GroupPage";
 import Social from "./pages/social/Social";
 import Schedule from "./pages/studygroup/Schedule";
 import ScheduleMain from "./pages/studygroup/ScheduleMain";
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "/studygroup",
         element: <StudyGroup />,
+      },
+      {
+        path: "/grouppage",
+        element: <GroupPage />,
       },
       {
         path: "/social",
