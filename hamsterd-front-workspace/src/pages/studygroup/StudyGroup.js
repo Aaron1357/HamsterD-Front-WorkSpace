@@ -23,10 +23,6 @@ const StudyGroupTest = styled.div`
     border: 0px;
     font-weight: bold;
     color: white;
-    box-shadow: var(
-      --shadows-gray-blue-3-5-b-box-shadow,
-      0px 2px 5px 0px rgba(38, 51, 77, 0.03)
-    );
   }
   .section {
     box-shadow: var(
