@@ -23,3 +23,15 @@ export const searchBoardList = async () => {
 
   console.log();
 };
+
+export const detailBoard = async (boardNo) => {
+  const res = (await instance.get("post/boardNo")).data;
+};
+
+export const addSchedule = async (data) => {
+  return await instance.post("schedule", data, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
