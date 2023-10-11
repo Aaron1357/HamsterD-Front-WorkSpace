@@ -103,7 +103,7 @@ const Header = () => {
             </div>
             <div className="menu" id="board">
               <div className="submenu1">
-                <Link to="/post">게시판</Link>
+                <Link to="/boardList">게시판</Link>
               </div>
               <div className="submenu">
                 <a href="#">랭킹</a>
