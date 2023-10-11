@@ -13,6 +13,21 @@ const StudyGroupTest = styled.div`
     color: rgba(211, 157, 87);
     //
   }
+  .createbtn {
+    padding: 20px;
+  }
+  #createbtn {
+    height: 40px;
+    width: 180px;
+    background-color: rgba(211, 157, 87);
+    border: 0px;
+    font-weight: bold;
+    color: white;
+    box-shadow: var(
+      --shadows-gray-blue-3-5-b-box-shadow,
+      0px 2px 5px 0px rgba(38, 51, 77, 0.03)
+    );
+  }
   .section {
     box-shadow: var(
       --shadows-gray-blue-3-5-b-box-shadow,
@@ -162,7 +177,7 @@ const StudyGroup = () => {
       <div className="mainsection">
         <div className="createbtn">
           <button type="button" id="createbtn" onClick={handleSignUpClick}>
-            스터디그룹 생성
+            + 스터디그룹 생성
           </button>
         </div>
         <div className="section">
