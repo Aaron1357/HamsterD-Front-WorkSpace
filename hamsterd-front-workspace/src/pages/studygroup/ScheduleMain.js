@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Calendar from "react-calendar";
-import moment from "moment";
+// import Calendar from "react-calendar";
+// import moment from "moment";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
 import "react-calendar/dist/Calendar.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,37 +13,40 @@ import { useNavigate } from "react-router-dom";
 
 const ScheduleStyle = styled.div`
   .content {
-    /* width: 700px; */
-    height: 500px;
+    width: 1000px;
+    height: 600px;
     display: flex;
     justify-content: center;
     /* background-color: white; */
+    border: 1px solid lightgray;
   }
+
   .left-section {
-    width: 500px;
+    width: 600px;
+    height: 600px;
     /* height: 100vh; */
-    margin: 10px;
-    /* border: 1px solid lightcoral; */
+    border: 1px solid lightcoral;
   }
 
   .calendar {
-    height: 500px;
+    height: 600px;
     display: flex;
     justify-content: center;
     padding-top: 20px;
-    /* border: 1px solid lightseagreen; */
+    padding-bottom: 20px;
+    border: 1px solid lightseagreen;
   }
-  .react-calendar {
-    width: 420px;
-    height: 320px;
-    min-width: 350px;
+
+  .fc {
+    border: 1px solid lightcoral;
+    width: 450px;
   }
 
   .right-section {
-    width: 500px;
+    width: 600px;
+    height: 600px;
     /* height: 100vh; */
-    margin: 10px;
-    /* border: 1px solid lightcoral; */
+    border: 1px solid lightcoral;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -52,25 +57,9 @@ const ScheduleStyle = styled.div`
     width: 450px;
     min-width: 350px;
   }
-
-  .react-calendar__tile:enabled:hover,
-  .react-calendar__tile:enabled:focus {
-    //hover 했을 때 색상 변경
-    background: beige;
-    border-radius: 100%;
-  }
-
-  .react-calendar__tile--active {
-    background: beige;
-    color: black;
-    border-radius: 100%;
-  }
 `;
 
 const ScheduleMain = () => {
-  // Calendar 관련
-  const [value, onChange] = useState(new Date());
-
   // 추가 버튼 누르면 Schedule 페이지로 이동
   const navigate = useNavigate();
 
@@ -96,10 +85,9 @@ const ScheduleMain = () => {
         <div className="left-section">
           {/* 달력 영역 */}
           <div className="calendar">
-            <Calendar
-              onChange={onChange}
-              value={value}
-              formatDay={(locale, date) => moment(date).format("DD")}
+            <FullCalendar
+              plugins={[dayGridPlugin]}
+              initialView="dayGridMonth"
             />
           </div>
         </div>
