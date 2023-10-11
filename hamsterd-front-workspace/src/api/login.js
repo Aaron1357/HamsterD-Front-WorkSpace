@@ -12,7 +12,7 @@ export const login = async (member) => {
   const result = await instance.get(url);
   console.log(result.data);
 
-  return result;
+  return result.data;
   // return await instance.get("member", member);
 
   //
