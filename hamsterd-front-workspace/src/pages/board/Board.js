@@ -3,6 +3,8 @@ import { addFile } from "../../api/boardFile";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import setBoardList from "../board/BoardList";
+
 const BoardStyle = styled.div`
   body {
     background-color: rgb(231, 250, 215);
@@ -107,7 +109,7 @@ const Board = () => {
   const navigate = useNavigate();
 
   //폼 전체 작성 후 클릭 할 때
-  const onClick = () => {
+  const onClick = (e) => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("desc", desc);
@@ -124,6 +126,9 @@ const Board = () => {
     //   //formData.append("name", );
     // }
     addFile(formData);
+
+    // setBoardList(...)
+
     navigate("/boardList");
   };
 
@@ -141,7 +146,7 @@ const Board = () => {
             </select>
 
             <div className="mb-3">
-              <label for="exampleFormControlInput1" className="form-label">
+              <label htmlFor="exampleFormControlInput1" className="form-label">
                 Title
               </label>
               <input
@@ -162,7 +167,7 @@ const Board = () => {
                   name="flexRadioDefault"
                   id="flexRadioDefault1"
                 />
-                <label className="form-check-label" for="flexRadioDefault1">
+                <label className="form-check-label" htmlFor="flexRadioDefault1">
                   익명
                 </label>
               </div>
@@ -175,14 +180,17 @@ const Board = () => {
                   id="flexRadioDefault2"
                   checked
                 />
-                <label className="form-check-label" for="flexRadioDefault2">
+                <label className="form-check-label" htmlFor="flexRadioDefault2">
                   공개
                 </label>
               </div>
             </div>
 
             <div className="mb-3">
-              <label for="exampleFormControlTextarea1" className="form-label">
+              <label
+                htmlFor="exampleFormControlTextarea1"
+                className="form-label"
+              >
                 Description
               </label>
               <textarea
@@ -212,7 +220,7 @@ const Board = () => {
                 id="inputGroupFile02"
                 onChange={onUploadFile}
               />
-              <label className="input-group-text" for="inputGroupFile02">
+              <label className="input-group-text" htmlFor="inputGroupFile02">
                 Upload
               </label>
             </div>
