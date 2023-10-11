@@ -110,7 +110,7 @@ const BoardList = () => {
 
   const navigate = useNavigate();
 
-  const onClick = (e) => {
+  const boardClick = (e) => {
     e.preventDefault();
     navigate("/board");
   };
@@ -119,7 +119,7 @@ const BoardList = () => {
     <BoardStyle>
       <div className="boardListHead1">
         <div className="boardListHead2">
-          <button onClick={onClick} className="boardButton">
+          <button onClick={boardClick} className="boardButton">
             게시물 작성하기
           </button>
         </div>
