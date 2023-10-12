@@ -9,6 +9,11 @@ import CreateGroup from "./pages/studygroup/CreateGroup";
 import GroupReview from "./pages/studygroup/GroupReview";
 import Social from "./pages/social/Social";
 import Schedule from "./pages/studygroup/Schedule";
+<<<<<<< HEAD
+=======
+import ScheduleMain from "./pages/studygroup/ScheduleMain";
+import GroupEval from "./pages/studygroup/GroupEval";
+>>>>>>> origin/GeumMiRi
 import BoardList from "./pages/board/BoardList";
 import Board from "./pages/board/Board";
 import SignUp from "./pages/member/SignUp";
@@ -52,7 +57,18 @@ const router = createBrowserRouter([
         path: "/schedule",
         element: <Schedule />,
       },
+<<<<<<< HEAD
 
+=======
+      {
+        path: "/scheduleMain",
+        element: <ScheduleMain />,
+      },
+      {
+        path: "/groupeval",
+        element: <GroupEval />,
+      },
+>>>>>>> origin/GeumMiRi
       {
         path: "/signup",
         element: <SignUp />,

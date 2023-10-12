@@ -3,20 +3,17 @@ import { addFile } from "../../api/boardFile";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import setBoardList from "../board/BoardList";
+import "react-quill/dist/quill.snow.css";
+import ReactQuill, { Quill } from "react-quill";
+import ImageResize from "quill-image-resize-module-react";
 
 const BoardStyle = styled.div`
-  body {
-    background-color: rgb(231, 250, 215);
-  }
-
   .head1 {
     width: 100vw;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgb(255, 247, 237);
   }
 
   .head2 {
@@ -85,6 +82,7 @@ const BoardStyle = styled.div`
     margin-bottom: 10px;
   }
 `;
+
 const Board = () => {
   const [title, setTitle] = useState([]);
   const [desc, setDesc] = useState([]);
@@ -92,44 +90,50 @@ const Board = () => {
   const emptyNickNameRef = useRef();
   const nickNameRef = useRef();
 
-  // const [nickname, setNickname] = useState([]);
+  // const [file, setFiles] = useState(null);
 
-  //파일 가져올 변수 생성
-  //파일 가져오려면 초기값 null로 설정
-  const [file, setFiles] = useState(null);
-
-  const onUploadFile = (e) => {
-    setFiles(e.target.files[0]);
-  };
-
-  // const nicknameClick = (e) => {
-  //   setNickname();
+  // const onUploadFile = (e) => {
+  //   setFiles(e.target.files[0]);
   // };
 
   const navigate = useNavigate();
 
   //폼 전체 작성 후 클릭 할 때
-  const onClick = (e) => {
+  const onClick = async () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("desc", desc);
-    // formData.append("nickname", nickname);
-    formData.append("file", file);
-    // console.log(title);
-    // console.log(desc);
-    // console.log(file);
-    console.log(formData.get("file"));
 
-    // if (nickNameRef.current.checked === true) {
-    //   //공개로 체크를 한 경우
-    //   //, 뒤에 로그인한 값에서 NAME을 넣으면 됨
-    //   //formData.append("name", );
-    // }
-    addFile(formData);
+    try {
+      await addFile(formData); // 비동기 작업 완료 대기
+      navigate("/boardList"); // 파일 업로드가 완료되면 페이지 이동
+    } catch (error) {
+      // 에러 처리
+      console.error("파일 업로드 중 오류 발생:", error);
+    }
+  };
 
-    // setBoardList(...)
+  const toolbarOptions = [
+    ["link", "image", "video"],
+    [{ header: [1, 2, 3, false] }],
+    ["bold", "italic", "underline", "strike"],
+    ["blockquote"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    [{ color: [] }, { background: [] }],
+    [{ align: [] }],
+  ];
 
-    navigate("/boardList");
+  Quill.register("modules/imageResize", ImageResize);
+
+  const modules = {
+    toolbar: {
+      container: toolbarOptions,
+    },
+    imageResize: {
+      // https://www.npmjs.com/package/quill-image-resize-module-react 참고
+      parchment: Quill.import("parchment"),
+      modules: ["Resize", "DisplaySize", "Toolbar"],
+    },
   };
 
   return (
@@ -193,16 +197,12 @@ const Board = () => {
               >
                 Description
               </label>
-              <textarea
+              <ReactQuill
                 value={desc}
-                onChange={(e) => setDesc(e.target.value)}
-                type="textarea"
-                col={5}
-                className="form-control"
-                id="exampleFormControlTextarea1"
-                rows="6"
-                placeholder="내용을 입력하세요"
-              ></textarea>
+                onChange={(value) => setDesc(value)}
+                modules={modules}
+                formats={formats}
+              />
             </div>
             <div className="button1">
               <button
@@ -213,7 +213,7 @@ const Board = () => {
                 임시저장하기
               </button>
             </div>
-            <div className="input-group mb-3">
+            {/* <div className="input-group mb-3">
               <input
                 type="file"
                 className="form-control"
@@ -223,7 +223,7 @@ const Board = () => {
               <label className="input-group-text" htmlFor="inputGroupFile02">
                 Upload
               </label>
-            </div>
+            </div> */}
             <div className="btnn">
               <div>
                 <button
@@ -253,3 +253,23 @@ const Board = () => {
 };
 
 export default Board;
+export const formats = [
+  "header",
+  "font",
+  "size",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "align",
+  "blockquote",
+  "list",
+  "bullet",
+  "indent",
+  "background",
+  "color",
+  "link",
+  "image",
+  "video",
+  "width",
+];
