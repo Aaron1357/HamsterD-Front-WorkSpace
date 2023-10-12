@@ -17,3 +17,21 @@ export const login = async (member) => {
 
   //
 };
+
+export const addMember = async (member) => {
+  console.log(member);
+  return await instance.post("member", member, {
+    headers: {
+      "Content-Type": `application/json`,
+    },
+  });
+};
+
+export const updateMember = async (member) => {
+  return await instance.put("member", member, {
+    headers: {
+      "Content-Type": `application/json`,
+    },
+  });
+};
+

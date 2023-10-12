@@ -12,6 +12,7 @@ import BoardList from "./pages/board/BoardList";
 import Board from "./pages/board/Board";
 import SignUp from "./pages/member/SignUp";
 import Fire from "./pages/member/Fire";
+import Update from "./pages/member/Update";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,11 @@ const router = createBrowserRouter([
       {
         path: "/fire",
         element: <Fire />,
+      },
+
+      {
+        path: "/update",
+        element: <Update />,
       },
       
     ],

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import profile from "../../resource/오리.jpg"
 import { useState } from "react";
+import { updateMember } from "../../api/login";
 const MypageTest = styled.div`
 
 .maincontain{
@@ -140,12 +141,28 @@ const MypageTest = styled.div`
 `;
 
 
+
 const MyPage = () => {
 
+  const logout = () => {
+    window.sessionStorage.clear(); // 세션 제거
+    window.location.reload(true); // 새로고침
+  };
+  
+
+  window.sessionStorage.getItem("member");
+  const sessionValue = sessionStorage.getItem('member');
+  const parseValue = JSON.parse(sessionValue);
+  console.log(window.sessionStorage.getItem("member"));
 
 const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
 
+  const handleUpdateClick = () => {
+    // 개인정보수정 버튼 클릭 시 '/update' 경로로 이동
+    navigate("/update");
+    setIsOpen(false);
+  };
 
   const handleStudyClick = () => {
     // 내 스터디 클릭시 내 스터디그룹' 경로로 이동
@@ -157,6 +174,7 @@ const [isOpen, setIsOpen] = useState(true);
     // 내 스터디 클릭시 내 스터디그룹' 경로로 이동
     navigate("/schedule");
    
+    
   };
   
 
@@ -175,10 +193,11 @@ const [isOpen, setIsOpen] = useState(true);
 
     <div className="nickname">
       <div className="nickname-font">
-    내 닉네임 : 오리84 
+    내 닉네임 : {parseValue.nickname}
+  
     </div>
     <div className="nickname-btn">
-    <button type="button" id="signUpbtn"  className="btn btn-danger"> 수정 </button>
+    
     </div>
     </div>
 
@@ -188,10 +207,10 @@ const [isOpen, setIsOpen] = useState(true);
 
     <div className="myId">
       <div className="myId-font">
-    내 아이디 : 오리84  
+    내 아이디 : {parseValue.id}
     </div>
     <div className="myId-btn">
-    <button type="button" id="signUpbtn"  className="btn btn-danger"> 수정 </button>
+
     </div>
     </div>
 
@@ -203,6 +222,9 @@ const [isOpen, setIsOpen] = useState(true);
     </div>
 
 
+    <div>
+    <button type="button" id="update-btn"  className="btn btn-danger" onClick={handleUpdateClick}> 개인정보 수정 </button>
+    </div>
 
     </div>
     </MypageTest>
