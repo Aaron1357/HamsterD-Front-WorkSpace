@@ -4,10 +4,12 @@ import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
 import MyPage from "./pages/MyPage";
 import StudyGroup from "./pages/studygroup/StudyGroup";
+import GroupPage from "./pages/studygroup/GroupPage";
+import CreateGroup from "./pages/studygroup/CreateGroup";
+import GroupReview from "./pages/studygroup/GroupReview";
 import Social from "./pages/social/Social";
 import Schedule from "./pages/studygroup/Schedule";
 import ScheduleMain from "./pages/studygroup/ScheduleMain";
-import GroupEval from "./pages/studygroup/GroupEval";
 import BoardList from "./pages/board/BoardList";
 import Board from "./pages/board/Board";
 import SignUp from "./pages/member/SignUp";
@@ -32,6 +34,18 @@ const router = createBrowserRouter([
         element: <StudyGroup />,
       },
       {
+        path: "/grouppage",
+        element: <GroupPage />,
+      },
+      {
+        path: "/creategroup",
+        element: <CreateGroup />,
+      },
+      {
+        path: "/groupreview",
+        element: <GroupReview />,
+      },
+      {
         path: "/social",
         element: <Social />,
       },
@@ -42,10 +56,6 @@ const router = createBrowserRouter([
       {
         path: "/scheduleMain",
         element: <ScheduleMain />,
-      },
-      {
-        path: "/groupeval",
-        element: <GroupEval />,
       },
       {
         path: "/signup",
