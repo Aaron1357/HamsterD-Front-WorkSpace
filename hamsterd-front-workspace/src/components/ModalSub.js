@@ -107,14 +107,18 @@ function ModalSub() {
     e.preventDefault();
     const idValue = e.target.elements.id.value; //아이디
     const passwordValue = e.target.elements.password.value; //비번
-    const formData2 = { idValue, passwordValue };
-
+    const formData2 = {
+      id: idValue,
+      password: passwordValue,
+    };
+    // console.log(formData2);
     const result = login(formData2);
     // console.log(result);
 
     if (result != null) {
       result.then(function (data) {
-        // console.log(data);
+        console.log(data);
+        console.log(data.token);
         window.sessionStorage.setItem("member", JSON.stringify(data));
         setIsOpen(false);
       });
