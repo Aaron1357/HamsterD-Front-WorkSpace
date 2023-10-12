@@ -1,11 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faXmark, faMinus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { useState } from "react";
 import { addSchedule } from "../../api/schedule";
 import { useNavigate } from "react-router-dom";
-import scheduleMain from "./ScheduleMain";
 
 const ScheduleStyle = styled.div`
   .scheduleBody {
@@ -44,7 +43,23 @@ const ScheduleStyle = styled.div`
     margin-right: 15px;
     /* border: 1px solid lightsalmon; */
   }
+
+  #date:hover {
+    cursor: pointer;
+  }
+
   .fa-plus {
+    width: 20px;
+    height: 20px;
+    /* border: 1px solid gray; */
+    margin-right: 15px;
+  }
+
+  .fa-plus:hover {
+    cursor: pointer;
+  }
+
+  .fa-minus {
     width: 20px;
     height: 20px;
     /* border: 1px solid gray; */
@@ -56,6 +71,9 @@ const ScheduleStyle = styled.div`
     height: 20px;
     /* border: 1px solid gray; */
     margin-right: 15px;
+  }
+  .fa-xmark:hover {
+    cursor: pointer;
   }
 
   #exampleFormControlTextarea1 {
@@ -74,7 +92,8 @@ const Schedule = () => {
 
   const navigate = useNavigate();
 
-  const onClick = async () => {
+  // 추가 버튼
+  const plus = async () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
@@ -93,6 +112,11 @@ const Schedule = () => {
     }
   };
 
+  // 닫기 버튼
+  const close = () => {
+    navigate("/grouppage");
+  };
+
   return (
     <ScheduleStyle>
       <div className="scheduleBody">
@@ -109,8 +133,9 @@ const Schedule = () => {
                 />
               </div>
               {/* <button onClick={onClick}>추가</button> */}
-              <FontAwesomeIcon icon={faPlus} onClick={onClick} />
-              <FontAwesomeIcon icon={faXmark} />
+              <FontAwesomeIcon icon={faPlus} onClick={plus} />
+              <FontAwesomeIcon icon={faMinus} />
+              <FontAwesomeIcon icon={faXmark} onClick={close} />
             </div>
 
             <div className="mb-3">
