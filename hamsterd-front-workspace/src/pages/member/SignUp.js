@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { addMember } from "../../api/signup";
+import { addMember } from "../../api/login";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
