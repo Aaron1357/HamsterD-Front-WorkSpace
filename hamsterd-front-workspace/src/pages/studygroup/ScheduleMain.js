@@ -18,14 +18,14 @@ const ScheduleStyle = styled.div`
     display: flex;
     justify-content: center;
     /* background-color: white; */
-    border: 1px solid lightgray;
+    /* border: 1px solid lightgray; */
   }
 
-  .left-section {
+  .calendar-section {
     width: 600px;
     height: 600px;
     /* height: 100vh; */
-    border: 1px solid lightcoral;
+    /* border: 1px solid lightcoral; */
   }
 
   .calendar {
@@ -34,26 +34,45 @@ const ScheduleStyle = styled.div`
     justify-content: center;
     padding-top: 20px;
     padding-bottom: 20px;
-    border: 1px solid lightseagreen;
+    /* border: 1px solid lightseagreen; */
   }
-
+  // 테이블 영역
   .fc {
-    border: 1px solid lightcoral;
+    /* border: 1px solid lightcoral; */
     width: 450px;
   }
 
-  .right-section {
+  // 년도, 월
+  .fc .fc-toolbar-title {
+    font-size: 1.75em;
+    margin: 0px;
+    color: black;
+    font-weight: bold;
+  }
+
+  // 일~토 요일
+  .fc-col-header-cell-cushion {
+    color: black;
+  }
+
+  // 각 일자
+  .fc-day a {
+    color: black;
+    text-decoration: none;
+  }
+
+  .schedule-list {
     width: 600px;
     height: 600px;
     /* height: 100vh; */
-    border: 1px solid lightcoral;
+    /* border: 1px solid lightcoral; */
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-top: 20px;
   }
 
-  .right-section table {
+  .schedule-list table {
     width: 450px;
     min-width: 350px;
   }
@@ -69,6 +88,22 @@ const ScheduleMain = () => {
 
   // schedule 목록 받아오기
   const [schedules, setSchedules] = useState([]);
+  const [newSchedules, setNewSchedules] = useState([]);
+  // array.map으로 새로 배열만들기(타입 일치시키기 위해서)
+  const newList = schedules.map((item) => {
+    // console.log(item.scheduleDate);
+    // console.log(item.scheduleTitle);
+    return {
+      title: item.scheduleTitle,
+      date: item.scheduleDate.substr(0, 10),
+    };
+  });
+
+  console.log(newSchedules);
+
+  useEffect(() => {
+    setNewSchedules(newList);
+  }, [schedules]);
 
   const scheduleListAPI = async () => {
     const result = await getScheduleList();
@@ -82,18 +117,19 @@ const ScheduleMain = () => {
   return (
     <ScheduleStyle>
       <div className="content">
-        <div className="left-section">
+        <div className="calendar-section">
           {/* 달력 영역 */}
           <div className="calendar">
             <FullCalendar
               plugins={[dayGridPlugin]}
               initialView="dayGridMonth"
+              events={newSchedules}
             />
           </div>
         </div>
 
         {/* 일정 목록 */}
-        <div className="right-section">
+        <div className="schedule-list">
           <table className="table">
             <thead>
               <tr>
@@ -112,7 +148,7 @@ const ScheduleMain = () => {
               {schedules.map((item) => (
                 <tr key={item.scheduleNo}>
                   <th scope="row">{item.scheduleNo}</th>
-                  <td colSpan={2}>{item.scheduleContent}</td>
+                  <td colSpan={2}>{item.scheduleTitle}</td>
                 </tr>
               ))}
             </tbody>

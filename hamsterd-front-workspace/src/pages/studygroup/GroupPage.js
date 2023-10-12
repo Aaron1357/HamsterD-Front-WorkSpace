@@ -138,6 +138,7 @@ const GroupPageTest = styled.div`
     font-size: 25px;
     font-weight: bold;
   }
+
   #comments {
     font-size: 25px;
     font-weight: bold;
