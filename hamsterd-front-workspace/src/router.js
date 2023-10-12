@@ -16,7 +16,6 @@ import SignUp from "./pages/member/SignUp";
 
 const router = createBrowserRouter([
   {
-    //
     path: "/",
     element: <Layout />,
     errorElement: <NotFound />,
