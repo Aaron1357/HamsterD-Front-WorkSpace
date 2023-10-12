@@ -108,7 +108,7 @@ const Header = () => {
               <div className="submenu">
                 <a href="#">랭킹</a>
                 <a href="#">스터디그룹 조회</a>
-                <a href="#">스터디 만들기</a>
+                <a href="creategroup">스터디 만들기</a>
               </div>
             </div>
             <div className="menu" id="studygroup">

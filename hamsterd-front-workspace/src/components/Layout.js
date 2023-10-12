@@ -4,24 +4,21 @@ import Sidebar from "./Sidebar";
 import styled from "styled-components";
 
 const LayoutTest = styled.div`
-  .allforone{
-
- background-color: rgba(242,242,240); 
- height: 200vh;
-//
+  .allforone {
+    background-color: rgba(242, 242, 240);
+    height: 200vh;
+    //
   }
   .main-page {
     display: flex;
     width: 100%;
     padding-top: 150px;
-    
-    .content {
+
+    /* .content {
       background-color: red;
-    }
-    
+    } */
   }
 
- 
   // ss//
   .header {
     width: 100%;
@@ -32,11 +29,11 @@ const Layout = () => {
   return (
     <LayoutTest>
       <div className="allforone">
-      <Header className="header" />
-      <div className="main-page">
-        <Sidebar className="sidebar" />
-        <Outlet />
-      </div>
+        <Header className="header" />
+        <div className="main-page">
+          <Sidebar className="sidebar" />
+          <Outlet />
+        </div>
       </div>
     </LayoutTest>
   );

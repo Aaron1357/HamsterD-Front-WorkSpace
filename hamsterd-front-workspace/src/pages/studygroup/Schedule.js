@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { addSchedule } from "../../api/schedule";
 import { useNavigate } from "react-router-dom";
-//import scheduleMain from "./ScheduleMain";
+import scheduleMain from "./ScheduleMain";
 
 const ScheduleStyle = styled.div`
   .scheduleBody {
@@ -61,6 +61,10 @@ const ScheduleStyle = styled.div`
   #exampleFormControlTextarea1 {
     height: 200px;
   }
+
+  .fc .fc-toolbar-title {
+    color: black;
+  }
 `;
 
 const Schedule = () => {
@@ -70,9 +74,7 @@ const Schedule = () => {
 
   const navigate = useNavigate();
 
-  const onClick = (e) => {
-    e.preventDefault();
-
+  const onClick = async () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
@@ -82,8 +84,13 @@ const Schedule = () => {
     console.log("content : " + formData.get("content"));
     console.log("date : " + formData.get("date"));
 
-    addSchedule(formData);
-    navigate("/scheduleMain");
+    try {
+      await addSchedule(formData); // 비동기 작업 완료 대기
+      navigate("/grouppage"); // 파일 업로드가 완료되면 페이지 이동
+    } catch (error) {
+      // 에러 처리
+      console.error("파일 업로드 중 오류 발생:", error);
+    }
   };
 
   return (
