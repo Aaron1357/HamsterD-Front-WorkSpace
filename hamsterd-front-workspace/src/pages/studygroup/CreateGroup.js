@@ -31,6 +31,7 @@ const CreateGroup = () => {
   const [title, setTitle] = useState([]);
   const [content, setContent] = useState([]);
   const [academy, setAcademy] = useState([]);
+  const [image, setImage] = useState(null);
 
   const navigate = useNavigate();
 
@@ -39,18 +40,25 @@ const CreateGroup = () => {
     formData.append("grouptitle", title);
     formData.append("groupcontent", content);
     formData.append("groupacademy", academy);
-    formData.append("groupimage", null);
+    formData.append("groupimage", image);
     // const formData2 = {
     //   title : ndsklanlkdnal,
     //   content : dnlksanldasnkd,
     // }
     try {
-      await addStudyGroup(formData); // 비동기 작업 완료 대기
+      const response = await addStudyGroup(formData); // 비동기 작업 완료 대기
+      setImage(response.data.image);
       navigate("/studygroup"); // 파일 업로드가 완료되면 페이지 이동
     } catch (error) {
       // 에러 처리
       console.error("파일 업로드 중 오류 발생:", error);
     }
+  };
+  // input 태그에 파일이 들어왔을때
+  const onUploadImage = (e) => {
+    // e.target.files은 list 타입으로 반환된다.
+    // console.log(e.target.files[0]);
+    setImage(e.target.files[0]);
   };
 
   return (
@@ -83,6 +91,7 @@ const CreateGroup = () => {
                 accept="image/*"
                 id="profileImage"
                 className="form-control"
+                onChange={onUploadImage}
               />
               <span className="form-text">
                 이미지 파일을 업로드하세요 (jpg, png 등)
