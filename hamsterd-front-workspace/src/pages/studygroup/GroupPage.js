@@ -144,11 +144,14 @@ const GroupPageTest = styled.div`
 `;
 
 const GroupPage = () => {
-  const navigate = useNavigate;
+  const navigate = useNavigate();
 
-  const handleSignUpClick = () => {
-    // 회원가입 버튼 클릭 시 '/signup' 경로로 이동
-    navigate("/signup");
+  const handleGroupJoinClick = () => {
+    navigate("/groupreview");
+  };
+
+  const handleGroupReviewClick = () => {
+    navigate("/groupreview");
   };
 
   return (
@@ -165,10 +168,18 @@ const GroupPage = () => {
                   <div id="groupname">'그룹명' ex 오리 </div>
                   <div id="grouppoint">그룹 점수 ex 4.7점</div>
                   <div className="btn">
-                    <button type="button" id="btn1" onClick={handleSignUpClick}>
+                    <button
+                      type="button"
+                      id="btn1"
+                      onClick={handleGroupJoinClick}
+                    >
                       참여하기
                     </button>
-                    <button type="button" id="btn2" onClick={handleSignUpClick}>
+                    <button
+                      type="button"
+                      id="btn2"
+                      onClick={handleGroupReviewClick}
+                    >
                       평가하기
                     </button>
                   </div>

@@ -1,5 +1,5 @@
-
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const Test2 = styled.div`
@@ -11,7 +11,7 @@ const Test2 = styled.div`
     display: flex;
     justify-content: center;
   }
-//
+  //
   /* 로고 이미지 */
   #logo img {
     width: 250px;
@@ -19,17 +19,17 @@ const Test2 = styled.div`
     top: -10px;
   } //
   .section {
-    border: 4px solid rgba(211,157,87);
+    border: 4px solid rgba(211, 157, 87);
     border-radius: 20px;
     box-shadow: var(
       --shadows-gray-blue-3-5-b-box-shadow,
       0px 2px 5px 0px rgba(38, 51, 77, 0.03)
     );
-   
+
     height: 700px;
     margin-top: 3px;
     padding: 30px;
-    color: rgba(211,157,87);
+    color: rgba(211, 157, 87);
     font-weight: bold;
   }
 
@@ -66,8 +66,8 @@ const Test2 = styled.div`
     text-align: center;
   }
 
-  .myinfo div {
-    border: 3px solid rgba(211,157,87);
+  .myinfo button {
+    border: 3px solid rgba(211, 157, 87);
     border-radius: 10px;
     box-shadow: var(
       --shadows-gray-blue-3-5-b-box-shadow,
@@ -78,25 +78,49 @@ const Test2 = styled.div`
     margin-bottom: 20px;
     margin-top: 20px;
     line-height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-  .main-page{}
-  width: 600px;
-  margin-top: -10px;
+
+  .main-page {
+    width: 600px;
+    margin-top: -10px;
+  }
+  .btn {
+    color: rgba(211, 157, 87);
+  }
 `;
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const handleStudyGroupClick = () => {
+    // 회원가입 버튼 클릭 시 '/signup' 경로로 이동
+    navigate("/grouppage");
+  };
   return (
     <Test2>
       <div className="main-page">
         <div className="main-section">
           <div className="section" id="section3">
-            
             <div className="myinfo">
-              <div className="mystudy">내 스터디</div>
-              <div className="myweight">내 몸무게</div>
-              <div className="mycalender">내 일정</div>
-              <div className="mypost">내 게시글</div>
-              <div className="mycomment">내 댓글</div>
+              <div>
+                <button className="btn" onClick={handleStudyGroupClick}>
+                  내 스터디
+                </button>
+              </div>
+              <div className="myweight">
+                <button className="btn">내 몸무게</button>
+              </div>
+              <div className="mycalender">
+                <button className="btn">내 일정</button>
+              </div>
+              <div className="mypost">
+                <button className="btn">내 게시글</button>
+              </div>
+              <div className="mycomment">
+                <button className="btn">내 댓글</button>
+              </div>
             </div>
           </div>
         </div>

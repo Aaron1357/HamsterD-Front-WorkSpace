@@ -116,7 +116,7 @@ const Header = () => {
                 <Link to="/studygroup">스터디그룹</Link>
               </div>
               <div className="submenu">
-                <Link to="/groupeval">그룹평가</Link>
+                <Link to="/groupreview">그룹평가</Link>
                 <Link to="/schedule">스케쥴</Link>
               </div>
             </div>
