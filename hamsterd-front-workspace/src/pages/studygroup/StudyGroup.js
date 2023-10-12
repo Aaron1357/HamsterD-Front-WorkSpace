@@ -3,6 +3,8 @@ import profile from "../../resource/종빈22.png";
 import groupimg from "../../resource/오리.jpg";
 import search from "../../resource/search.png";
 import { Link, useNavigate } from "react-router-dom";
+import { getStudyGroupList } from "../../api/studygroup";
+import { useState, useEffect } from "react";
 
 const StudyGroupTest = styled.div`
   .mainsection {
@@ -167,9 +169,38 @@ const StudyGroupTest = styled.div`
 const StudyGroup = () => {
   const navigate = useNavigate();
 
+  const [studygroup, setStudyGroup] = useState([]);
+
+  const newList = studygroup.map((item) => {
+    return {
+      grouptitle: item.groupName,
+      groupcontent: item.groupContent,
+      groupacademy: item.groupAcademy,
+      groupimage: item.groupImage,
+    };
+  });
+
   const handleCreateGroupClick = () => {
+    //생성버튼 페이지 이동
     navigate("/creategroup");
   };
+
+  const getStudyGroupListAPI = async () => {
+    //  그룹전체API 호출
+    const result = await getStudyGroupList();
+    setStudyGroup(result.data); // 후 상태 저장
+  };
+
+  // useEffect(() => {
+  //   // 전체 조회 내용이 바뀔 때 최신화
+  //   setStudyGroup(newList);
+  // }, [studygroup]);
+
+  useEffect(() => {
+    // 처음 페이지 접근했을 떄 호출
+    getStudyGroupListAPI();
+  }, []);
+  console.log(studygroup);
 
   return (
     <StudyGroupTest>
@@ -195,82 +226,47 @@ const StudyGroup = () => {
           <div className="horizonline"></div>
           <br />
           <br />
-          <div>
-            <div className="profile-container">
-              <div id="profile">
-                <img className="profileimg" src={profile} alt="Profile" />
-              </div>
-              <div>
+          {studygroup.map((item) => (
+            <div>
+              <div className="profile-container">
+                <div id="profile">
+                  <img className="profileimg" src={profile} alt="Profile" />
+                </div>
                 <div>
-                  <Link to="/grouppage" id="grouptext">
-                    '그룹장'님의 스터디그룹
-                  </Link>
-                </div>
-                <div id="academyname">학원명</div>
-              </div>
-            </div>
-            <div className="groupinfo">
-              <div className="group-container">
-                <div id="group">
-                  <img className="groupimg" src={groupimg} alt="Group" />
-                </div>
-                <div className="groupintro">
-                  <Link to="/grouppage" className="groupintro">
-                    <div className="groupname">'그룹명' ex 오리</div>
-                    <div>'그룹 소개' ex 우리는 멋진 오리에요!</div>
-                  </Link>
+                  <div>
+                    <Link to="/grouppage" id="grouptext">
+                      '그룹장'님의 스터디그룹
+                    </Link>
+                  </div>
+                  <div id="academyname">{item.groupAcademy}</div>
                 </div>
               </div>
+              <div className="groupinfo">
+                <div className="group-container">
+                  <div id="group">
+                    <img className="groupimg" src={groupimg} alt="Group" />
+                  </div>
+                  <div className="groupintro">
+                    <Link to="/grouppage" className="groupintro">
+                      <div className="groupname">{item.groupName}</div>
+                      <div>{item.groupContent}</div>
+                    </Link>
+                  </div>
+                </div>
 
-              <div className="horizonline"></div>
-              <div className="group-container">
-                <div>
-                  <img className="profileimg2" src={profile} alt="Profile" />
+                <div className="horizonline"></div>
+                <div className="group-container">
+                  <div>
+                    <img className="profileimg2" src={profile} alt="Profile" />
+                  </div>
+                  <div>외 '그룹인원'명 참여 중</div>
+                  <div id="grouppoint">그룹 점수 ex 4.7점</div>
                 </div>
-                <div>외 '그룹인원'명 참여 중</div>
-                <div id="grouppoint">그룹 점수 ex 4.7점</div>
               </div>
+              <br />
+              <br />
             </div>
-          </div>
-          <br />
-          <br />
-          <div>
-            <div className="profile-container">
-              <div id="profile">
-                <img className="profileimg" src={profile} alt="Profile" />
-              </div>
-              <div>
-                <div>
-                  <Link to="/grouppage" id="grouptext">
-                    '그룹장'님의 스터디그룹
-                  </Link>
-                </div>
-                <div id="academyname">학원명</div>
-              </div>
-            </div>
-            <div className="groupinfo">
-              <div className="group-container">
-                <div id="group">
-                  <img className="groupimg" src={groupimg} alt="Group" />
-                </div>
-                <div className="groupintro">
-                  <Link to="/grouppage" className="groupintro">
-                    <div className="groupname">'그룹명' ex 오리</div>
-                    <div>'그룹 소개' ex 우리는 멋진 오리에요!</div>
-                  </Link>
-                </div>
-              </div>
-
-              <div className="horizonline"></div>
-              <div className="group-container">
-                <div>
-                  <img className="profileimg2" src={profile} alt="Profile" />
-                </div>
-                <div>외 '그룹인원'명 참여 중</div>
-                <div id="grouppoint">그룹 점수 ex 4.7점</div>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </StudyGroupTest>

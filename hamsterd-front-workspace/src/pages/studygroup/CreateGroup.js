@@ -39,6 +39,7 @@ const CreateGroup = () => {
     formData.append("grouptitle", title);
     formData.append("groupcontent", content);
     formData.append("groupacademy", academy);
+    formData.append("groupimage", null);
     // const formData2 = {
     //   title : ndsklanlkdnal,
     //   content : dnlksanldasnkd,

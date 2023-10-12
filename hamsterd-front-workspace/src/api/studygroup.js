@@ -10,6 +10,6 @@ export const addStudyGroup = async (data) => {
 };
 
 // 스케줄 목록 받아오기
-export const getScheduleList = async () => {
+export const getStudyGroupList = async () => {
   return await instance.get("studygroup");
 };
