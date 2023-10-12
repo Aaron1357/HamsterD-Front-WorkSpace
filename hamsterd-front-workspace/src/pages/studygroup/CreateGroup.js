@@ -1,4 +1,7 @@
 import styled from "styled-components";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { addStudyGroup } from "../../api/studygroup";
 
 const CreateGroupStyle = styled.div`
   .mainsection {
@@ -25,11 +28,30 @@ const CreateGroupStyle = styled.div`
 `;
 
 const CreateGroup = () => {
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    // TODO: Handle the file upload logic here
-    console.log("Selected file:", file);
+  const [title, setTitle] = useState([]);
+  const [content, setContent] = useState([]);
+  const [academy, setAcademy] = useState([]);
+
+  const navigate = useNavigate();
+
+  const onClick = async () => {
+    const formData = new FormData();
+    formData.append("grouptitle", title);
+    formData.append("groupcontent", content);
+    formData.append("groupacademy", academy);
+    // const formData2 = {
+    //   title : ndsklanlkdnal,
+    //   content : dnlksanldasnkd,
+    // }
+    try {
+      await addStudyGroup(formData); // 비동기 작업 완료 대기
+      navigate("/studygroup"); // 파일 업로드가 완료되면 페이지 이동
+    } catch (error) {
+      // 에러 처리
+      console.error("파일 업로드 중 오류 발생:", error);
+    }
   };
+
   return (
     <CreateGroupStyle>
       <div className="mainsection">
@@ -45,6 +67,8 @@ const CreateGroup = () => {
                   id="nickName"
                   className="form-control"
                   name="nickname"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                   required
                 />
               </div>
@@ -58,7 +82,6 @@ const CreateGroup = () => {
                 accept="image/*"
                 id="profileImage"
                 className="form-control"
-                onChange={handleFileUpload}
               />
               <span className="form-text">
                 이미지 파일을 업로드하세요 (jpg, png 등)
@@ -74,6 +97,8 @@ const CreateGroup = () => {
                 id="description"
                 className="form-control"
                 required
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
                 name="name"
               />
               <span className="form-text">
@@ -90,6 +115,8 @@ const CreateGroup = () => {
                 id="academy"
                 className="form-control"
                 required
+                value={academy}
+                onChange={(e) => setAcademy(e.target.value)}
                 name="academyName"
               />
               <span className="form-text">
@@ -97,7 +124,12 @@ const CreateGroup = () => {
               </span>
             </div>
 
-            <button type="submit" id="signupbtn" className="btn btn-primary">
+            <button
+              type="submit"
+              id="signupbtn"
+              className="btn btn-primary"
+              onClick={onClick}
+            >
               스터디그룹 생성
             </button>
           </form>
