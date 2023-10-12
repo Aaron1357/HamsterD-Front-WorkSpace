@@ -10,9 +10,9 @@ export const login = async (member) => {
   // console.log(member.idValue);
   const url = `member/${member.idValue}/${member.passwordValue}`;
   const result = await instance.get(url);
-  console.log(result.data);
+  // console.log(result.data);
 
-  return result;
+  return result.data;
   // return await instance.get("member", member);
 
   //

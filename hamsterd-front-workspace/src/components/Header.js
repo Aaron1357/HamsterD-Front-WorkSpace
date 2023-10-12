@@ -3,7 +3,6 @@ import styled from "styled-components";
 import logo from "../resource/logo.jpg";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import ModalSub from "../components/ModalSub";
-// import Modal from "react-modal";
 
 const Test = styled.div`
   .header-section {
@@ -11,7 +10,7 @@ const Test = styled.div`
     width: 100%;
     height: 120px;
   }
-  ////
+
   .header {
     display: flex;
     align-items: center;
@@ -82,6 +81,11 @@ const Test = styled.div`
 const Sub = styled.div``;
 
 const Header = () => {
+  const logout = () => {
+    window.sessionStorage.clear(); // 세션 제거
+    window.location.reload(true); // 새로고침
+  };
+
   return (
     <Test>
       <Sub>
@@ -135,18 +139,21 @@ const Header = () => {
                 <a href="#">서브메뉴 3</a>
               </div>  
             </div>
+
             <div className="menu" id="logout">
               <div className="logout">
-              <button
+              <button 
                 type="button"
                 id="signUpbtn"
                 className="btn btn-danger" 
+                onClick={logout}
               >
                 로그아웃
               </button>
               </div>
            
           </div>
+
           </div>
         </div>
       </div>
