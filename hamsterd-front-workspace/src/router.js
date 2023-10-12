@@ -52,12 +52,10 @@ const router = createBrowserRouter([
         path: "/schedule",
         element: <Schedule />,
       },
-
       {
         path: "/scheduleMain",
         element: <ScheduleMain />,
       },
-
       {
         path: "/signup",
         element: <SignUp />,

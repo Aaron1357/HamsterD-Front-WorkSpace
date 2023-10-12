@@ -23,3 +23,7 @@ export const searchBoardList = async () => {
 
   console.log();
 };
+
+export const detailBoard = async (boardNo) => {
+  const res = (await instance.get("post/boardNo")).data;
+};
