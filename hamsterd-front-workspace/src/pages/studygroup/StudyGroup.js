@@ -244,7 +244,11 @@ const StudyGroup = () => {
               <div className="groupinfo">
                 <div className="group-container">
                   <div id="group">
-                    <img className="groupimg" src={groupimg} alt="Group" />
+                    <img
+                      className="groupimg"
+                      src={`/upload/${item.groupImage.split("\\").pop()}`}
+                      alt="Group"
+                    />
                   </div>
                   <div className="groupintro">
                     <Link to="/grouppage" className="groupintro">
@@ -263,6 +267,7 @@ const StudyGroup = () => {
                   <div id="grouppoint">그룹 점수 ex 4.7점</div>
                 </div>
               </div>
+
               <br />
               <br />
             </div>
