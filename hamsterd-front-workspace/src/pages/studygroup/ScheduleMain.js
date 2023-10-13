@@ -100,15 +100,28 @@ const ScheduleMain = () => {
   const [schedulesOfGroup, setschedulesOfGroup] = useState([]);
 
   // 특정 그룹, 날짜의 schedule 목록 받아오기
-  const [schedule, setSchedule] = useState([]);
+  // const [schedule, setSchedule] = useState([]);
 
   // 캘린더에 표시할 배열 새로 만들기 위해 변수 지정
   const [newSchedules, setNewSchedules] = useState([]);
+
+  // 특정 그룹 목록 받아오는 로직(groupNo를 넘겨야 함)
+  const scheduleOfGroupAPI = async () => {
+    const result = await getScheduleOfGroup(groupNo);
+
+    console.log(result.data);
+    setschedulesOfGroup(result.data);
+  };
+
+  useEffect(() => {
+    scheduleOfGroupAPI();
+  }, []);
 
   // array.map으로 새로 배열만들기(배열 내 key 이름 일치시키기 위해서)
   const newList = schedulesOfGroup.map((item) => {
     // console.log(item.scheduleDate);
     // console.log(item.scheduleTitle);
+
     return {
       title: item.scheduleTitle,
       date: item.scheduleDate.substr(0, 10),
@@ -130,30 +143,20 @@ const ScheduleMain = () => {
   //   scheduleListAPI();
   // }, []);
 
-  // 특정 그룹 목록 받아오는 로직(groupNo를 넘겨야 함)
-  const scheduleOfGroupAPI = async () => {
-    const result = await getScheduleOfGroup(groupNo);
-    setschedulesOfGroup(result.data);
-  };
-
-  useEffect(() => {
-    scheduleOfGroupAPI();
-  }, []);
-
   // 특정 그룹, 특정 날짜의 schedule 목록 받아오는 로직
-  const scheduleOfGroupDateAPI = async (groupNo, scheduleDate) => {
-    const result = await getScheduleofGroupDate(groupNo, scheduleDate);
-    return result.data;
-  };
+  // const scheduleOfGroupDateAPI = async (groupNo, scheduleDate) => {
+  //   const result = await getScheduleofGroupDate(groupNo, scheduleDate);
+  //   setschedulesOfGroup(result.data);
+  // };
 
-  // useEffect 내부에서 API 호출
-  useEffect(() => {
-    if (scheduleDate) {
-      scheduleOfGroupDateAPI(groupNo, scheduleDate).then((data) => {
-        setschedulesOfGroup(data);
-      });
-    }
-  }, [scheduleDate]);
+  // // useEffect 내부에서 API 호출
+  // useEffect(() => {
+  //   if (scheduleDate) {
+  //     scheduleOfGroupDateAPI(groupNo, scheduleDate).then((data) => {
+  //       setschedulesOfGroup(data);
+  //     });
+  //   }
+  // }, [scheduleDate]);
 
   // 특정 날짜 클릭시 발생하는 event 추가
   const handleDateClick = (arg) => {
