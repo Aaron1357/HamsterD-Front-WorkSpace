@@ -7,8 +7,14 @@ const instance = axios.create({
 //게시물 값 db에 보내기
 
 export const addFile = async (data) => {
-  // console.log(photo.get("file"));
+  console.log(data);
+
   return await instance.post("post", data);
+};
+
+export const addFileURL = async (formData) => {
+  console.log(formData);
+  return await instance.post("post/upload", formData);
 };
 
 //db에 있는 데이터 끌어와서 게시물에 보이게끔 하기

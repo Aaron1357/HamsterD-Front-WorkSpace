@@ -1,69 +1,148 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { addFile } from "../../api/boardFile";
 import { useRef, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ReactQuill, { Quill } from "react-quill";
-import ImageResize from "quill-image-resize-module-react";
-import formats from "./Format";
+import ImageResize from "quill-image-resize";
+import "react-quill/dist/quill.snow.css";
+import { addFile, addFileURL } from "../../api/boardFile";
 
 const BoardStyle = styled.div`
   /* 스타일 내용 입력 */
 `;
 
 const Board = () => {
+  const formats = [
+    "header",
+    "font",
+    "size",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "align",
+    "blockquote",
+    "list",
+    "bullet",
+    "indent",
+    "background",
+    "color",
+    "link",
+    "image",
+    "video",
+    "width",
+  ];
+
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const [editorData, setEditorData] = useState({
+    desc: "",
+    img: null,
+  });
+
+  const handleEditorChange = (value) => {
+    setEditorData({ ...editorData, desc: value });
+    // You can also update other properties in editorData if needed.
+  };
 
   const navigate = useNavigate();
-  const quillRef = useRef(null);
 
-  const [selectedFile, setSelectedFile] = useState(null);
-  const input = useRef(null);
+  const formData = new FormData();
 
-  const onClick = async (e) => {
-    const formData = new FormData();
+  const onClick = async () => {
+    // const formData = {
+    //   title: title,
+    //   desc: desc,
+    // };
     formData.append("title", title);
     formData.append("desc", desc);
 
+    // formData.append("img", img);
     if (selectedFile) {
       formData.append("img", selectedFile);
     }
+    const response = await addFile(formData);
+
+    const editor = quillRef.current.getEditor();
+    const range = editor.getSelection();
+
+    const imageUrl = response.data.imgUrl;
+    console.log("이미지 url : " + imageUrl);
+
+    // 클라우드 환경이 아닌 로컬에서 사용했기때문에
+    const path = `http://localhost:3000/inImg/${imageUrl}`;
+    console.log(path);
+    editor //에디터에 이미지 삽입
+      .insertEmbed(range.index, "image", path);
 
     try {
-      await addFile(formData);
+      // 여기에서 파일을 업로드하고 나중에 navigate 호출
       navigate("/boardList");
     } catch (error) {
       console.error("파일 업로드 중 오류 발생:", error);
     }
   };
 
+  const quillRef = useRef(null);
+
+  //이미지 업로드 하기 위한 함수
   const imageHandler = () => {
-    if (input.current) {
-      input.current.click();
-    }
+    console.log("image Handler 들어옴");
+    //파일 업로드하기 위한 input 태그 생성
+    const input = document.createElement("input");
+
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    input.click();
+    console.log(input);
+
+    // input.addEventListener("change", async () => {
+    input.onchange = async () => {
+      const file = input.files[0];
+
+      // if (!file) return;
+      // else {
+      try {
+        const formDataURL = new FormData();
+        formDataURL.append("file", file);
+
+        console.log(formDataURL);
+
+        //이미지 업로드하고 이미지 url 가져오기
+        const response = await addFileURL(formDataURL);
+        console.log(response);
+
+        const editor = quillRef.current.getEditor();
+        const range = editor.getSelection();
+
+        const imageUrl = response.data;
+        console.log("이미지 url : " + imageUrl);
+
+        // 클라우드 환경이 아닌 로컬에서 사용했기때문에
+        const path = `http://localhost:3000/img/${imageUrl}`;
+        console.log(path);
+        editor //에디터에 이미지 삽입
+          .insertEmbed(range.index, "image", path);
+
+        // editor.clipboard.dangerouslyPasteHTML(
+        //   range,
+        //   `<img src="${path}" alt="image" />`
+        // );
+        console.log(editor.insertEmbed);
+        editor.setSelection(range.index + 1);
+        console.log(editor);
+        console.log("인덱스 : " + range.index);
+        console.log(range);
+      } catch (error) {
+        console.log("서버 통신 문제로 불가능");
+        // }
+      }
+    };
   };
 
-  if (input.current) {
-    input.current.addEventListener("change", async () => {
-      const selectedFile = input.current.files[0];
-      if (selectedFile) {
-        try {
-          const formData = new FormData();
-          formData.append("img", selectedFile);
-          const response = await addFile(formData);
-          const imgUrl = response.data.imgUrl;
-
-          const editor = quillRef.current.getEditor();
-          const range = editor.getSelection();
-          editor.insertEmbed(range.index, "image", imgUrl);
-          editor.setSelection(range.index + 1);
-        } catch (error) {
-          console.error("이미지 업로드 중 오류 발생:", error);
-        }
-      }
-    });
-  }
+  Quill.register("modules/imageResize", ImageResize);
 
   const toolbarOptions = [
     ["link", "image", "video"],
@@ -75,15 +154,13 @@ const Board = () => {
     [{ align: [] }],
   ];
 
-  Quill.register("modules/imageResize", ImageResize);
-
   const modules = useMemo(
     () => ({
       toolbar: {
         container: toolbarOptions,
-      },
-      handlers: {
-        image: imageHandler,
+        handlers: {
+          image: imageHandler,
+        },
       },
       clipboard: {
         matchVisual: false,
@@ -94,7 +171,7 @@ const Board = () => {
         modules: ["Resize", "DisplaySize", "Toolbar"],
       },
     }),
-    [toolbarOptions, imageHandler]
+    []
   );
 
   return (
@@ -120,7 +197,10 @@ const Board = () => {
                 id="exampleFormControlInput1"
                 placeholder="제목을 입력하세요"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setTitle(e.target.value);
+                }}
               />
             </div>
             <div className="formCheck">
@@ -162,6 +242,7 @@ const Board = () => {
                 onChange={setDesc}
                 modules={modules}
                 formats={formats}
+                theme="snow"
               />
             </div>
             <div className="button1">
@@ -202,23 +283,3 @@ const Board = () => {
 };
 
 export default Board;
-// export const formats = [
-//   "header",
-//   "font",
-//   "size",
-//   "bold",
-//   "italic",
-//   "underline",
-//   "strike",
-//   "align",
-//   "blockquote",
-//   "list",
-//   "bullet",
-//   "indent",
-//   "background",
-//   "color",
-//   "link",
-//   "image",
-//   "video",
-//   "width",
-// ];
