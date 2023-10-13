@@ -28,10 +28,8 @@ export const addMember = async (member) => {
 };
 
 export const updateMember = async (member) => {
-  return await instance.put("member", member, {
-    headers: {
-      "Content-Type": `application/json`,
-    },
-  });
+  console.log(member.get("id"));
+
+  return await instance.put("member", member);
 };
 
