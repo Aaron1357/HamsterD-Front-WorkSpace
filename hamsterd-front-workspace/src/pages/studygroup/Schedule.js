@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { useState } from "react";
 import { addSchedule } from "../../api/schedule";
 import { useNavigate } from "react-router-dom";
-
 const ScheduleStyle = styled.div`
   .scheduleBody {
     width: 1000px;

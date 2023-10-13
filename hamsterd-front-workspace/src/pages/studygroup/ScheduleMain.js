@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-// import Calendar from "react-calendar";
-// import moment from "moment";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import "react-calendar/dist/Calendar.css";
+// import "react-calendar/dist/Calendar.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -93,11 +91,11 @@ const ScheduleMain = () => {
   const [groupNo, setGroupNo] = useState(1);
   const [scheduleDate, setScheduleDate] = useState();
 
-  //schedule 전체 목록 받아오기
-  //const [schedules, setSchedules] = useState([]);
-
-  // 특정 그룹의 schedule 목록 받아오기
+  // 특정 그룹의 schedule 목록 받아오기(우측 목록용)
   const [schedulesOfGroup, setschedulesOfGroup] = useState([]);
+
+  // 특정 그룹의 schedule 목록 받아오기(좌측 캘린더 표시용)
+  const [schedulesOfGroup2, setschedulesOfGroup2] = useState([]);
 
   // 특정 그룹, 날짜의 schedule 목록 받아오기
   // const [schedule, setSchedule] = useState([]);
@@ -105,62 +103,69 @@ const ScheduleMain = () => {
   // 캘린더에 표시할 배열 새로 만들기 위해 변수 지정
   const [newSchedules, setNewSchedules] = useState([]);
 
-  // 특정 그룹 목록 받아오는 로직(groupNo를 넘겨야 함)
+  // 특정 그룹 목록 받아오는 로직(groupNo 넘김) + 날짜 변경처리
   const scheduleOfGroupAPI = async () => {
     const result = await getScheduleOfGroup(groupNo);
+    //console.log(result.data); // 2023-10-12
+    const data = result.data.map((item) => {
+      const originalDate = new Date(item.scheduleDate);
+      const nextDay = new Date(originalDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      //console.log(nextDay); // Fri Oct 13 2023 09:00:00 GMT+0900
 
-    console.log(result.data);
-    setschedulesOfGroup(result.data);
+      const newDate = new Date(nextDay);
+      newDate.setDate(newDate.getDate());
+
+      //console.log("newDate : " + newDate);
+
+      const date = new Date(newDate);
+      const year = date.getFullYear().toString().slice(-4); // 년도의 마지막 두 자리를 가져옴
+      const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 +1 해주고, 두 자리로 맞춤
+      const day = date.getDate().toString().padStart(2, "0"); // 일도 두 자리로 맞춤
+
+      const yyyymmdd = year + "-" + month + "-" + day;
+      //console.log(yyyymmdd);
+      return {
+        scheduleNo: item.scheduleNo,
+        scheduleTitle: item.scheduleTitle,
+        scheduleContent: item.scheduleContent,
+        scheduleDate: yyyymmdd,
+      };
+    });
+    setschedulesOfGroup(data);
+    setschedulesOfGroup2(data);
   };
 
   useEffect(() => {
     scheduleOfGroupAPI();
   }, []);
 
+  // 캘린더용 그룹별 일정 목록
+  // 특정 그룹 목록 받아오는 로직(groupNo 넘김) + 날짜 변경처리
+
   // array.map으로 새로 배열만들기(배열 내 key 이름 일치시키기 위해서)
-  const newList = schedulesOfGroup.map((item) => {
+  const newList = schedulesOfGroup2.map((item) => {
     // console.log(item.scheduleDate);
     // console.log(item.scheduleTitle);
 
     return {
       title: item.scheduleTitle,
-      date: item.scheduleDate.substr(0, 10),
+      date: item.scheduleDate,
+      groupId: item.scheduleNo,
     };
   });
 
   // 특정 그룹의 스케줄 목록이 변경될 때마다 달력에 새로 표시
   useEffect(() => {
-    setNewSchedules(newList);
-  }, [schedulesOfGroup]);
+    if (schedulesOfGroup2.length !== 0) {
+      setNewSchedules(newList);
+    }
+  }, [schedulesOfGroup2]);
 
-  // 전체 그룹 목록 받아오는 로직
-  // const scheduleListAPI = async () => {
-  //   const result = await getScheduleList();
-  //   setSchedules(result.data);
-  // };
-
-  // useEffect(() => {
-  //   scheduleListAPI();
-  // }, []);
-
-  // 특정 그룹, 특정 날짜의 schedule 목록 받아오는 로직
-  // const scheduleOfGroupDateAPI = async (groupNo, scheduleDate) => {
-  //   const result = await getScheduleofGroupDate(groupNo, scheduleDate);
-  //   setschedulesOfGroup(result.data);
-  // };
-
-  // // useEffect 내부에서 API 호출
-  // useEffect(() => {
-  //   if (scheduleDate) {
-  //     scheduleOfGroupDateAPI(groupNo, scheduleDate).then((data) => {
-  //       setschedulesOfGroup(data);
-  //     });
-  //   }
-  // }, [scheduleDate]);
-
-  // 특정 날짜 클릭시 발생하는 event 추가
+  //특정 날짜 클릭시 발생하는 event 추가
   const handleDateClick = (arg) => {
-    console.log(arg.date); // Mon Oct 23 2023 00:00:00 GMT+0900
+    console.log(arg);
+    //console.log(arg.date); // Mon Oct 23 2023 00:00:00 GMT+0900
 
     const date = new Date(arg.date);
     const year = date.getFullYear().toString().slice(-2); // 년도의 마지막 두 자리를 가져옴
@@ -171,6 +176,54 @@ const ScheduleMain = () => {
     console.log(yymmdd); // 231023
 
     setScheduleDate(yymmdd); // api에 scheduleDate yymmdd 형태로 넘김
+
+    scheduleOfGroupDateAPI(groupNo, yymmdd);
+  };
+
+  // // 특정 그룹, 특정 날짜의 schedule 목록 받아오는 로직(캘린더 클릭시 목록 출력용)
+  const scheduleOfGroupDateAPI = async (groupNo, scheduleDate) => {
+    const result = await getScheduleofGroupDate(groupNo, scheduleDate);
+
+    const data = result.data.map((item) => {
+      const originalDate = new Date(item.scheduleDate);
+      const nextDay = new Date(originalDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      //console.log(nextDay); // Fri Oct 13 2023 09:00:00 GMT+0900
+
+      const newDate = new Date(nextDay);
+      newDate.setDate(newDate.getDate());
+
+      //console.log("newDate : " + newDate);
+
+      const date = new Date(newDate);
+      const year = date.getFullYear().toString().slice(-4); // 년도의 마지막 두 자리를 가져옴
+      const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 +1 해주고, 두 자리로 맞춤
+      const day = date.getDate().toString().padStart(2, "0"); // 일도 두 자리로 맞춤
+
+      const yyyymmdd = year + "-" + month + "-" + day;
+      //console.log(yyyymmdd);
+      return {
+        scheduleNo: item.scheduleNo,
+        scheduleTitle: item.scheduleTitle,
+        scheduleContent: item.scheduleContent,
+        scheduleDate: yyyymmdd,
+      };
+    });
+    setschedulesOfGroup(data);
+  };
+
+  // // useEffect 내부에서 API 호출
+  useEffect(() => {
+    if (scheduleDate !== undefined) {
+      scheduleOfGroupDateAPI(groupNo, scheduleDate);
+    }
+  }, [scheduleDate]);
+
+  // eventClick 함수
+  const handleEventClick = (info) => {
+    console.log(info.event.groupId);
+    const scheduleNo = info.event.groupId;
+    navigate("/Schedule");
   };
 
   return (
@@ -182,8 +235,9 @@ const ScheduleMain = () => {
             <FullCalendar
               plugins={[dayGridPlugin, interactionPlugin]}
               initialView="dayGridMonth"
-              events={newSchedules} // 해당 날짜에 일정 표시하는 기능
+              events={newList} // 해당 날짜에 일정 표시하는 기능
               dateClick={handleDateClick}
+              eventClick={handleEventClick}
             />
           </div>
         </div>
@@ -211,7 +265,7 @@ const ScheduleMain = () => {
               {schedulesOfGroup.map((item) => (
                 <tr key={item.scheduleNo}>
                   <th scope="row">{item.scheduleNo}</th>
-                  <td>{item.scheduleDate.substr(0, 10)}</td>
+                  <td>{item.scheduleDate}</td>
                   <td colSpan={2}>{item.scheduleTitle}</td>
                 </tr>
               ))}
