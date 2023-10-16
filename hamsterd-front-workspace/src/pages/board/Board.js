@@ -5,11 +5,16 @@ import styled from "styled-components";
 import ReactQuill, { Quill } from "react-quill";
 import ImageResize from "quill-image-resize";
 import "react-quill/dist/quill.snow.css";
-import { addFile, addFileURL } from "../../api/boardFile";
+import { addFile } from "../../api/boardFile";
+import ImageUploader from "quill-image-uploader";
 
 const BoardStyle = styled.div`
   /* 스타일 내용 입력 */
 `;
+//이미지 업로드 시 quill에 추가
+Quill.register("modules/imageUploader", ImageUploader);
+//이미지 사이즈 크기 조정 quill에 추가
+Quill.register("modules/imageResize", ImageResize);
 
 const Board = () => {
   const formats = [
@@ -31,118 +36,29 @@ const Board = () => {
     "image",
     "video",
     "width",
+    "imageBlot",
   ];
 
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
-
-  const [editorData, setEditorData] = useState({
-    desc: "",
-    img: null,
-  });
-
-  const handleEditorChange = (value) => {
-    setEditorData({ ...editorData, desc: value });
-    // You can also update other properties in editorData if needed.
-  };
+  const [img, setImg] = useState([]);
+  //게시물 이미지 업로드시 여러개 넣을 수 있게 배열로 만들어줌
+  const images = [];
 
   const navigate = useNavigate();
 
   const formData = new FormData();
 
   const onClick = async () => {
-    // const formData = {
-    //   title: title,
-    //   desc: desc,
-    // };
     formData.append("title", title);
     formData.append("desc", desc);
+    console.log(desc);
+    console.log(img);
+    // data-type : clob <-- 한 컬럼에 html 통째로!
 
-    // formData.append("img", img);
-    if (selectedFile) {
-      formData.append("img", selectedFile);
-    }
-    const response = await addFile(formData);
-
-    const editor = quillRef.current.getEditor();
-    const range = editor.getSelection();
-
-    const imageUrl = response.data.imgUrl;
-    console.log("이미지 url : " + imageUrl);
-
-    // 클라우드 환경이 아닌 로컬에서 사용했기때문에
-    const path = `http://localhost:3000/inImg/${imageUrl}`;
-    console.log(path);
-    editor //에디터에 이미지 삽입
-      .insertEmbed(range.index, "image", path);
-
-    try {
-      // 여기에서 파일을 업로드하고 나중에 navigate 호출
-      navigate("/boardList");
-    } catch (error) {
-      console.error("파일 업로드 중 오류 발생:", error);
-    }
+    addFile(formData);
+    navigate("/boardList");
   };
-
-  const quillRef = useRef(null);
-
-  //이미지 업로드 하기 위한 함수
-  const imageHandler = () => {
-    console.log("image Handler 들어옴");
-    //파일 업로드하기 위한 input 태그 생성
-    const input = document.createElement("input");
-
-    input.setAttribute("type", "file");
-    input.setAttribute("accept", "image/*");
-    input.click();
-    console.log(input);
-
-    // input.addEventListener("change", async () => {
-    input.onchange = async () => {
-      const file = input.files[0];
-
-      // if (!file) return;
-      // else {
-      try {
-        const formDataURL = new FormData();
-        formDataURL.append("file", file);
-
-        console.log(formDataURL);
-
-        //이미지 업로드하고 이미지 url 가져오기
-        const response = await addFileURL(formDataURL);
-        console.log(response);
-
-        const editor = quillRef.current.getEditor();
-        const range = editor.getSelection();
-
-        const imageUrl = response.data;
-        console.log("이미지 url : " + imageUrl);
-
-        // 클라우드 환경이 아닌 로컬에서 사용했기때문에
-        const path = `http://localhost:3000/img/${imageUrl}`;
-        console.log(path);
-        editor //에디터에 이미지 삽입
-          .insertEmbed(range.index, "image", path);
-
-        // editor.clipboard.dangerouslyPasteHTML(
-        //   range,
-        //   `<img src="${path}" alt="image" />`
-        // );
-        console.log(editor.insertEmbed);
-        editor.setSelection(range.index + 1);
-        console.log(editor);
-        console.log("인덱스 : " + range.index);
-        console.log(range);
-      } catch (error) {
-        console.log("서버 통신 문제로 불가능");
-        // }
-      }
-    };
-  };
-
-  Quill.register("modules/imageResize", ImageResize);
 
   const toolbarOptions = [
     ["link", "image", "video"],
@@ -152,18 +68,48 @@ const Board = () => {
     [{ list: "ordered" }, { list: "bullet" }],
     [{ color: [] }, { background: [] }],
     [{ align: [] }],
+    //게시물에서 이미지 여러개 담을때 필요함
+    ["images"],
   ];
 
   const modules = useMemo(
     () => ({
       toolbar: {
         container: toolbarOptions,
-        handlers: {
-          image: imageHandler,
-        },
       },
       clipboard: {
         matchVisual: false,
+      },
+
+      imageUploader: {
+        upload: (file) => {
+          return new Promise((resolve, reject) => {
+            const formData = new FormData();
+            formData.append("image", file);
+
+            fetch(
+              "https://api.imgbb.com/1/upload?key=334ecea9ec1213784db5cb9a14dac265",
+              {
+                method: "POST",
+                body: formData,
+              }
+            )
+              .then((response) => response.json())
+              .then((result) => {
+                console.log(file);
+                images.push(file);
+                console.log(images);
+                setImg(images);
+                // setImages([...images, file]);
+                console.log(result);
+                resolve(result.data.url);
+              })
+              .catch((error) => {
+                reject("Upload 실패");
+                console.error("Error : ", error);
+              });
+          });
+        },
       },
       imageResize: {
         displaySize: true,
@@ -237,9 +183,11 @@ const Board = () => {
                 Description
               </label>
               <ReactQuill
-                ref={quillRef}
                 value={desc}
-                onChange={setDesc}
+                onChange={(e) => {
+                  console.log(e);
+                  setDesc(e);
+                }}
                 modules={modules}
                 formats={formats}
                 theme="snow"
