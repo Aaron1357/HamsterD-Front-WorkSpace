@@ -45,14 +45,7 @@ const UpdateStyle = styled.div`
 const Update = () => {
   const navigate = useNavigate();
 
-  const convertToDate = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-  };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -71,6 +64,7 @@ const Update = () => {
     formData2.set("nickname", e.target.nickname.value);
     formData2.set("profile", file);
 
+
     // 식별자 넣기(id)
     formData2.set("id", memberData.id);
     
@@ -81,7 +75,8 @@ const Update = () => {
 
     
     updateMember(formData2);
-    
+    window.location.reload(true); 
+    navigate("/mypage");
    
   };
 

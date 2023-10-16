@@ -58,6 +58,7 @@ const SignUp = () => {
       phone: e.target.phone.value,
       academyName: e.target.academy.value,
       address: e.target.address.value,
+     
     };
 
     console.log(formData2.id);

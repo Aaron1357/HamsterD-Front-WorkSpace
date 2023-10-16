@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import profile from "../../resource/오리.jpg";
 import { useState } from "react";
-import { addMember, updateMember } from "../../api/login";
+
 
 const MypageTest = styled.div`
   .maincontain {
@@ -143,6 +143,7 @@ const MyPage = () => {
   const handleStudyClick = () => {
     // 내 스터디 클릭시 내 스터디그룹' 경로로 이동
     navigate("/studygroup");
+    
   };
 
   const handleScheduleClick = () => {
@@ -175,6 +176,7 @@ const MyPage = () => {
   const handleUpdateClick = () => {
     // 개인정보수정 버튼 클릭 시 '/update' 경로로 이동
     navigate("/update");
+    
     setIsOpen(false);
   };
   
@@ -239,12 +241,13 @@ const MyPage = () => {
                 
                 <img
                   className="profileimg"
-                  // src={}
-                  alt="Profile"
+                   src={`/upload/${parseValue.profile.split("\\").pop()}`}
+                  alt="profile"
                 />
+                
               </div>
             </div>
-
+            
         
         {/* 프로필사진 */}
 
