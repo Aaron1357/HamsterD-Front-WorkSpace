@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/login";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { asyncLogin } from "../store/userSlice";
 
 const customStyles = {
   overlay: {
@@ -80,21 +82,26 @@ const StyleTest = styled.div`
 `;
 
 function ModalSub() {
+  // 세션 존재여부 검사
   const session = () => {
-    return window.sessionStorage.getItem("member");
+    // return window.sessionStorage.getItem("user");
+    return window.localStorage.getItem("user");
   };
   console.log(session());
+
   const [isOpen, setIsOpen] = useState(true); // Modal 표시여부
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const closeTab = () => {
     setIsOpen(false);
   };
   useEffect(() => {
     if (session() != null) {
+      // 세션이 있다면 modal 닫기
       closeTab();
     }
-  }, [sessionStorage]);
+  }, [localStorage]);
 
   const handleSignUpClick = () => {
     // 회원가입 버튼 클릭 시 '/signup' 경로로 이동
@@ -105,25 +112,32 @@ function ModalSub() {
   const handleSubmit = (e) => {
     // 로그인 버튼 클릭시 로그인
     e.preventDefault();
-    const idValue = e.target.elements.id.value; //아이디
-    const passwordValue = e.target.elements.password.value; //비번
-    const formData2 = {
-      id: idValue,
-      password: passwordValue,
-    };
+    const id = e.target.elements.id.value; //아이디
+    const password = e.target.elements.password.value; //비번
+    // const idValue = e.target.elements.id.value; //아이디
+    // const passwordValue = e.target.elements.password.value; //비번
+    // const formData2 = {
+    //   id: idValue,
+    //   password: passwordValue,
+    // };
     // console.log(formData2);
-    const result = login(formData2);
+    // const result = login(formData2);
+
+    // 로그인 시도
+    dispatch(asyncLogin({ id, password }));
+    navigate("/");
+    // window.location.reload(true); // 새로고침
+
     // console.log(result);
 
-    if (result != null) {
-      result.then(function (data) {
-        console.log(data);
-        console.log(data.token);
-        window.sessionStorage.setItem("member", JSON.stringify(data));
-        setIsOpen(false);
-      });
-    }
-    navigate("/");
+    // if (result != null) {
+    //   result.then(function (data) {
+    //     console.log(data);
+    //     console.log(data.token);
+    //     window.sessionStorage.setItem("member", JSON.stringify(data));
+    //     setIsOpen(false);
+    //   });
+    // }
   };
 
   return (

@@ -77,7 +77,8 @@ const Sub = styled.div``;
 
 const Header = () => {
   const logout = () => {
-    window.sessionStorage.clear(); // 세션 제거
+    window.localStorage.clear(); // 세션 제거
+    // window.sessionStorage.clear(); // 세션 제거
     window.location.reload(true); // 새로고침
   };
 
