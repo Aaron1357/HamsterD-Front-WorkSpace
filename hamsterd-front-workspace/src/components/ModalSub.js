@@ -87,7 +87,6 @@ function ModalSub() {
     // return window.sessionStorage.getItem("user");
     return window.localStorage.getItem("user");
   };
-  console.log(session());
 
   const [isOpen, setIsOpen] = useState(true); // Modal 표시여부
   const navigate = useNavigate();

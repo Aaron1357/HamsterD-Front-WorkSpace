@@ -31,3 +31,19 @@ export const addMember = async (member) => {
     },
   });
 };
+
+export const addMember = async (member) => {
+  console.log(member);
+  return await instance.post("member", member, {
+    headers: {
+      "Content-Type": `application/json`,
+    },
+  });
+};
+
+export const updateMember = async (member) => {
+  console.log(member.get("id"));
+
+  return await instance.put("member", member);
+};
+

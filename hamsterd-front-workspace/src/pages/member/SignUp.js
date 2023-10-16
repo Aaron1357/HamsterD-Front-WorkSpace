@@ -56,28 +56,19 @@ const SignUp = () => {
       birth: e.target.birth.value,
       gender: e.target.gender.value,
       phone: e.target.phone.value,
-      academy: e.target.academy.value,
+      academyName: e.target.academy.value,
       address: e.target.address.value,
+     
     };
 
-    console.log(formData2);
+    console.log(formData2.id);
 
-    // const formData = new FormData();
-    // formData.append("id", e.target.elements.id.value);
-    // formData.append("nickname", e.target.elements.nickname.value);
-    // formData.append("password", e.target.elements.password.value);
-    // formData.append("name", e.target.elements.name.value);
-    // formData.append("birth", convertToDate(e.target.elements.birth.value));
-    // formData.append("gender", e.target.elements.gender.value);
-    // formData.append("phone", e.target.elements.phone.value);
-    // formData.append("academy", e.target.elements.academy.value);
-    // formData.append("address", e.target.elements.address.value);
-    // console.log(formData.get("birth"));
-
+ 
     // formData.set("birth", convertToDate(formData.get("birth")));
-    addMember(formData2).then((response) => {
-      console.log(response);
-    });
+    addMember(formData2);
+    // .then((response) => {
+    //   console.log(response);
+    // });
     navigate("/");
   };
 
