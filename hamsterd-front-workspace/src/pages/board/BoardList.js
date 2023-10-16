@@ -102,6 +102,7 @@ const BoardStyle = styled.div`
 `;
 
 const BoardList = () => {
+  const session = sessionStorage.getItem("member");
   const [boardList, setBoardList] = useState([]);
 
   useEffect(() => {
@@ -114,6 +115,8 @@ const BoardList = () => {
     e.preventDefault();
     navigate("/board");
   };
+
+  console.log(`boardlist : ${JSON.parse(session)}`);
 
   return (
     <BoardStyle>

@@ -10,10 +10,26 @@ export const login = async (member) => {
   // console.log(member.idValue);
   const url = `member/${member.idValue}/${member.passwordValue}`;
   const result = await instance.get(url);
-  console.log(result.data);
+  // console.log(result.data);
 
-  return result;
+  return result.data;
   // return await instance.get("member", member);
 
   //
 };
+
+export const addMember = async (member) => {
+  console.log(member);
+  return await instance.post("member", member, {
+    headers: {
+      "Content-Type": `application/json`,
+    },
+  });
+};
+
+export const updateMember = async (member) => {
+  console.log(member.get("id"));
+
+  return await instance.put("member", member);
+};
+

@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Home from "./pages/Home";
 import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
-import MyPage from "./pages/MyPage";
+import MyPage from "./pages/member/MyPage";
 import StudyGroup from "./pages/studygroup/StudyGroup";
 import GroupPage from "./pages/studygroup/GroupPage";
 import CreateGroup from "./pages/studygroup/CreateGroup";
@@ -13,6 +13,8 @@ import ScheduleMain from "./pages/studygroup/ScheduleMain";
 import BoardList from "./pages/board/BoardList";
 import Board from "./pages/board/Board";
 import SignUp from "./pages/member/SignUp";
+import Fire from "./pages/member/Fire";
+import Update from "./pages/member/Update";
 
 const router = createBrowserRouter([
   {
@@ -69,6 +71,16 @@ const router = createBrowserRouter([
         path: "/board",
         element: <Board />,
       },
+      {
+        path: "/fire",
+        element: <Fire />,
+      },
+
+      {
+        path: "/update",
+        element: <Update />,
+      },
+      
     ],
   },
 ]);
