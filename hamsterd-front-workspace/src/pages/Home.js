@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useEffect } from "react";
 
 const HomeTest = styled.div`
   /* 전체 페이지 설정 */
@@ -15,7 +16,7 @@ const HomeTest = styled.div`
     width: 100%;
     height: 900px;
   }
-//
+  //
   .section {
     border: 1px solid var(--grey-blue-95, #edeff2);
     border-radius: 20px;
@@ -158,12 +159,15 @@ const HomeTest = styled.div`
   }
 `;
 
-
-
-
-
-
 const Home = () => {
+  // const session = window.sessionStorage.getItem("member");
+
+  // useEffect(() => {
+  //   session;
+  // }, []);
+
+  // console.log(JSON.parse(session).id);
+  // console.log(Object.values(sessionStorage));
   return (
     <HomeTest>
       <div className="section" id="section2">

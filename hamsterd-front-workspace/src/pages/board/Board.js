@@ -99,6 +99,7 @@ const Board = () => {
   const navigate = useNavigate();
 
   //폼 전체 작성 후 클릭 할 때
+
   const onClick = async () => {
     const formData = new FormData();
     formData.append("title", title);
