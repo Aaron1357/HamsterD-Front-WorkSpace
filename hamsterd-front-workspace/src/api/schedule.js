@@ -23,3 +23,9 @@ export const getScheduleOfGroup = async (groupNo) => {
 export const getScheduleofGroupDate = async (groupNo, scheduleDate) => {
   return await instance.get(`schedule/study/${groupNo}/${scheduleDate}`);
 };
+
+// 특정 스케줄 1개 상세보기
+// "/study/{groupNo}/schedule/{scheduleNo}"
+export const getOneSchedule = async (groupNo, scheduleNo) => {
+  return await instance.get(`/study/${groupNo}/schedule/${scheduleNo}`);
+};

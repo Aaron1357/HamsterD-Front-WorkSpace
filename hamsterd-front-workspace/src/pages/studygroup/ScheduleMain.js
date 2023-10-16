@@ -12,6 +12,7 @@ import { getScheduleOfGroup } from "../../api/schedule";
 import { getScheduleofGroupDate } from "../../api/schedule";
 import { useNavigate } from "react-router-dom";
 
+// css
 const ScheduleStyle = styled.div`
   .content {
     width: 1000px;
@@ -88,8 +89,10 @@ const ScheduleMain = () => {
     navigate("/Schedule");
   };
 
+  // 스터디그룹 넘버 임시 지정(1)
   const [groupNo, setGroupNo] = useState(1);
   const [scheduleDate, setScheduleDate] = useState();
+  const [scheduleNo, setScheduleNo] = useState();
 
   // 특정 그룹의 schedule 목록 받아오기(우측 목록용)
   const [schedulesOfGroup, setschedulesOfGroup] = useState([]);
@@ -100,20 +103,19 @@ const ScheduleMain = () => {
   // 특정 그룹, 날짜의 schedule 목록 받아오기
   // const [schedule, setSchedule] = useState([]);
 
-  // 캘린더에 표시할 배열 새로 만들기 위해 변수 지정
+  // 캘린더에 표시할 배열 새로 만들기 위해 변수 지정(full-calendar 라이브러리에 맞게)
   const [newSchedules, setNewSchedules] = useState([]);
 
   // 특정 그룹 목록 받아오는 로직(groupNo 넘김) + 날짜 변경처리
   const scheduleOfGroupAPI = async () => {
     const result = await getScheduleOfGroup(groupNo);
-    //console.log(result.data); // 2023-10-12
+    //console.log(result.data);
     const data = result.data.map((item) => {
       const originalDate = new Date(item.scheduleDate);
-      const nextDay = new Date(originalDate);
-      nextDay.setDate(nextDay.getDate() + 1);
+
       //console.log(nextDay); // Fri Oct 13 2023 09:00:00 GMT+0900
 
-      const newDate = new Date(nextDay);
+      const newDate = new Date(originalDate);
       newDate.setDate(newDate.getDate());
 
       //console.log("newDate : " + newDate);
@@ -132,10 +134,11 @@ const ScheduleMain = () => {
         scheduleDate: yyyymmdd,
       };
     });
-    setschedulesOfGroup(data);
-    setschedulesOfGroup2(data);
+    setschedulesOfGroup(data); // 일정 목록
+    setschedulesOfGroup2(data); // 캘린더
   };
 
+  // 처음 화면 띄울때 1번만 그룹별 일정 목록 받아옴
   useEffect(() => {
     scheduleOfGroupAPI();
   }, []);
@@ -145,9 +148,6 @@ const ScheduleMain = () => {
 
   // array.map으로 새로 배열만들기(배열 내 key 이름 일치시키기 위해서)
   const newList = schedulesOfGroup2.map((item) => {
-    // console.log(item.scheduleDate);
-    // console.log(item.scheduleTitle);
-
     return {
       title: item.scheduleTitle,
       date: item.scheduleDate,
@@ -164,7 +164,7 @@ const ScheduleMain = () => {
 
   //특정 날짜 클릭시 발생하는 event 추가
   const handleDateClick = (arg) => {
-    console.log(arg);
+    //console.log(arg);
     //console.log(arg.date); // Mon Oct 23 2023 00:00:00 GMT+0900
 
     const date = new Date(arg.date);
@@ -180,17 +180,14 @@ const ScheduleMain = () => {
     scheduleOfGroupDateAPI(groupNo, yymmdd);
   };
 
-  // // 특정 그룹, 특정 날짜의 schedule 목록 받아오는 로직(캘린더 클릭시 목록 출력용)
+  // 특정 그룹, 특정 날짜의 schedule 목록 받아오는 로직(캘린더 클릭시 목록 출력용)
   const scheduleOfGroupDateAPI = async (groupNo, scheduleDate) => {
     const result = await getScheduleofGroupDate(groupNo, scheduleDate);
 
     const data = result.data.map((item) => {
       const originalDate = new Date(item.scheduleDate);
-      const nextDay = new Date(originalDate);
-      nextDay.setDate(nextDay.getDate() + 1);
-      //console.log(nextDay); // Fri Oct 13 2023 09:00:00 GMT+0900
 
-      const newDate = new Date(nextDay);
+      const newDate = new Date(originalDate);
       newDate.setDate(newDate.getDate());
 
       //console.log("newDate : " + newDate);
@@ -209,7 +206,7 @@ const ScheduleMain = () => {
         scheduleDate: yyyymmdd,
       };
     });
-    setschedulesOfGroup(data);
+    setschedulesOfGroup(data); // 캘린더는 전체 목록으로 두고 우측 목록만 특정 날짜의 목록으로 변경
   };
 
   // // useEffect 내부에서 API 호출
@@ -221,9 +218,9 @@ const ScheduleMain = () => {
 
   // eventClick 함수
   const handleEventClick = (info) => {
-    console.log(info.event.groupId);
-    const scheduleNo = info.event.groupId;
-    navigate("/Schedule");
+    //console.log(info.event);
+    setScheduleNo(info.event.groupId);
+    //navigate("/Schedule");
   };
 
   return (

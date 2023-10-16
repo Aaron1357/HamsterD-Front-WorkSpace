@@ -2,9 +2,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faXmark, faMinus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { addSchedule } from "../../api/schedule";
 import { useNavigate } from "react-router-dom";
+import { getOneSchedule } from "../../api/schedule";
+
 const ScheduleStyle = styled.div`
   .scheduleBody {
     width: 1000px;
@@ -82,14 +84,48 @@ const ScheduleStyle = styled.div`
   .fc .fc-toolbar-title {
     color: black;
   }
+
+  /* // type이 date인 input의 placeholder를 커스텀하기 위한 선택자
+  // 기본적으로 type date인 input은 placeholder가 먹히지 않기 때문이다!
+  input[type="date"]::before {
+    content: attr(
+      placeholder
+    ); // input 태그의 placeholder라는 속성값을 가져와서 content로 사용한다. 보통은 placeholder보다는 data-placeholder라는 커스텀 속성을 만들어서 사용하시는 것 같다.
+    width: 100%;
+    height: 100%;
+  }
+
+  // input에 어떠한 유효값이 입력된 상태인지 확인하는 선택자
+  // 날짜를 선택하면 유효값이 입력된다.
+  // 이 속성을 활용하고자 한다면 반드시 태그에 required 속성을 달아줘야한다.
+  input[type="date"]:valid::before {
+    display: none; // 유효값이 입력된 경우 before에 있는 것을 사라지게 한다. 즉, placeholder를 사라지게 한다.
+  } */
 `;
 
 const Schedule = () => {
+  const navigate = useNavigate();
+
   const [title, setTitle] = useState([]);
   const [content, setContent] = useState([]);
   const [date, setDate] = useState([]);
 
-  const navigate = useNavigate();
+  // 스터디그룹, 스케줄넘버(임의 지정 - scheduleMain에서 eventClick 이벤트 실행 시 groupNo, scheduleNo 넘겨받아야 함)
+  const [groupNo, setGroupNo] = useState(1);
+  const [scheduleNo, setScheduleNo] = useState(1);
+
+  const [schedules, setSchedules] = useState([]);
+
+  const scheduleAPI = async () => {
+    const result = await getOneSchedule(groupNo, scheduleNo);
+    setSchedules(result.data);
+
+    console.log(result.data);
+  };
+
+  useEffect(() => {
+    scheduleAPI(groupNo, scheduleNo);
+  }, []);
 
   // 추가 버튼
   const plus = async () => {
@@ -120,6 +156,10 @@ const Schedule = () => {
     <ScheduleStyle>
       <div className="scheduleBody">
         <div className="scheduleContent">
+          {/* 
+              schedules가 빈 값인 경우: 최초 등록 폼
+              schedules가 있는 경우: placeholder에 기존값 넣기
+            */}
           <form className="registerSchedule">
             <div className="add">
               <div className="mb-3">
@@ -128,7 +168,10 @@ const Schedule = () => {
                   className="form-control"
                   id="date"
                   value={date}
+                  placeholder={schedules.scheduleDate}
                   onChange={(e) => setDate(e.target.value)}
+                  required
+                  aria-required="true"
                 />
               </div>
               {/* <button onClick={onClick}>추가</button> */}
@@ -146,6 +189,7 @@ const Schedule = () => {
                 className="form-control"
                 id="exampleFormControlInput1"
                 value={title}
+                placeholder={schedules.scheduleTitle}
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>
@@ -161,6 +205,7 @@ const Schedule = () => {
                 id="exampleFormControlTextarea1"
                 rows="3"
                 value={content}
+                placeholder={schedules.scheduleContent}
                 onChange={(e) => setContent(e.target.value)}
               ></textarea>
             </div>
