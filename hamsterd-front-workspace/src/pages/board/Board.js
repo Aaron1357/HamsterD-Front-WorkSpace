@@ -102,7 +102,6 @@ const Board = () => {
 
   const onClick = async () => {
 
-
     const formData = new FormData();
     formData.append("title", title);
     formData.append("desc", desc);

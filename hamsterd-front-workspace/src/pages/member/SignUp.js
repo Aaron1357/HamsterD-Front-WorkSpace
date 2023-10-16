@@ -63,7 +63,6 @@ const SignUp = () => {
 
     console.log(formData2.id);
 
- 
     // formData.set("birth", convertToDate(formData.get("birth")));
     addMember(formData2);
     // .then((response) => {
