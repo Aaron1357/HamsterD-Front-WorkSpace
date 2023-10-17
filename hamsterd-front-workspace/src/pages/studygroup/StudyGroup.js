@@ -3,7 +3,7 @@ import profile from "../../resource/종빈22.png";
 import groupimg from "../../resource/오리.jpg";
 import search from "../../resource/search.png";
 import { Link, useNavigate } from "react-router-dom";
-import { getStudyGroupList } from "../../api/studygroup";
+import { getStudyGroupList, viewManager } from "../../api/studygroup";
 import { useState, useEffect } from "react";
 
 const StudyGroupTest = styled.div`
@@ -170,9 +170,11 @@ const StudyGroup = () => {
   const navigate = useNavigate();
 
   const [studygroup, setStudyGroup] = useState([]);
+  const [manager, setManager] = useState([]);
 
   const newList = studygroup.map((item) => {
     return {
+      groupNo: item.groupNo,
       grouptitle: item.groupName,
       groupcontent: item.groupContent,
       groupacademy: item.groupAcademy,
@@ -185,22 +187,37 @@ const StudyGroup = () => {
     navigate("/creategroup");
   };
 
+  // const a = 1;
+  const getManager = async (a) => {
+    //  그룹장 API 호출
+    // console.log(a);
+    const result = await viewManager(a);
+    console.log(result.nickname);
+    // setManager(result.nickname); // 후 상태 저장
+    return result;
+  };
+
   const getStudyGroupListAPI = async () => {
     //  그룹전체API 호출
     const result = await getStudyGroupList();
     setStudyGroup(result.data); // 후 상태 저장
   };
 
-  // useEffect(() => {
-  //   // 전체 조회 내용이 바뀔 때 최신화
-  //   setStudyGroup(newList);
-  // }, [studygroup]);
-
   useEffect(() => {
     // 처음 페이지 접근했을 떄 호출
     getStudyGroupListAPI();
+    fetchData();
   }, []);
-  console.log(studygroup);
+
+  const fetchData = async () => {
+    const updatedStudyGroup = await Promise.all(
+      studygroup.map(async (item) => {
+        const managerData = await getManager(parseInt(item.groupNo));
+        return managerData;
+      })
+    );
+    setManager(updatedStudyGroup);
+  };
 
   return (
     <StudyGroupTest>
@@ -226,8 +243,8 @@ const StudyGroup = () => {
           <div className="horizonline"></div>
           <br />
           <br />
-          {studygroup.map((item) => (
-            <div>
+          {studygroup.map((item, index) => (
+            <div key={index}>
               <div className="profile-container">
                 <div id="profile">
                   <img className="profileimg" src={profile} alt="Profile" />
@@ -235,7 +252,7 @@ const StudyGroup = () => {
                 <div>
                   <div>
                     <Link to="/grouppage" id="grouptext">
-                      '그룹장'님의 스터디그룹
+                      <div>{getManager(parseInt(item.groupNo)).nickname}</div>
                     </Link>
                   </div>
                   <div id="academyname">{item.groupAcademy}</div>

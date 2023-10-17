@@ -28,6 +28,10 @@ const CreateGroupStyle = styled.div`
 `;
 
 const CreateGroup = () => {
+  const memberData = JSON.parse(sessionStorage.getItem("member")); // 로그인한 회원 정보 세션으로 불러옴
+  console.log(memberData);
+  console.log(memberData.id);
+
   const [title, setTitle] = useState([]);
   const [content, setContent] = useState([]);
   const [academy, setAcademy] = useState([]);
@@ -41,6 +45,9 @@ const CreateGroup = () => {
     formData.append("groupcontent", content);
     formData.append("groupacademy", academy);
     formData.append("groupimage", image);
+    // console.log(memberData.id);
+    formData.append("id", memberData.id);
+
     // const formData2 = {
     //   title : ndsklanlkdnal,
     //   content : dnlksanldasnkd,
@@ -70,6 +77,7 @@ const CreateGroup = () => {
               <label htmlFor="nickName" className="form-label">
                 스터디그룹명
               </label>
+
               <div className="input-group">
                 <input
                   type="text"
