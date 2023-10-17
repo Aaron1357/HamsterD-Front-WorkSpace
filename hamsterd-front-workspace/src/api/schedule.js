@@ -29,3 +29,9 @@ export const getScheduleofGroupDate = async (groupNo, scheduleDate) => {
 export const getOneSchedule = async (groupNo, scheduleNo) => {
   return await instance.get(`/study/${groupNo}/schedule/${scheduleNo}`);
 };
+
+// 스케줄 1개 삭제
+// "/schedule/{id}"
+export const deleteSchedule = async (scheduleNo) => {
+  return await instance.delete(`/schedule/${scheduleNo}`);
+};

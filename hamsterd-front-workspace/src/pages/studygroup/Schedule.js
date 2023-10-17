@@ -1,14 +1,22 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faXmark, faMinus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faXmark,
+  faMinus,
+  faArrowUp,
+} from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import { addSchedule } from "../../api/schedule";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getOneSchedule } from "../../api/schedule";
+import { deleteSchedule } from "../../api/schedule";
 
+// css
 const ScheduleStyle = styled.div`
   .scheduleBody {
+    /* border: 1px solid lightgray; */
     width: 1000px;
     height: 100vh;
     display: flex;
@@ -18,7 +26,6 @@ const ScheduleStyle = styled.div`
   .scheduleContent {
     width: 600px;
     height: 600px;
-    background-color: antiquewhite;
     border-radius: 20px;
     display: flex;
     justify-content: center;
@@ -67,6 +74,10 @@ const ScheduleStyle = styled.div`
     margin-right: 15px;
   }
 
+  .fa-minus:hover {
+    cursor: pointer;
+  }
+
   .fa-xmark {
     width: 20px;
     height: 20px;
@@ -74,6 +85,17 @@ const ScheduleStyle = styled.div`
     margin-right: 15px;
   }
   .fa-xmark:hover {
+    cursor: pointer;
+  }
+
+  .fa-arrow-up {
+    width: 20px;
+    height: 20px;
+    /* border: 1px solid gray; */
+    margin-right: 15px;
+  }
+
+  .fa-arrow-up:hover {
     cursor: pointer;
   }
 
@@ -105,29 +127,45 @@ const ScheduleStyle = styled.div`
 
 const Schedule = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [title, setTitle] = useState([]);
-  const [content, setContent] = useState([]);
-  const [date, setDate] = useState([]);
+  const [title, setTitle] = useState();
+  const [content, setContent] = useState();
+  const [date, setDate] = useState();
 
+  const [schedule, setSchedule] = useState();
+  // const [groupNo, setGroupNo] = useState();
+  // const [scheduleNo, setScheduleNo] = useState();
   // 스터디그룹, 스케줄넘버(임의 지정 - scheduleMain에서 eventClick 이벤트 실행 시 groupNo, scheduleNo 넘겨받아야 함)
-  const [groupNo, setGroupNo] = useState(1);
-  const [scheduleNo, setScheduleNo] = useState(1);
 
-  const [schedules, setSchedules] = useState([]);
+  const scheduleNo = location.state.scheduleNo;
+  const groupNo = location.state.groupNo;
+  // setGroupNo(location.state.groupNo);
+  // setScheduleNo(location.state.scheduleNo);
 
+  // } else {
+  //   setGroupNo();
+  //   setScheduleNo();
+  // }
+
+  // console.log("scheduleNo : " + scheduleNo);
+  // console.log("groupNo : " + groupNo);
+
+  // grouppage에서 eventClick시 groupNo, scheduleNo 넘겨받아서 기존정보 끌어옴
   const scheduleAPI = async () => {
     const result = await getOneSchedule(groupNo, scheduleNo);
-    setSchedules(result.data);
-
-    console.log(result.data);
+    setSchedule(result.data);
+    // console.log("result : " + result.data);
   };
 
   useEffect(() => {
-    scheduleAPI(groupNo, scheduleNo);
+    // groupNo과 scheduleNo이 있는 경우만 기존 정보 끌어옴
+    if (groupNo && scheduleNo) {
+      scheduleAPI(groupNo, scheduleNo);
+    }
   }, []);
 
-  // 추가 버튼
+  // 추가 버튼(기존 정보 있으면 수정)
   const plus = async () => {
     const formData = new FormData();
     formData.append("title", title);
@@ -143,14 +181,28 @@ const Schedule = () => {
       navigate("/grouppage"); // 파일 업로드가 완료되면 페이지 이동
     } catch (error) {
       // 에러 처리
-      console.error("파일 업로드 중 오류 발생:", error);
+      console.error("오류 발생 : ", error);
     }
   };
 
-  // 닫기 버튼
+  // 삭제버튼 클릭 시
+  const deleteEvent = async () => {
+    if (scheduleNo) {
+      try {
+        await deleteSchedule(scheduleNo); // 비동기 작업 완료 대기
+        navigate("/grouppage"); // 파일 업로드가 완료되면 페이지 이동
+      } catch (error) {
+        console.error("오류 발생 : " + error);
+      }
+    }
+  };
+
+  // 닫기 버튼 클릭 시 grouppage 메인으로 돌아감
   const close = () => {
     navigate("/grouppage");
   };
+
+  const updateEvent = () => {};
 
   return (
     <ScheduleStyle>
@@ -160,56 +212,112 @@ const Schedule = () => {
               schedules가 빈 값인 경우: 최초 등록 폼
               schedules가 있는 경우: placeholder에 기존값 넣기
             */}
-          <form className="registerSchedule">
-            <div className="add">
+          {schedule ? (
+            // 받아온 schedule 있는 경우
+            <form className="registerSchedule">
+              <div className="add">
+                <div className="mb-3">
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="date"
+                    value={date}
+                    placeholder={schedule.scheduleDate}
+                    onChange={(e) => setDate(e.target.value)}
+                    required
+                    aria-required="true"
+                  />
+                </div>
+                <FontAwesomeIcon icon={faArrowUp} onClick={updateEvent} />
+                <FontAwesomeIcon icon={faMinus} onClick={deleteEvent} />
+                <FontAwesomeIcon icon={faXmark} onClick={close} />
+              </div>
+
               <div className="mb-3">
+                <label
+                  htmlFor="exampleFormControlInput1"
+                  className="form-label"
+                >
+                  제목
+                </label>
                 <input
-                  type="date"
+                  type="text"
                   className="form-control"
-                  id="date"
-                  value={date}
-                  placeholder={schedules.scheduleDate}
-                  onChange={(e) => setDate(e.target.value)}
-                  required
-                  aria-required="true"
+                  id="exampleFormControlInput1"
+                  value={title}
+                  placeholder={schedule.scheduleTitle}
+                  onChange={(e) => setTitle(e.target.value)}
                 />
               </div>
-              {/* <button onClick={onClick}>추가</button> */}
-              <FontAwesomeIcon icon={faPlus} onClick={plus} />
-              <FontAwesomeIcon icon={faMinus} />
-              <FontAwesomeIcon icon={faXmark} onClick={close} />
-            </div>
+              <div className="mb-3">
+                <label
+                  htmlFor="exampleFormControlTextarea1"
+                  className="form-label"
+                >
+                  내용
+                </label>
+                <textarea
+                  className="form-control"
+                  id="exampleFormControlTextarea1"
+                  rows="3"
+                  value={content}
+                  placeholder={schedule.scheduleContent}
+                  onChange={(e) => setContent(e.target.value)}
+                ></textarea>
+              </div>
+            </form>
+          ) : (
+            // 받아온 schedule 없는 경우
+            <form className="registerSchedule">
+              <div className="add">
+                <div className="mb-3">
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    required
+                    aria-required="true"
+                  />
+                </div>
 
-            <div className="mb-3">
-              <label htmlFor="exampleFormControlInput1" className="form-label">
-                제목
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="exampleFormControlInput1"
-                value={title}
-                placeholder={schedules.scheduleTitle}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
-            <div className="mb-3">
-              <label
-                htmlFor="exampleFormControlTextarea1"
-                className="form-label"
-              >
-                내용
-              </label>
-              <textarea
-                className="form-control"
-                id="exampleFormControlTextarea1"
-                rows="3"
-                value={content}
-                placeholder={schedules.scheduleContent}
-                onChange={(e) => setContent(e.target.value)}
-              ></textarea>
-            </div>
-          </form>
+                <FontAwesomeIcon icon={faPlus} onClick={plus} />
+                <FontAwesomeIcon icon={faMinus} />
+                <FontAwesomeIcon icon={faXmark} onClick={close} />
+              </div>
+              <div className="mb-3">
+                <label
+                  htmlFor="exampleFormControlInput1"
+                  className="form-label"
+                >
+                  제목
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="exampleFormControlInput1"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label
+                  htmlFor="exampleFormControlTextarea1"
+                  className="form-label"
+                >
+                  내용
+                </label>
+                <textarea
+                  className="form-control"
+                  id="exampleFormControlTextarea1"
+                  rows="3"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                ></textarea>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </ScheduleStyle>

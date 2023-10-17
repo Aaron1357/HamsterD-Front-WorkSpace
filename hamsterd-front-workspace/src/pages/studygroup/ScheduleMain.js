@@ -6,11 +6,13 @@ import interactionPlugin from "@fullcalendar/interaction";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faClock } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 //import { getScheduleList } from "../../api/schedule";
 import { getScheduleOfGroup } from "../../api/schedule";
 import { getScheduleofGroupDate } from "../../api/schedule";
 import { useNavigate } from "react-router-dom";
+import { getOneSchedule } from "../../api/schedule";
 
 // css
 const ScheduleStyle = styled.div`
@@ -73,10 +75,42 @@ const ScheduleStyle = styled.div`
     align-items: center;
     padding-top: 20px;
   }
-
-  .schedule-list table {
+  .table {
     width: 450px;
     min-width: 350px;
+    --bs-table-bg: #fff0;
+  }
+
+  .fc .fc-button-primary {
+    background-color: #2c3e5000;
+    border-color: #fff0;
+    color: #212529;
+    color: black;
+    font-weight: bold;
+  }
+
+  .fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
+    margin-left: 0;
+  }
+
+  .fc .fc-button {
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 0.25em;
+    display: inline-block;
+    font-size: 1em;
+    font-weight: 400;
+    line-height: 1.5;
+    /* padding: 0.4em 0.65em; */
+    text-align: center;
+    user-select: none;
+    vertical-align: middle;
+  }
+
+  .fc .fc-button {
+    display: inline-block;
+    font-size: 1em;
+    font-weight: 600;
   }
 `;
 
@@ -100,8 +134,8 @@ const ScheduleMain = () => {
   // 특정 그룹의 schedule 목록 받아오기(좌측 캘린더 표시용)
   const [schedulesOfGroup2, setschedulesOfGroup2] = useState([]);
 
-  // 특정 그룹, 날짜의 schedule 목록 받아오기
-  // const [schedule, setSchedule] = useState([]);
+  // schedule 1개 상세 조회(수정, 삭제화면 넘기기 위해)
+  const [schedule, setSchedule] = useState();
 
   // 캘린더에 표시할 배열 새로 만들기 위해 변수 지정(full-calendar 라이브러리에 맞게)
   const [newSchedules, setNewSchedules] = useState([]);
@@ -218,9 +252,25 @@ const ScheduleMain = () => {
 
   // eventClick 함수
   const handleEventClick = (info) => {
-    //console.log(info.event);
     setScheduleNo(info.event.groupId);
-    //navigate("/Schedule");
+    getOneScheduleAPI(groupNo, info.event.groupId);
+    navigate("/Schedule", {
+      state: {
+        groupNo: groupNo,
+        scheduleNo: info.event.groupId,
+        schedule: schedule,
+      },
+    });
+  };
+
+  const getOneScheduleAPI = async (groupNo, scheduleDate) => {
+    const result = await getOneSchedule(groupNo, scheduleDate);
+    setSchedule(result.data);
+  };
+
+  // 캘린더 상단 + 버튼 클릭시 등록 폼으로 이동
+  const handleAddEvent = () => {
+    navigate("/Schedule");
   };
 
   return (
@@ -232,6 +282,17 @@ const ScheduleMain = () => {
             <FullCalendar
               plugins={[dayGridPlugin, interactionPlugin]}
               initialView="dayGridMonth"
+              headerToolbar={{
+                start: "prev next",
+                center: "title",
+                end: "today custom",
+              }}
+              customButtons={{
+                custom: {
+                  text: "+",
+                  click: handleAddEvent,
+                },
+              }}
               events={newList} // 해당 날짜에 일정 표시하는 기능
               dateClick={handleDateClick}
               eventClick={handleEventClick}
@@ -263,7 +324,9 @@ const ScheduleMain = () => {
                 <tr key={item.scheduleNo}>
                   <th scope="row">{item.scheduleNo}</th>
                   <td>{item.scheduleDate}</td>
-                  <td colSpan={2}>{item.scheduleTitle}</td>
+                  <td colSpan={2}>
+                    <a href="/schedule">{item.scheduleTitle}</a>
+                  </td>
                 </tr>
               ))}
             </tbody>
