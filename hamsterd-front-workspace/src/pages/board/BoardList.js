@@ -2,6 +2,7 @@ import { searchBoardList } from "../../api/boardFile";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+// import { viewPostNo } from "../store/postSlice";
 
 const BoardStyle = styled.div`
   .boardListHead1 {
@@ -23,10 +24,12 @@ const BoardStyle = styled.div`
 `;
 
 const BoardList = () => {
+  // const save = window.localStorage.getItem("user");
   const [boardList, setBoardList] = useState([]);
 
   useEffect(() => {
     searchBoardList().then((res) => setBoardList(res));
+    console.log(setBoardList);
   }, []);
 
   const navigate = useNavigate();
@@ -59,12 +62,10 @@ const BoardList = () => {
               {boardList &&
                 boardList.map((item) => (
                   <tr key={item.postNo}>
-                    <td>
-                      <a href={`/boardDetail`} className="underList">
-                        {item.postNo}
-                      </a>
-                    </td>
-                    <td>{item.postTitle}</td>
+                    <td>{item.postNo}</td>
+                    <a href={`/post/${item.postNo}`}>
+                      <td>{item.postTitle}</td>
+                    </a>
                     <td>
                       {item.member == null ? "익명" : item.member.nickname}
                     </td>

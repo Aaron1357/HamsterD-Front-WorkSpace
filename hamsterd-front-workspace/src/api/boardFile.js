@@ -5,20 +5,13 @@ const instance = axios.create({
 });
 
 //게시물 값 db에 보내기
-
 export const addFile = async (data) => {
   console.log(data);
 
   return await instance.post("post", data);
 };
 
-export const addFileURL = async (formData) => {
-  console.log(formData);
-  return await instance.post("post/upload", formData);
-};
-
 //db에 있는 데이터 끌어와서 게시물에 보이게끔 하기
-
 export const searchBoardList = async () => {
   try {
     const res = await instance.get("post");
@@ -30,6 +23,12 @@ export const searchBoardList = async () => {
   console.log();
 };
 
-export const detailBoard = async () => {
-  return await instance.get("post/postNo").data;
+export const detailBoard = async (postNo) => {
+  try {
+    const res = instance.get(`post/${postNo}`).data;
+    console.log(res);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
 };
