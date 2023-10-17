@@ -58,25 +58,27 @@ const BoardList = () => {
             <tbody>
               {boardList &&
                 boardList.map((item) => (
-                  <a href={`/boardDetail`} className="underList">
-                    <tr key={item.postNo}>
-                      <td>{item.postNo}</td>
-                      <td>{item.postTitle}</td>
-                      <td>
-                        {item.member == null ? "익명" : item.member.nickname}
-                      </td>
-                      <td>
-                        {item.createTime
-                          ? new Date(item.createTime).toLocaleString("en-US", {
-                              year: "numeric",
-                              month: "2-digit",
-                              day: "2-digit",
-                            })
-                          : ""}
-                      </td>
-                      <td>22</td>
-                    </tr>
-                  </a>
+                  <tr key={item.postNo}>
+                    <td>
+                      <a href={`/boardDetail`} className="underList">
+                        {item.postNo}
+                      </a>
+                    </td>
+                    <td>{item.postTitle}</td>
+                    <td>
+                      {item.member == null ? "익명" : item.member.nickname}
+                    </td>
+                    <td>
+                      {item.createTime
+                        ? new Date(item.createTime).toLocaleString("en-US", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          })
+                        : ""}
+                    </td>
+                    <td>22</td>
+                  </tr>
                 ))}
             </tbody>
           </table>

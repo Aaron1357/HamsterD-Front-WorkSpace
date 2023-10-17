@@ -12,13 +12,19 @@ const BoardDetail = () => {
     <div className="head1">
       <div className="head2">
         <form>
-          <thead></thead>
+          <thead>게시판</thead>
           <tbody>
-            {boardDetail.map((item) => (
-              <tr key={item.postNo}>
-                <td>{item.postTitle}</td>
+            {boardDetail.length > 0 ? (
+              boardDetail.map((item) => (
+                <tr key={item.postNo}>
+                  <td>{item.postTitle}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td>Loading...</td>
               </tr>
-            ))}
+            )}
           </tbody>
           <tfoot></tfoot>
         </form>
