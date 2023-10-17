@@ -25,14 +25,6 @@ export const login = async (data) => {
 };
 
 export const addMember = async (member) => {
-  return await instance.post("member", member, {
-    headers: {
-      "Content-Type": `application/json`,
-    },
-  });
-};
-
-export const addMember = async (member) => {
   console.log(member);
   return await instance.post("member", member, {
     headers: {
@@ -42,8 +34,12 @@ export const addMember = async (member) => {
 };
 
 export const updateMember = async (member) => {
-  console.log(member.get("id"));
+  // console.log(member.get("id"));
 
   return await instance.put("member", member);
 };
 
+export const deleteMember = async (id) => {
+  console.log(id);
+  return await instance.delete(`member/${id}`);
+};

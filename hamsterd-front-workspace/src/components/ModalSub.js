@@ -6,7 +6,8 @@ import { login } from "../api/login";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { asyncLogin } from "../store/userSlice";
-
+import { useSelector } from "react-redux";
+import { userSave } from "../store/userSlice";
 const customStyles = {
   overlay: {
     backgroundColor: "rgb(0, 0, 0, 0.6)", // 모달이 열릴 때 뒷 배경의 색상과 투명도
@@ -82,25 +83,38 @@ const StyleTest = styled.div`
 `;
 
 function ModalSub() {
-  // 세션 존재여부 검사
-  const session = () => {
-    // return window.sessionStorage.getItem("user");
-    return window.localStorage.getItem("user");
-  };
-
+  const save = localStorage.getItem("user"); // 로컬스토리지에 user정보 호출
   const [isOpen, setIsOpen] = useState(true); // Modal 표시여부
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const closeTab = () => {
-    setIsOpen(false);
-  };
+  const user = useSelector((state) => {
+    return state.user;
+  });
+
   useEffect(() => {
-    if (session() != null) {
-      // 세션이 있다면 modal 닫기
+    if (Object.keys(user).length === 0 && save !== null) {
+      // 로컬 스토리지에 유저정보가 존재하면 저장
+      dispatch(userSave(JSON.parse(save)));
+    } else if (Object.keys(user).length !== 0 && save !== null) {
+      // 유저정보가 저장되어 있다면 modal 내리기
       closeTab();
     }
-  }, [localStorage]);
+  }, [save]);
+
+  useEffect(() => {
+    // modal 상태에 따라 body 고정여부
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [isOpen]);
+
+  const closeTab = () => {
+    // modal 내리기
+    setIsOpen(false);
+  };
 
   const handleSignUpClick = () => {
     // 회원가입 버튼 클릭 시 '/signup' 경로로 이동
@@ -113,30 +127,10 @@ function ModalSub() {
     e.preventDefault();
     const id = e.target.elements.id.value; //아이디
     const password = e.target.elements.password.value; //비번
-    // const idValue = e.target.elements.id.value; //아이디
-    // const passwordValue = e.target.elements.password.value; //비번
-    // const formData2 = {
-    //   id: idValue,
-    //   password: passwordValue,
-    // };
-    // console.log(formData2);
-    // const result = login(formData2);
 
     // 로그인 시도
     dispatch(asyncLogin({ id, password }));
     navigate("/");
-    // window.location.reload(true); // 새로고침
-
-    // console.log(result);
-
-    // if (result != null) {
-    //   result.then(function (data) {
-    //     console.log(data);
-    //     console.log(data.token);
-    //     window.sessionStorage.setItem("member", JSON.stringify(data));
-    //     setIsOpen(false);
-    //   });
-    // }
   };
 
   return (

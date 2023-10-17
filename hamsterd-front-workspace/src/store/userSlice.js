@@ -1,9 +1,28 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { login } from "../api/login";
+import { deleteMember, login } from "../api/login";
+import Update from "../pages/member/Update";
+import { useDispatch } from "react-redux";
 
 const asyncLogin = createAsyncThunk("userSlice/asyncLogin", async (data) => {
   //   console.log(data);
   const result = await login(data);
+  console.log(result.data);
+  return result.data;
+});
+
+const updateMember = createAsyncThunk(
+  "userSlice/updateMember",
+  async (data) => {
+    //   console.log(data);
+    const result = await Update(data);
+    console.log(result.data);
+    return result.data;
+  }
+);
+
+const delMember = createAsyncThunk("userSlice/deleteMember", async (data) => {
+  //   console.log(data);
+  const result = await deleteMember(data);
   console.log(result.data);
   return result.data;
 });
@@ -26,6 +45,16 @@ const userSlice = createSlice({
       localStorage.setItem("user", JSON.stringify(action.payload));
       return action.payload;
     });
+
+    // builder.addCase(updateMember.fulfilled, (state, action) => {
+    //   return state;
+    // });
+
+    // builder.addCase(delMember.fulfilled, (state, action) => {
+    //   const dispatch = useDispatch();
+    //   localStorage.clear("user");
+    //   dispatch(userLogout());
+    // });
   },
 });
 

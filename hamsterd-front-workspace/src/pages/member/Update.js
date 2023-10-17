@@ -45,39 +45,32 @@ const UpdateStyle = styled.div`
 const Update = () => {
   const navigate = useNavigate();
 
-  
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
     console.log(file);
-   
+
     // 로컬 스토리지에서 member 데이터 가져오기
-    const memberData = JSON.parse(sessionStorage.getItem("member"));
+    const memberData = JSON.parse(localStorage.getItem("user"));
 
     // 새로운 FormData 생성
     const formData2 = new FormData();
-    
+
     // 필드 추가
-  
+
     formData2.set("password", e.target.password.value);
     formData2.set("nickname", e.target.nickname.value);
     formData2.set("profile", file);
 
-
     // 식별자 넣기(id)
     formData2.set("id", memberData.id);
-    
 
     // console.log(formData2.get("password"));
     // console.log(formData2.get("nickname"));
-   
 
-    
     updateMember(formData2);
-    window.location.reload(true); 
+    window.location.reload(true);
     navigate("/mypage");
-   
   };
 
   const handleImageClick = () => {
@@ -91,7 +84,6 @@ const Update = () => {
   // const [viewFile, setViewFile] = useState(null);
 
   const handleFileChange = (e) => {
-
     setFile(e.target.files[0]);
 
     // if (file) {
@@ -103,7 +95,6 @@ const Update = () => {
     // }
   };
 
-  
   return (
     <UpdateStyle>
       <div className="mainsection">
@@ -125,7 +116,7 @@ const Update = () => {
                 />
               </div>
             </div>
-            
+
             <div className="mb-3">
               <label htmlFor="password" className="form-label">
                 변경 할 비밀번호
@@ -141,7 +132,7 @@ const Update = () => {
                 />
               </div>
             </div>
-            
+
             <div className="mb-3">
               <label htmlFor="nickName" className="form-label">
                 변경 할 닉네임
@@ -157,7 +148,7 @@ const Update = () => {
                 />
               </div>
             </div>
-            
+
             <br></br>
             <button type="submit" id="updatebtn" className="btn btn-primary">
               개인정보 수정
@@ -165,8 +156,7 @@ const Update = () => {
           </form>
         </div>
       </div>
-</UpdateStyle>
-
+    </UpdateStyle>
   );
 };
 
