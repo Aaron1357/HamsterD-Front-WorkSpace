@@ -31,5 +31,5 @@ export const searchBoardList = async () => {
 };
 
 export const detailBoard = async () => {
-  await instance.get("post/postNo").data;
+  return await instance.get("post/postNo").data;
 };

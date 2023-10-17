@@ -56,9 +56,9 @@ const BoardList = () => {
               </tr>
             </thead>
             <tbody>
-              <a href={`/post/${post?.postNo}`} className="underList">
-                {boardList &&
-                  boardList.map((item) => (
+              {boardList &&
+                boardList.map((item) => (
+                  <a href={`/boardDetail`} className="underList">
                     <tr key={item.postNo}>
                       <td>{item.postNo}</td>
                       <td>{item.postTitle}</td>
@@ -76,8 +76,8 @@ const BoardList = () => {
                       </td>
                       <td>22</td>
                     </tr>
-                  ))}
-              </a>
+                  </a>
+                ))}
             </tbody>
           </table>
         </div>
