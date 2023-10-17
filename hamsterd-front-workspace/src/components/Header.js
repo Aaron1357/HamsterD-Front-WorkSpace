@@ -1,9 +1,17 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import styled from "styled-components";
 import logo from "../resource/logo.jpg";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+} from "react-router-dom";
 import ModalSub from "../components/ModalSub";
-// import Modal from "react-modal";
+
+import { userLogout } from "../store/userSlice";
+import { useDispatch } from "react-redux";
 
 const Test = styled.div`
   .header-section {
@@ -71,12 +79,33 @@ const Test = styled.div`
     justify-content: space-around;
   }
 
+  .logout {
+    margin-top: -150px;
+    margin-left: 200px;
+  }
+
   /* 사이드바 CSS */
 `;
 
 const Sub = styled.div``;
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const home = () => {
+    // 로고 클릭시 메인페이지 이동
+    navigate("/");
+  };
+
+  const logout = () => {
+    console.log("logout!");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    dispatch(userLogout());
+    window.location.reload(true);
+  };
+
   return (
     <Test>
       <Sub>
@@ -85,7 +114,7 @@ const Header = () => {
 
       <div className="header-section">
         <div id="logo">
-          <img className="logoimg" src={logo} alt="Logo" />
+          <img className="logoimg" src={logo} alt="Logo" onClick={home} />
         </div>
         <div className="realheader">
           <div className="header">
@@ -126,6 +155,19 @@ const Header = () => {
                 <a href="#">서브메뉴 1</a>
                 <a href="#">서브메뉴 2</a>
                 <a href="#">서브메뉴 3</a>
+              </div>
+            </div>
+
+            <div className="menu" id="logout">
+              <div className="logout">
+                <button
+                  type="button"
+                  id="signUpbtn"
+                  className="btn btn-danger"
+                  onClick={logout}
+                >
+                  로그아웃
+                </button>
               </div>
             </div>
           </div>
