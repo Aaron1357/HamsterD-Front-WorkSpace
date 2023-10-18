@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import profile from "../../resource/종빈22.png";
 import groupimg from "../../resource/오리.jpg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ScheduleMain from "./ScheduleMain";
 
 const GroupPageTest = styled.div`
@@ -147,6 +147,12 @@ const GroupPageTest = styled.div`
 
 const GroupPage = () => {
   const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const data = location.state.data;
+
+  console.log(data);
 
   const handleGroupJoinClick = () => {
     navigate("/groupreview");

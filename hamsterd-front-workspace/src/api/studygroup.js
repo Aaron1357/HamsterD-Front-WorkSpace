@@ -22,8 +22,8 @@ export const viewMemberList = async (groupNo) => {
 
 // 그룹넘버를 기본키로 가지고 있는 스터디그룹 방장 멤버
 export const viewManager = async (groupNo) => {
-  console.log("그룹넘버" + groupNo);
+  // console.log("그룹넘버" + groupNo);
   const result = await instance.get(`studygroup/${groupNo}/manager`);
-  console.log(result.data);
+  // console.log(result.data);
   return result.data;
 };

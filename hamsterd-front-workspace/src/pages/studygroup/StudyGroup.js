@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import profile from "../../resource/종빈22.png";
-import groupimg from "../../resource/오리.jpg";
 import search from "../../resource/search.png";
 import { Link, useNavigate } from "react-router-dom";
 import { getStudyGroupList, viewManager } from "../../api/studygroup";
@@ -172,51 +171,60 @@ const StudyGroup = () => {
   const [studygroup, setStudyGroup] = useState([]);
   const [manager, setManager] = useState([]);
 
-  const newList = studygroup.map((item) => {
-    return {
-      groupNo: item.groupNo,
-      grouptitle: item.groupName,
-      groupcontent: item.groupContent,
-      groupacademy: item.groupAcademy,
-      groupimage: item.groupImage,
+  const getStudyGroupListAPI = async () => {
+    //  그룹전체API 호출
+    const result = await getStudyGroupList();
+    return result.data;
+  };
+  const getManager = async () => {
+    //  그룹장 API 호출
+    const test = [];
+    console.log("getManager 호출");
+
+    for (let idx = 0; idx < studygroup.length; idx++) {
+      const groupNo = studygroup[idx].groupNo;
+
+      const result = await viewManager(groupNo);
+
+      if (result) {
+        test.push(result);
+      } else {
+        test.push(null);
+      }
+    }
+    // console.log(result);
+    // setManager(result.nickname); // 후 상태 저장
+    return await test;
+  };
+
+  useEffect(() => {
+    const handler = async () => {
+      const dataGroup = await getStudyGroupListAPI();
+
+      if (dataGroup) {
+        setStudyGroup(dataGroup);
+      }
     };
-  });
+
+    // 처음 페이지 접근했을 떄 호출
+    handler();
+  }, []);
+
+  useEffect(() => {
+    console.log("Study Group 변경됬을때..");
+    const handler2 = async () => {
+      const dataManager = await getManager();
+
+      if (dataManager) {
+        setManager(dataManager);
+      }
+    };
+    handler2();
+  }, [studygroup]);
 
   const handleCreateGroupClick = () => {
     //생성버튼 페이지 이동
     navigate("/creategroup");
-  };
-
-  // const a = 1;
-  const getManager = async (a) => {
-    //  그룹장 API 호출
-    // console.log(a);
-    const result = await viewManager(a);
-    console.log(result.nickname);
-    // setManager(result.nickname); // 후 상태 저장
-    return result;
-  };
-
-  const getStudyGroupListAPI = async () => {
-    //  그룹전체API 호출
-    const result = await getStudyGroupList();
-    setStudyGroup(result.data); // 후 상태 저장
-  };
-
-  useEffect(() => {
-    // 처음 페이지 접근했을 떄 호출
-    getStudyGroupListAPI();
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    const updatedStudyGroup = await Promise.all(
-      studygroup.map(async (item) => {
-        const managerData = await getManager(parseInt(item.groupNo));
-        return managerData;
-      })
-    );
-    setManager(updatedStudyGroup);
   };
 
   return (
@@ -243,19 +251,29 @@ const StudyGroup = () => {
           <div className="horizonline"></div>
           <br />
           <br />
-          {studygroup.map((item, index) => (
+          {manager.map((item, index) => (
             <div key={index}>
               <div className="profile-container">
                 <div id="profile">
-                  <img className="profileimg" src={profile} alt="Profile" />
+                  {/* <img
+                    className="groupimg"
+                    src={`/upload/${item.profile.split("\\").pop()}`}
+                    alt="Profile"
+                  /> */}
                 </div>
                 <div>
                   <div>
-                    <Link to="/grouppage" id="grouptext">
-                      <div>{getManager(parseInt(item.groupNo)).nickname}</div>
+                    <Link
+                      to={{
+                        pathname: "/grouppage",
+                        state: { data: 1 },
+                      }}
+                      id="grouptext"
+                    >
+                      <div> {item.nickname}</div>
                     </Link>
                   </div>
-                  <div id="academyname">{item.groupAcademy}</div>
+                  <div id="academyname">{item.academyName}</div>
                 </div>
               </div>
               <div className="groupinfo">
@@ -263,14 +281,27 @@ const StudyGroup = () => {
                   <div id="group">
                     <img
                       className="groupimg"
-                      src={`/upload/${item.groupImage.split("\\").pop()}`}
+                      src={`/upload/${
+                        item.studyGroup &&
+                        item.studyGroup.groupImage.split("\\").pop()
+                      }`}
                       alt="Group"
                     />
                   </div>
                   <div className="groupintro">
-                    <Link to="/grouppage" className="groupintro">
-                      <div className="groupname">{item.groupName}</div>
-                      <div>{item.groupContent}</div>
+                    <Link
+                      to={{
+                        pathname: "/grouppage",
+                        state: { data: 1 },
+                      }}
+                      className="groupintro"
+                    >
+                      <div className="groupname">
+                        {item.studyGroup && item.studyGroup.groupName}
+                      </div>
+                      <div>
+                        {item.studyGroup && item.studyGroup.groupContent}
+                      </div>
                     </Link>
                   </div>
                 </div>
