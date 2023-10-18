@@ -120,18 +120,18 @@ const MypageTest = styled.div`
 `;
 
 const MyPage = () => {
-  const logout = () => {
-    window.sessionStorage.clear(); // 세션 제거
-    window.location.reload(true); // 새로고침
-  };
+  // const logout = () => {
+  //   window.sessionStorage.clear(); // 세션 제거
+  //   window.location.reload(true); // 새로고침
+  // };
 
   // window.sessionStorage.getItem("member");
   // const sessionValue = sessionStorage.getItem("member");
   const session = localStorage.getItem("user");
+  console.log(session);
   const parseValue = JSON.parse(session);
 
   // console.log(window.sessionStorage.getItem("member"));
-
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
 
