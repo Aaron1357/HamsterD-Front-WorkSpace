@@ -1,5 +1,8 @@
 import styled from "styled-components";
-import { addMember } from "../../api/signup";
+import { addMember } from "../../api/login";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+
 const SignUpStyle = styled.div`
   .mainsection {
     border: 1px solid rgba(211, 157, 87);
@@ -51,8 +54,7 @@ const SignUp = () => {
     // .then((response) => {
     //   console.log(response);
     // });
-    navigate("/");
-
+    // navigate("/");
   };
 
   return (

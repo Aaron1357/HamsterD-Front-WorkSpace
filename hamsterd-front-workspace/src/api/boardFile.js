@@ -4,15 +4,24 @@ const instance = axios.create({
   baseURL: "http://localhost:8080/hamsterd/",
 });
 
-//게시물 값 db에 보내기
-
+//작성한 게시물 값(title, content) db에 보내기
 export const addFile = async (data) => {
-  // console.log(photo.get("file"));
+  console.log(data);
+
   return await instance.post("post", data);
 };
 
-//db에 있는 데이터 끌어와서 게시물에 보이게끔 하기
+//기존 게시물에서 업데이트 후 수정하기
+export const updateBoard = async (data) => {
+  try {
+    const res = await instance.put("updatePost", data);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
+//db에 있는 데이터 끌어와서 전체 게시물 리스트 보기
 export const searchBoardList = async () => {
   try {
     const res = await instance.get("post");
@@ -20,10 +29,29 @@ export const searchBoardList = async () => {
   } catch (error) {
     console.error(error);
   }
-
-  console.log();
 };
 
-export const detailBoard = async (boardNo) => {
-  const res = (await instance.get("post/boardNo")).data;
+//게시물 번호에 해당하는 개별 게시물 보기
+export const detailBoard = async (postNo) => {
+  try {
+    console.log(postNo);
+    const res = await instance.get(`post/detail/${postNo}`);
+    console.log("api 값 보내기 res.data" + res.data);
+    console.log("api 값 보내기 res" + res);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+//게시물 삭제
+export const deletePost = async (postNo) => {
+  try {
+    const res = await instance.delete(`deletePost/${postNo}`);
+    console.log("delete의 res" + res);
+    console.log("delete의 postNo" + postNo);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
 };

@@ -1,9 +1,10 @@
 import styled from "styled-components";
 // import { updateMember } from "../../api/login";
-import putMember from "../../store/userSlice";
+import { putMember } from "../../store/userSlice";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { updateMember } from "../../api/login";
 
 const UpdateStyle = styled.div`
   .mainsection {
@@ -46,6 +47,9 @@ const UpdateStyle = styled.div`
 
 const Update = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [file, setFile] = useState(null);
 
   const user = useSelector((state) => {
     return state.user;
@@ -57,26 +61,21 @@ const Update = () => {
     console.log(file);
 
     // 로컬 스토리지에서 member 데이터 가져오기
-    const memberData = JSON.parse(localStorage.getItem("user"));
+    // const memberData = JSON.parse(localStorage.getItem("user"));
 
     // 새로운 FormData 생성
-    // const formData2 = new FormData();
+    const formData2 = new FormData();
 
     // 필드 추가
 
-    // formData2.set("password", e.target.password.value);
-    // formData2.set("nickname", e.target.nickname.value);
-    // formData2.set("profile", file);
+    formData2.set("password", e.target.password.value);
+    formData2.set("nickname", e.target.nickname.value);
+    formData2.set("profile", file);
 
     // 식별자 넣기(id)
-    // formData2.set("id", memberData.id);
+    formData2.set("id", user.id);
 
-    putMember({
-      id: user.id,
-      nickname: e.target.nickname.value,
-      password: e.target.password.value,
-      profile: file,
-    });
+    dispatch(putMember(formData2));
 
     // if (putMember(formData2)) {
     //   const result = putMember(formData2);
@@ -96,7 +95,6 @@ const Update = () => {
     }
   };
 
-  const [file, setFile] = useState(null);
   // const [viewFile, setViewFile] = useState(null);
 
   const handleFileChange = (e) => {

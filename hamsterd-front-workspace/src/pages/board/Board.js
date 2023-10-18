@@ -1,69 +1,64 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { addFile } from "../../api/boardFile";
 import { useRef, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ReactQuill, { Quill } from "react-quill";
-import ImageResize from "quill-image-resize-module-react";
-import formats from "./Format";
+import ImageResize from "quill-image-resize";
+import "react-quill/dist/quill.snow.css";
+import { addFile } from "../../api/boardFile";
+import ImageUploader from "quill-image-uploader";
 
 const BoardStyle = styled.div`
   /* 스타일 내용 입력 */
 `;
+//이미지 업로드 시 quill에 추가
+Quill.register("modules/imageUploader", ImageUploader);
+//이미지 사이즈 크기 조정 quill에 추가
+Quill.register("modules/imageResize", ImageResize);
 
 const Board = () => {
+  const formats = [
+    "header",
+    "font",
+    "size",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "align",
+    "blockquote",
+    "list",
+    "bullet",
+    "indent",
+    "background",
+    "color",
+    "link",
+    "image",
+    "video",
+    "width",
+    "imageBlot",
+  ];
+
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
+  const [img, setImg] = useState([]);
+  //게시물 이미지 업로드시 여러개 넣을 수 있게 배열로 만들어줌
+  const images = [];
 
   const navigate = useNavigate();
-  const quillRef = useRef(null);
 
-  const [selectedFile, setSelectedFile] = useState(null);
-  const input = useRef(null);
+  const formData = new FormData();
 
-  const onClick = async (e) => {
-    const formData = new FormData();
+  const onClick = async () => {
     formData.append("title", title);
     formData.append("desc", desc);
+    console.log(desc);
+    console.log(img);
+    // data-type : clob <-- 한 컬럼에 html 통째로!
 
-    if (selectedFile) {
-      formData.append("img", selectedFile);
-    }
-
-    try {
-      await addFile(formData);
-      navigate("/boardList");
-    } catch (error) {
-      console.error("파일 업로드 중 오류 발생:", error);
-    }
+    addFile(formData);
+    navigate("/boardList");
   };
-
-  const imageHandler = () => {
-    if (input.current) {
-      input.current.click();
-    }
-  };
-
-  if (input.current) {
-    input.current.addEventListener("change", async () => {
-      const selectedFile = input.current.files[0];
-      if (selectedFile) {
-        try {
-          const formData = new FormData();
-          formData.append("img", selectedFile);
-          const response = await addFile(formData);
-          const imgUrl = response.data.imgUrl;
-
-          const editor = quillRef.current.getEditor();
-          const range = editor.getSelection();
-          editor.insertEmbed(range.index, "image", imgUrl);
-          editor.setSelection(range.index + 1);
-        } catch (error) {
-          console.error("이미지 업로드 중 오류 발생:", error);
-        }
-      }
-    });
-  }
 
   const toolbarOptions = [
     ["link", "image", "video"],
@@ -73,20 +68,48 @@ const Board = () => {
     [{ list: "ordered" }, { list: "bullet" }],
     [{ color: [] }, { background: [] }],
     [{ align: [] }],
+    //게시물에서 이미지 여러개 담을때 필요함
+    ["images"],
   ];
-
-  Quill.register("modules/imageResize", ImageResize);
 
   const modules = useMemo(
     () => ({
       toolbar: {
         container: toolbarOptions,
       },
-      handlers: {
-        image: imageHandler,
-      },
       clipboard: {
         matchVisual: false,
+      },
+
+      imageUploader: {
+        upload: (file) => {
+          return new Promise((resolve, reject) => {
+            const formData = new FormData();
+            formData.append("image", file);
+
+            fetch(
+              "https://api.imgbb.com/1/upload?key=334ecea9ec1213784db5cb9a14dac265",
+              {
+                method: "POST",
+                body: formData,
+              }
+            )
+              .then((response) => response.json())
+              .then((result) => {
+                console.log(file);
+                images.push(file);
+                console.log(images);
+                setImg(images);
+                // setImages([...images, file]);
+                console.log(result);
+                resolve(result.data.url);
+              })
+              .catch((error) => {
+                reject("Upload 실패");
+                console.error("Error : ", error);
+              });
+          });
+        },
       },
       imageResize: {
         displaySize: true,
@@ -94,7 +117,7 @@ const Board = () => {
         modules: ["Resize", "DisplaySize", "Toolbar"],
       },
     }),
-    [toolbarOptions, imageHandler]
+    []
   );
 
   return (
@@ -120,7 +143,10 @@ const Board = () => {
                 id="exampleFormControlInput1"
                 placeholder="제목을 입력하세요"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setTitle(e.target.value);
+                }}
               />
             </div>
             <div className="formCheck">
@@ -157,11 +183,14 @@ const Board = () => {
                 Description
               </label>
               <ReactQuill
-                ref={quillRef}
                 value={desc}
-                onChange={setDesc}
+                onChange={(e) => {
+                  console.log(e);
+                  setDesc(e);
+                }}
                 modules={modules}
                 formats={formats}
+                theme="snow"
               />
             </div>
             <div className="button1">
@@ -202,23 +231,3 @@ const Board = () => {
 };
 
 export default Board;
-// export const formats = [
-//   "header",
-//   "font",
-//   "size",
-//   "bold",
-//   "italic",
-//   "underline",
-//   "strike",
-//   "align",
-//   "blockquote",
-//   "list",
-//   "bullet",
-//   "indent",
-//   "background",
-//   "color",
-//   "link",
-//   "image",
-//   "video",
-//   "width",
-// ];

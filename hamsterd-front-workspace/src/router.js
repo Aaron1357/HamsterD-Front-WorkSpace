@@ -13,7 +13,7 @@ import ScheduleMain from "./pages/studygroup/ScheduleMain";
 import BoardList from "./pages/board/BoardList";
 import Board from "./pages/board/Board";
 import SignUp from "./pages/member/SignUp";
-
+import BoardDetail from "./pages/board/BoardDetail";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -67,6 +67,10 @@ const router = createBrowserRouter([
       {
         path: "/board",
         element: <Board />,
+      },
+      {
+        path: "/post/:postNo",
+        element: <BoardDetail />,
       },
     ],
   },

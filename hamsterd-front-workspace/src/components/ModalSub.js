@@ -3,6 +3,12 @@ import Modal from "react-modal";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/login";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { asyncLogin } from "../store/userSlice";
+import { useSelector } from "react-redux";
+import { userSave } from "../store/userSlice";
+
 const customStyles = {
   overlay: {
     backgroundColor: "rgb(0, 0, 0, 0.6)", // 모달이 열릴 때 뒷 배경의 색상과 투명도
@@ -82,6 +88,7 @@ function ModalSub() {
   const navigate = useNavigate();
 
   const closeTab = () => {
+
     setIsOpen(false);
   };
 
@@ -94,10 +101,19 @@ function ModalSub() {
   const handleSubmit = (e) => {
     // 로그인 버튼 클릭시 로그인
     e.preventDefault();
+
+
     const idValue = e.target.elements.id.value; //아이디
     const passwordValue = e.target.elements.password.value; //비번
-    const formData2 = { idValue, passwordValue };
-    login(formData2);
+    // const formData2 = { idValue, passwordValue };
+    // login(formData2);
+
+    const id = e.target.elements.id.value; //아이디
+    const password = e.target.elements.password.value; //비번
+
+    // 로그인 시도
+    dispatch(asyncLogin({ id, password }));
+    navigate("/");
   };
 
   return (
