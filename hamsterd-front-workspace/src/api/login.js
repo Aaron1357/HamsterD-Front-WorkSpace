@@ -34,7 +34,7 @@ export const addMember = async (member) => {
 };
 
 export const updateMember = async (member) => {
-  // console.log(member.get("id"));
+  console.log("들어온 아이디 값 : " + member.id);
 
   return await instance.put("member", member);
 };

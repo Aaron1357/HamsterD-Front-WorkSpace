@@ -56,14 +56,12 @@ const SignUp = () => {
       birth: e.target.birth.value,
       gender: e.target.gender.value,
       phone: e.target.phone.value,
-      academyName: e.target.academy.value,
+      academy: e.target.academy.value,
       address: e.target.address.value,
-     
     };
 
     console.log(formData2.id);
 
- 
     // formData.set("birth", convertToDate(formData.get("birth")));
     addMember(formData2);
     // .then((response) => {
