@@ -14,7 +14,6 @@ import BoardList from "./pages/board/BoardList";
 import Board from "./pages/board/Board";
 import SignUp from "./pages/member/SignUp";
 import BoardDetail from "./pages/board/BoardDetail";
-import Board2 from "./pages/board/Board2";
 const router = createBrowserRouter([
   {
     path: "/",
