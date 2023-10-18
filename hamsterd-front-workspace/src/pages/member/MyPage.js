@@ -129,7 +129,7 @@ const MyPage = () => {
   // const sessionValue = sessionStorage.getItem("member");
   const session = localStorage.getItem("user");
   const parseValue = JSON.parse(session);
-  console.log(parseValue.profile);
+
   // console.log(window.sessionStorage.getItem("member"));
 
   const [isOpen, setIsOpen] = useState(true);

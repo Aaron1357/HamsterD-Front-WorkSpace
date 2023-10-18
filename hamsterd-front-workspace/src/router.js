@@ -14,6 +14,7 @@ import BoardList from "./pages/board/BoardList";
 import Board from "./pages/board/Board";
 import SignUp from "./pages/member/SignUp";
 import BoardDetail from "./pages/board/BoardDetail";
+import Fire from "./pages/member/Fire";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "/mypage",
         element: <MyPage />,
+      },
+      {
+        path: "/fire",
+        element: <Fire />,
       },
       {
         path: "/studygroup",
