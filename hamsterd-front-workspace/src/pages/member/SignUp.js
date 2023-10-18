@@ -29,12 +29,7 @@ const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-<<<<<<< HEAD
-    const formData = new FormData(e.target);
 
-    formData.set("birth", convertToDate(formData.get("birth")));
-    addMember(formData);
-=======
     const formData2 = {
       id: e.target.id.value,
       nickname: e.target.nickname.value,
@@ -57,7 +52,7 @@ const SignUp = () => {
     //   console.log(response);
     // });
     navigate("/");
->>>>>>> parent of 8be18ff (멤버관리(delete 오류 수정 필요))
+
   };
 
   return (
