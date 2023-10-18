@@ -35,3 +35,8 @@ export const getOneSchedule = async (groupNo, scheduleNo) => {
 export const deleteSchedule = async (scheduleNo) => {
   return await instance.delete(`/schedule/${scheduleNo}`);
 };
+
+// 스케줄 수정
+export const updateSchedule = async (data) => {
+  return await instance.put("schedule", data);
+};

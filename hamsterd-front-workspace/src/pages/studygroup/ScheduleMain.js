@@ -75,6 +75,11 @@ const ScheduleStyle = styled.div`
     align-items: center;
     padding-top: 20px;
   }
+
+  .scheduleTable {
+    height: 530px;
+  }
+
   .table {
     width: 450px;
     min-width: 350px;
@@ -112,6 +117,22 @@ const ScheduleStyle = styled.div`
     font-size: 1em;
     font-weight: 600;
   }
+
+  #scheduleTitle:hover {
+    cursor: pointer;
+  }
+
+  .mb-3 {
+    height: 35px;
+    display: flex;
+    align-items: center;
+    margin: 0;
+  }
+
+  input {
+    width: 450px;
+    height: 30px;
+  }
 `;
 
 const ScheduleMain = () => {
@@ -120,7 +141,12 @@ const ScheduleMain = () => {
 
   // 목록의 추가(+) 버튼 클릭 시 schedule 등록 폼으로 이동
   const onClick = () => {
-    navigate("/Schedule");
+    navigate("/Schedule", {
+      state: {
+        groupNo: groupNo,
+        scheduleNo: 0,
+      },
+    });
   };
 
   // 스터디그룹 넘버 임시 지정(1)
@@ -251,26 +277,48 @@ const ScheduleMain = () => {
   }, [scheduleDate]);
 
   // eventClick 함수
-  const handleEventClick = (info) => {
-    setScheduleNo(info.event.groupId);
-    getOneScheduleAPI(groupNo, info.event.groupId);
+  const handleEventClick = async (info) => {
+    // console.log(info.event)
+    const scheduleData = await getOneScheduleAPI(groupNo, info.event.groupId);
+
     navigate("/Schedule", {
       state: {
         groupNo: groupNo,
         scheduleNo: info.event.groupId,
-        schedule: schedule,
+        schedule: scheduleData,
       },
     });
   };
 
-  const getOneScheduleAPI = async (groupNo, scheduleDate) => {
-    const result = await getOneSchedule(groupNo, scheduleDate);
+  const getOneScheduleAPI = async (groupNo, scheduleNo) => {
+    const result = await getOneSchedule(groupNo, scheduleNo);
     setSchedule(result.data);
+    const schedule2 = result.data;
+    return schedule2;
   };
 
   // 캘린더 상단 + 버튼 클릭시 등록 폼으로 이동
   const handleAddEvent = () => {
-    navigate("/Schedule");
+    navigate("/Schedule", {
+      state: {
+        groupNo: groupNo,
+        scheduleNo: 0,
+      },
+    });
+  };
+
+  // 목록에서 일정 제목 클릭 시 등록(수정삭제)화면으로 이동
+  const viewDetail = async (scheduleNo) => {
+    console.log(scheduleNo);
+    const scheduleData = await getOneScheduleAPI(groupNo, scheduleNo);
+
+    navigate("/Schedule", {
+      state: {
+        groupNo: groupNo,
+        scheduleNo: scheduleNo,
+        schedule: scheduleData,
+      },
+    });
   };
 
   return (
@@ -302,35 +350,50 @@ const ScheduleMain = () => {
 
         {/* 일정 목록 */}
         <div className="schedule-list">
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col" width="50">
-                  번호
-                </th>
-                <th scope="col" width="100">
-                  날짜
-                </th>
-                <th scope="col" width="200">
-                  제목
-                </th>
-                <th scope="col" width="10">
-                  <FontAwesomeIcon icon={faPlus} onClick={onClick} />
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {schedulesOfGroup.map((item) => (
-                <tr key={item.scheduleNo}>
-                  <th scope="row">{item.scheduleNo}</th>
-                  <td>{item.scheduleDate}</td>
-                  <td colSpan={2}>
-                    <a href="/schedule">{item.scheduleTitle}</a>
-                  </td>
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control"
+              id="exampleFormControlInput1"
+              // value={title}
+              // onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+          <div className="scheduleTable">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th scope="col" width="50">
+                    번호
+                  </th>
+                  <th scope="col" width="100">
+                    날짜
+                  </th>
+                  <th scope="col" width="200">
+                    제목
+                  </th>
+                  <th scope="col" width="10">
+                    <FontAwesomeIcon icon={faPlus} onClick={onClick} />
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {schedulesOfGroup.map((item) => (
+                  <tr key={item.scheduleNo}>
+                    <th scope="row">{item.scheduleNo}</th>
+                    <td>{item.scheduleDate}</td>
+                    <td
+                      id="scheduleTitle"
+                      colSpan={2}
+                      onClick={() => viewDetail(item.scheduleNo)}
+                    >
+                      {item.scheduleTitle}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </ScheduleStyle>
