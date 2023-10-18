@@ -132,6 +132,8 @@ const MyPage = () => {
   const sessionValue = sessionStorage.getItem("member");
   const parseValue = JSON.parse(sessionValue);
   console.log(parseValue.profile);
+  console.log(parseValue);
+  
   // console.log(window.sessionStorage.getItem("member"));
 
   const [isOpen, setIsOpen] = useState(true);
@@ -160,7 +162,7 @@ const MyPage = () => {
 
 
   const filePath = parseValue.profile;
-  const parts = filePath.split("/"); // "/"로 문자열 분할
+  const parts = filePath.split("//"); // "/"로 문자열 분할
 
   const uploadFolder = parts.pop(); // 배열의 마지막 요소 추출
 

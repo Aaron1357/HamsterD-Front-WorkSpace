@@ -153,7 +153,7 @@ function ModalSub() {
               <br></br> <br></br>
               <input
                 className="set"
-                type="text"
+                type="password"
                 placeholder="  비밀번호를 입력하세요.."
                 name="password"
               ></input>

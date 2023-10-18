@@ -75,8 +75,6 @@ const Update = () => {
 
     
     updateMember(formData2);
-    window.location.reload(true); 
-    navigate("/mypage");
    
   };
 
