@@ -1,5 +1,8 @@
 import styled, { keyframes } from "styled-components";
 import React from "react";
+import { delMember } from "../../store/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const blink = keyframes`
   0% {
@@ -39,11 +42,26 @@ const FireTest = styled.div`
 `;
 
 const Fire = () => {
+  const user = useSelector((state) => {
+    return state.user;
+  });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const deleteMember = () => {
+    dispatch(delMember(user.memberNo));
+    navigate("/");
+  };
   return (
     <FireTest>
       <div className="maincon">
         <div className="fireBtn">
-          <button type="button" id="fireBtn" className="btn btn-danger">
+          <button
+            type="button"
+            id="fireBtn"
+            className="btn btn-danger"
+            onClick={deleteMember}
+          >
             탈퇴
           </button>
         </div>
