@@ -29,10 +29,35 @@ const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+<<<<<<< HEAD
     const formData = new FormData(e.target);
 
     formData.set("birth", convertToDate(formData.get("birth")));
     addMember(formData);
+=======
+    const formData2 = {
+      id: e.target.id.value,
+      nickname: e.target.nickname.value,
+      password: e.target.password.value,
+      name: e.target.name.value,
+      birth: e.target.birth.value,
+      gender: e.target.gender.value,
+      phone: e.target.phone.value,
+      academyName: e.target.academy.value,
+      address: e.target.address.value,
+     
+    };
+
+    console.log(formData2.id);
+
+ 
+    // formData.set("birth", convertToDate(formData.get("birth")));
+    addMember(formData2);
+    // .then((response) => {
+    //   console.log(response);
+    // });
+    navigate("/");
+>>>>>>> parent of 8be18ff (멤버관리(delete 오류 수정 필요))
   };
 
   return (
