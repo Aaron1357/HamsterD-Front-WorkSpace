@@ -17,7 +17,3 @@ export const login = async (member) => {
 
   //
 };
-
-export const addMember = async (member) => {
-  return await instance.post("member", member);
-};
