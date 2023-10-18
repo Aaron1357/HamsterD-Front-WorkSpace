@@ -3,7 +3,6 @@ import Modal from "react-modal";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/login";
-
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { asyncLogin } from "../store/userSlice";

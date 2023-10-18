@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { deleteMember, login } from "../api/login";
-import Update from "../pages/member/Update";
+import { updateMember, deleteMember, login } from "../api/login";
 import { useDispatch } from "react-redux";
 
 const asyncLogin = createAsyncThunk("userSlice/asyncLogin", async (data) => {
@@ -10,15 +9,12 @@ const asyncLogin = createAsyncThunk("userSlice/asyncLogin", async (data) => {
   return result.data;
 });
 
-const updateMember = createAsyncThunk(
-  "userSlice/updateMember",
-  async (data) => {
-    //   console.log(data);
-    const result = await Update(data);
-    console.log(result.data);
-    return result.data;
-  }
-);
+const putMember = createAsyncThunk("userSlice/putMember", async (data) => {
+  //   console.log(data);
+  const result = await updateMember(data);
+  console.log(result.data);
+  return result.data;
+});
 
 const delMember = createAsyncThunk("userSlice/deleteMember", async (data) => {
   //   console.log(data);
@@ -46,18 +42,18 @@ const userSlice = createSlice({
       return action.payload;
     });
 
-    // builder.addCase(updateMember.fulfilled, (state, action) => {
-    //   return state;
-    // });
+    builder.addCase(putMember.fulfilled, (state, action) => {
+      return state;
+    });
 
-    // builder.addCase(delMember.fulfilled, (state, action) => {
-    //   const dispatch = useDispatch();
-    //   localStorage.clear("user");
-    //   dispatch(userLogout());
-    // });
+    builder.addCase(delMember.fulfilled, (state, action) => {
+      const dispatch = useDispatch();
+      localStorage.clear("user");
+      dispatch(userLogout());
+    });
   },
 });
 
 export default userSlice;
-export { asyncLogin };
+export { asyncLogin, putMember };
 export const { userSave, userLogout } = userSlice.actions;

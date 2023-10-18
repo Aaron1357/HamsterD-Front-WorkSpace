@@ -1,7 +1,9 @@
 import styled from "styled-components";
-import { updateMember } from "../../api/login";
+// import { updateMember } from "../../api/login";
+import putMember from "../../store/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const UpdateStyle = styled.div`
   .mainsection {
@@ -45,6 +47,10 @@ const UpdateStyle = styled.div`
 const Update = () => {
   const navigate = useNavigate();
 
+  const user = useSelector((state) => {
+    return state.user;
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -54,21 +60,31 @@ const Update = () => {
     const memberData = JSON.parse(localStorage.getItem("user"));
 
     // 새로운 FormData 생성
-    const formData2 = new FormData();
+    // const formData2 = new FormData();
 
     // 필드 추가
 
-    formData2.set("password", e.target.password.value);
-    formData2.set("nickname", e.target.nickname.value);
-    formData2.set("profile", file);
+    // formData2.set("password", e.target.password.value);
+    // formData2.set("nickname", e.target.nickname.value);
+    // formData2.set("profile", file);
 
     // 식별자 넣기(id)
-    formData2.set("id", memberData.id);
+    // formData2.set("id", memberData.id);
 
-    // console.log(formData2.get("password"));
-    // console.log(formData2.get("nickname"));
+    putMember({
+      id: user.id,
+      nickname: e.target.nickname.value,
+      password: e.target.password.value,
+      profile: file,
+    });
 
-    updateMember(formData2);
+    // if (putMember(formData2)) {
+    //   const result = putMember(formData2);
+    //   console.log(result);
+
+    //   // localStorage.setItem("user", )
+    // }
+
     window.location.reload(true);
     navigate("/mypage");
   };
