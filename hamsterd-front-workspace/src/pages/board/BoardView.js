@@ -17,8 +17,10 @@ const BoardView = ({ postNo, title, desc }) => {
   const navigate = useNavigate();
   //삭제하기 버튼 클릭 시 해당 게시물 삭제 후 게시판 전체조회로 이동
   const onClickDelete = async () => {
-    if (postNo) await deletePost(postNo);
-    navigate("/boardList");
+    if (postNo) {
+      await deletePost(postNo);
+      navigate("/boardList");
+    }
 
     console.log("delete resp : " + (await deletePost(postNo)));
     console.log("delete postNo : " + postNo);

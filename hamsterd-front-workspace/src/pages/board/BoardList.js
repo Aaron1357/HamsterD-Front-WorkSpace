@@ -27,6 +27,7 @@ const BoardList = () => {
   // const save = window.localStorage.getItem("user");
   const [boardList, setBoardList] = useState([]);
 
+  const [view, setView] = useState(0);
   useEffect(() => {
     searchBoardList().then((res) => setBoardList(res));
     console.log(setBoardList);
@@ -34,9 +35,12 @@ const BoardList = () => {
 
   const navigate = useNavigate();
 
-  const onClick = (e) => {
-    e.preventDefault();
+  const onClick = () => {
     navigate("/board");
+  };
+
+  const onClickView = () => {
+    setView(view + 1);
   };
 
   return (
@@ -63,11 +67,15 @@ const BoardList = () => {
                 boardList.map((item) => (
                   <tr key={item.postNo}>
                     <td>{item.postNo}</td>
-                    <a href={`/post/${item.postNo}`}>
-                      <td>{item.postTitle}</td>
-                    </a>
+
                     <td>
-                      {item.member == null ? "익명" : item.member.nickname}
+                      <a href={`/post/${item.postNo}`} onClick={onClickView}>
+                        {item.postTitle} (조회수 : {view})
+                      </a>
+                    </td>
+
+                    <td>
+                      {item.securityCheck === "y" ? "익명" : item.securityCheck}
                     </td>
                     <td>
                       {item.createTime
@@ -78,7 +86,7 @@ const BoardList = () => {
                           })
                         : ""}
                     </td>
-                    <td>22</td>
+                    <td>{view}</td>
                   </tr>
                 ))}
             </tbody>
