@@ -103,7 +103,9 @@ const Header = () => {
   return (
     <Test>
       <Sub>
-        <div>{/* <ModalSub /> */}</div>
+        <div>
+          <ModalSub />
+        </div>
       </Sub>
 
       <div className="header-section">
@@ -138,7 +140,7 @@ const Header = () => {
               </div>
               <div className="submenu">
                 <Link to="/groupreview">그룹평가</Link>
-                <Link to="/schedule">스케쥴</Link>
+                <Link to="/scheduleMain">스케쥴</Link>
               </div>
             </div>
             <div className="menu" id="social">

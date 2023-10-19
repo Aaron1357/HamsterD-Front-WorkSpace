@@ -7,6 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 //import { getScheduleList } from "../../api/schedule";
 import { getScheduleOfGroup } from "../../api/schedule";
@@ -136,12 +137,27 @@ const ScheduleStyle = styled.div`
 `;
 
 const ScheduleMain = () => {
+  const user = localStorage.getItem("user");
+  console.log("user : " + user);
+
+  // if (user) {
+  //   const userObject = JSON.parse(user);
+
+  //   // user 객체에서 nickname 값 가져오기
+  //   const nickname = userObject.nickname;
+
+  //   // nickname 값을 사용
+  //   console.log("nickname: " + nickname);
+  // } else {
+  //   console.log("user 데이터가 존재하지 않습니다.");
+  // }
+
   // 추가 버튼 누르면 Schedule 페이지로 이동
   const navigate = useNavigate();
 
   // 목록의 추가(+) 버튼 클릭 시 schedule 등록 폼으로 이동
   const onClick = () => {
-    navigate("/Schedule", {
+    navigate("/schedule", {
       state: {
         groupNo: groupNo,
         scheduleNo: 0,
@@ -224,7 +240,7 @@ const ScheduleMain = () => {
 
   //특정 날짜 클릭시 발생하는 event 추가
   const handleDateClick = (arg) => {
-    //console.log(arg);
+    // console.log(arg);
     //console.log(arg.date); // Mon Oct 23 2023 00:00:00 GMT+0900
 
     const date = new Date(arg.date);
@@ -236,6 +252,7 @@ const ScheduleMain = () => {
     console.log(yymmdd); // 231023
 
     setScheduleDate(yymmdd); // api에 scheduleDate yymmdd 형태로 넘김
+    console.log(scheduleDate);
 
     scheduleOfGroupDateAPI(groupNo, yymmdd);
   };
@@ -278,10 +295,12 @@ const ScheduleMain = () => {
 
   // eventClick 함수
   const handleEventClick = async (info) => {
-    // console.log(info.event)
+    console.log("info.event : " + info.event.groupId);
+    console.log("groupNo : " + groupNo);
     const scheduleData = await getOneScheduleAPI(groupNo, info.event.groupId);
+    console.log("scheduleData : " + scheduleData);
 
-    navigate("/Schedule", {
+    navigate("/schedule", {
       state: {
         groupNo: groupNo,
         scheduleNo: info.event.groupId,
@@ -294,12 +313,13 @@ const ScheduleMain = () => {
     const result = await getOneSchedule(groupNo, scheduleNo);
     setSchedule(result.data);
     const schedule2 = result.data;
+    // console.log(schedule2);
     return schedule2;
   };
 
   // 캘린더 상단 + 버튼 클릭시 등록 폼으로 이동
   const handleAddEvent = () => {
-    navigate("/Schedule", {
+    navigate("/schedule", {
       state: {
         groupNo: groupNo,
         scheduleNo: 0,
@@ -309,10 +329,10 @@ const ScheduleMain = () => {
 
   // 목록에서 일정 제목 클릭 시 등록(수정삭제)화면으로 이동
   const viewDetail = async (scheduleNo) => {
-    console.log(scheduleNo);
+    console.log("scheduleNo : " + scheduleNo);
     const scheduleData = await getOneScheduleAPI(groupNo, scheduleNo);
 
-    navigate("/Schedule", {
+    navigate("/schedule", {
       state: {
         groupNo: groupNo,
         scheduleNo: scheduleNo,
@@ -350,6 +370,8 @@ const ScheduleMain = () => {
 
         {/* 일정 목록 */}
         <div className="schedule-list">
+          {/* 일정 검색창 */}
+          <FontAwesomeIcon icon={faMagnifyingGlass} />
           <div className="mb-3">
             <input
               type="text"
@@ -378,9 +400,9 @@ const ScheduleMain = () => {
                 </tr>
               </thead>
               <tbody>
-                {schedulesOfGroup.map((item) => (
+                {schedulesOfGroup.map((item, index) => (
                   <tr key={item.scheduleNo}>
-                    <th scope="row">{item.scheduleNo}</th>
+                    <th scope="row">{index + 1}</th>
                     <td>{item.scheduleDate}</td>
                     <td
                       id="scheduleTitle"
