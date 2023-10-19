@@ -95,7 +95,7 @@ function ModalSub() {
 
   useEffect(() => {
     if (Object.keys(user).length === 0 && save !== null) {
-      // 로컬 스토리지에 유저정보가 존재하면 저장
+      // store에 키값(식별자)이 없으면서 로컬 스토리지에 유저정보가 존재하면 저장
       dispatch(userSave(JSON.parse(save)));
     } else if (Object.keys(user).length !== 0 && save !== null) {
       // 유저정보가 저장되어 있다면 modal 내리기
@@ -103,6 +103,7 @@ function ModalSub() {
     }
   }, [save]);
 
+  console.log(user);
   useEffect(() => {
     // modal 상태에 따라 body 고정여부
     if (isOpen) {
