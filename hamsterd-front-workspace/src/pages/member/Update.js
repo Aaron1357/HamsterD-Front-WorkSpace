@@ -75,6 +75,11 @@ const Update = () => {
 
     
     updateMember(formData2);
+    window.location.reload(true); 
+    window.sessionStorage.clear(); // 세션 제거
+    alert("수정이 완료되었습니다. 다시 로그인 해주세요!")
+    navigate("/");
+    
    
   };
 
