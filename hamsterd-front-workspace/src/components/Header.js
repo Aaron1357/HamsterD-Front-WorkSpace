@@ -3,7 +3,7 @@ import styled from "styled-components";
 import logo from "../resource/logo.jpg";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import ModalSub from "../components/ModalSub";
-
+import { useNavigate } from "react-router-dom";
 import { userLogout } from "../store/userSlice";
 import { useDispatch } from "react-redux";
 

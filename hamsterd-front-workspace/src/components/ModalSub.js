@@ -86,9 +86,9 @@ const StyleTest = styled.div`
 function ModalSub() {
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const closeTab = () => {
-
     setIsOpen(false);
   };
 
@@ -101,7 +101,6 @@ function ModalSub() {
   const handleSubmit = (e) => {
     // 로그인 버튼 클릭시 로그인
     e.preventDefault();
-
 
     const idValue = e.target.elements.id.value; //아이디
     const passwordValue = e.target.elements.password.value; //비번
