@@ -2,7 +2,7 @@ import { searchBoardList } from "../../api/boardFile";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-// import { viewPostNo } from "../store/postSlice";
+import { updateBoardView } from "../../api/boardFile";
 
 const BoardStyle = styled.div`
   .boardListHead1 {
@@ -21,26 +21,34 @@ const BoardStyle = styled.div`
     width: 160px;
     height: 40px;
   }
+
+  #boardView :hover {
+    cursor: pointer;
+  }
 `;
 
 const BoardList = () => {
-  // const save = window.localStorage.getItem("user");
   const [boardList, setBoardList] = useState([]);
 
-  const [view, setView] = useState(0);
+  // const user = JSON.parse(localStorage.getItem("user"));
+  // const nickname = storedData.nickname;
+
   useEffect(() => {
     searchBoardList().then((res) => setBoardList(res));
-    console.log(setBoardList);
+
+    // console.log("로컬스토리지 닉네임 " + localStorage.getItem("nickname"));
   }, []);
 
   const navigate = useNavigate();
-
+  //게시판 작성하기
   const onClick = () => {
     navigate("/board");
   };
-
-  const onClickView = () => {
-    setView(view + 1);
+  //조회수 1씩 업데이트하기
+  const onClickView = async (postNo) => {
+    await updateBoardView(postNo);
+    console.log("조회수 1씩 업데이트 버튼 클릭 " + postNo);
+    navigate(`/post/${postNo}`);
   };
 
   return (
@@ -64,15 +72,15 @@ const BoardList = () => {
             </thead>
             <tbody>
               {boardList &&
-                boardList.map((item) => (
-                  <tr key={item.postNo}>
-                    <td>{item.postNo}</td>
+                boardList.map((item, index) => (
+                  <tr
+                    id="boardView"
+                    key={item.postNo}
+                    onClick={() => onClickView(item.postNo)}
+                  >
+                    <td>{index + 1}</td>
 
-                    <td>
-                      <a href={`/post/${item.postNo}`} onClick={onClickView}>
-                        {item.postTitle} (조회수 : {view})
-                      </a>
-                    </td>
+                    <td>{item.postTitle}</td>
 
                     <td>
                       {item.securityCheck === "y" ? "익명" : item.securityCheck}
@@ -86,7 +94,7 @@ const BoardList = () => {
                           })
                         : ""}
                     </td>
-                    <td>{view}</td>
+                    <td>{item.boardView}</td>
                   </tr>
                 ))}
             </tbody>

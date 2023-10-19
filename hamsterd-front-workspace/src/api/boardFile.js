@@ -21,6 +21,17 @@ export const updateBoard = async (data) => {
   }
 };
 
+//기존 게시물 조회수 업데이트하기
+export const updateBoardView = async (postNo) => {
+  try {
+    console.log("게시물 조회 api들어옴");
+    const res = await instance.put(`post/boardView/${postNo}`);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 //db에 있는 데이터 끌어와서 전체 게시물 리스트 보기
 export const searchBoardList = async () => {
   try {
