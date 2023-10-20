@@ -99,19 +99,20 @@ const ScheduleMain = () => {
     };
   });
 
-  console.log(newSchedules);
-
   useEffect(() => {
     setNewSchedules(newList);
+    console.log("범인검거.");
   }, [schedules]);
 
   const scheduleListAPI = async () => {
     const result = await getScheduleList();
+    console.log("범인검거1.");
     setSchedules(result.data);
   };
 
   useEffect(() => {
     scheduleListAPI();
+    console.log("범인검거2.");
   }, []);
 
   return (
@@ -119,6 +120,7 @@ const ScheduleMain = () => {
       <div className="content">
         <div className="calendar-section">
           {/* 달력 영역 */}
+          {console.log("범인검거3.")}
           <div className="calendar">
             <FullCalendar
               plugins={[dayGridPlugin]}

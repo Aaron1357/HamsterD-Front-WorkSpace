@@ -15,9 +15,16 @@ export const getStudyGroupList = async () => {
   return await instance.get("studygroup");
 };
 
+// 그룹넘버를 기본키로 가지고 있는 스터디그룹
+export const viewStudyGroup = async (groupNo) => {
+  const result = await instance.get(`studygroup/${groupNo}`);
+  return result.data;
+};
+
 // 그룹넘버를 기본키로 가지고 있는 스터디그룹에 속한 멤버 리스트
 export const viewMemberList = async (groupNo) => {
-  return await instance.get(`studygroup/${groupNo}/member`);
+  const result = await instance.get(`studygroup/${groupNo}/member`);
+  return result.data;
 };
 
 // 그룹넘버를 기본키로 가지고 있는 스터디그룹 방장 멤버

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import profile from "../../resource/종빈22.png";
 import search from "../../resource/search.png";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getStudyGroupList, viewManager } from "../../api/studygroup";
 import { useState, useEffect } from "react";
 
@@ -205,13 +205,11 @@ const StudyGroup = () => {
         setStudyGroup(dataGroup);
       }
     };
-
     // 처음 페이지 접근했을 떄 호출
     handler();
   }, []);
 
   useEffect(() => {
-    console.log("Study Group 변경됬을때..");
     const handler2 = async () => {
       const dataManager = await getManager();
 
@@ -225,6 +223,11 @@ const StudyGroup = () => {
   const handleCreateGroupClick = () => {
     //생성버튼 페이지 이동
     navigate("/creategroup");
+  };
+
+  const onClick = (e) => {
+    const idex = e.target.getAttribute("groupNo"); // 선택한 스터디 그룹의 그룹넘버를 state에 담아서 navigate로 넘긴다
+    navigate("/grouppage", { state: { data: idex } });
   };
 
   return (
@@ -263,15 +266,13 @@ const StudyGroup = () => {
                 </div>
                 <div>
                   <div>
-                    <Link
-                      to={{
-                        pathname: "/grouppage",
-                        state: { data: 1 },
-                      }}
+                    <div
                       id="grouptext"
+                      onClick={onClick}
+                      groupNo={item.studyGroup && item.studyGroup.groupNo} // 선택한 스터디 그룹의 그룹넘버를 value 속성에 저장
                     >
-                      <div> {item.nickname}</div>
-                    </Link>
+                      {item.nickname}
+                    </div>
                   </div>
                   <div id="academyname">{item.academyName}</div>
                 </div>
@@ -288,24 +289,14 @@ const StudyGroup = () => {
                       alt="Group"
                     />
                   </div>
-                  <div className="groupintro">
-                    <Link
-                      to={{
-                        pathname: "/grouppage",
-                        state: { data: 1 },
-                      }}
-                      className="groupintro"
-                    >
-                      <div className="groupname">
-                        {item.studyGroup && item.studyGroup.groupName}
-                      </div>
-                      <div>
-                        {item.studyGroup && item.studyGroup.groupContent}
-                      </div>
-                    </Link>
+                  <div className="groupintro" onClick={onClick}>
+                    <div className="groupname">
+                      {" "}
+                      {item.studyGroup && item.studyGroup.groupName}
+                    </div>
+                    <div>{item.studyGroup && item.studyGroup.groupContent}</div>
                   </div>
                 </div>
-
                 <div className="horizonline"></div>
                 <div className="group-container">
                   <div>
