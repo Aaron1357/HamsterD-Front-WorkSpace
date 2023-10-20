@@ -1,118 +1,63 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { addFile } from "../../api/boardFile";
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import "react-quill/dist/quill.snow.css";
 import ReactQuill, { Quill } from "react-quill";
-import ImageResize from "quill-image-resize-module-react";
+import ImageResize from "quill-image-resize";
+import "react-quill/dist/quill.snow.css";
+import { addFile } from "../../api/boardFile";
+import ImageUploader from "quill-image-uploader";
 
 const BoardStyle = styled.div`
-  .head1 {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .head2 {
-    border: 5px solid rgb(228, 192, 228);
-    border-radius: 10px;
-    background-color: white;
-    width: 600px;
-    height: 700px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  form {
-    border-radius: 10px;
-    width: 500px;
-    height: 650px;
-
-    background-color: white;
-  }
-  .head {
-    border: 4px #808080;
-    padding: 10px;
-  }
-
-  .headName {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: plum;
-  }
-
-  .form-select {
-    margin-bottom: 15px;
-  }
-
-  .formCheck {
-    display: flex;
-    justify-content: flex-end;
-    margin-left: 10px;
-  }
-
-  .form-check {
-    margin: 5px;
-  }
-
-  .button1 {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 10px;
-  }
-
-  #button1 {
-    font-size: 10px;
-    text-align: center;
-  }
-
-  #button2 {
-    margin: 10px;
-  }
-
-  .btnn {
-    width: 100%;
-    height: 50px;
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 10px;
-  }
+  /* 스타일 내용 입력 */
 `;
+//이미지 업로드 시 quill에 추가
+Quill.register("modules/imageUploader", ImageUploader);
+//이미지 사이즈 크기 조정 quill에 추가
+Quill.register("modules/imageResize", ImageResize);
 
 const Board = () => {
-  const [title, setTitle] = useState([]);
-  const [desc, setDesc] = useState([]);
+  const formats = [
+    "header",
+    "font",
+    "size",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "align",
+    "blockquote",
+    "list",
+    "bullet",
+    "indent",
+    "background",
+    "color",
+    "link",
+    "image",
+    "video",
+    "width",
+    "imageBlot",
+  ];
 
-  const emptyNickNameRef = useRef();
-  const nickNameRef = useRef();
-
-  // const [file, setFiles] = useState(null);
-
-  // const onUploadFile = (e) => {
-  //   setFiles(e.target.files[0]);
-  // };
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
+  const [img, setImg] = useState([]);
+  //게시물 이미지 업로드시 여러개 넣을 수 있게 배열로 만들어줌
+  const images = [];
 
   const navigate = useNavigate();
 
-  //폼 전체 작성 후 클릭 할 때
+  const formData = new FormData();
 
   const onClick = async () => {
-
-    const formData = new FormData();
     formData.append("title", title);
     formData.append("desc", desc);
+    console.log(desc);
+    console.log(img);
+    // data-type : clob <-- 한 컬럼에 html 통째로!
 
-    try {
-      await addFile(formData); // 비동기 작업 완료 대기
-      navigate("/boardList"); // 파일 업로드가 완료되면 페이지 이동
-    } catch (error) {
-      // 에러 처리
-      console.error("파일 업로드 중 오류 발생:", error);
-    }
+    addFile(formData);
+    navigate("/boardList");
   };
 
   const toolbarOptions = [
@@ -123,20 +68,57 @@ const Board = () => {
     [{ list: "ordered" }, { list: "bullet" }],
     [{ color: [] }, { background: [] }],
     [{ align: [] }],
+    //게시물에서 이미지 여러개 담을때 필요함
+    ["images"],
   ];
 
-  Quill.register("modules/imageResize", ImageResize);
+  const modules = useMemo(
+    () => ({
+      toolbar: {
+        container: toolbarOptions,
+      },
+      clipboard: {
+        matchVisual: false,
+      },
 
-  const modules = {
-    toolbar: {
-      container: toolbarOptions,
-    },
-    imageResize: {
-      // https://www.npmjs.com/package/quill-image-resize-module-react 참고
-      parchment: Quill.import("parchment"),
-      modules: ["Resize", "DisplaySize", "Toolbar"],
-    },
-  };
+      imageUploader: {
+        upload: (file) => {
+          return new Promise((resolve, reject) => {
+            const formData = new FormData();
+            formData.append("image", file);
+
+            fetch(
+              "https://api.imgbb.com/1/upload?key=334ecea9ec1213784db5cb9a14dac265",
+              {
+                method: "POST",
+                body: formData,
+              }
+            )
+              .then((response) => response.json())
+              .then((result) => {
+                console.log(file);
+                images.push(file);
+                console.log(images);
+                setImg(images);
+                // setImages([...images, file]);
+                console.log(result);
+                resolve(result.data.url);
+              })
+              .catch((error) => {
+                reject("Upload 실패");
+                console.error("Error : ", error);
+              });
+          });
+        },
+      },
+      imageResize: {
+        displaySize: true,
+        parchment: Quill.import("parchment"),
+        modules: ["Resize", "DisplaySize", "Toolbar"],
+      },
+    }),
+    []
+  );
 
   return (
     <BoardStyle>
@@ -161,13 +143,15 @@ const Board = () => {
                 id="exampleFormControlInput1"
                 placeholder="제목을 입력하세요"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setTitle(e.target.value);
+                }}
               />
             </div>
             <div className="formCheck">
               <div className="form-check">
                 <input
-                  ref={emptyNickNameRef}
                   className="form-check-input"
                   type="radio"
                   name="flexRadioDefault"
@@ -179,7 +163,6 @@ const Board = () => {
               </div>
               <div className="form-check">
                 <input
-                  ref={nickNameRef}
                   className="form-check-input"
                   type="radio"
                   name="flexRadioDefault"
@@ -201,9 +184,13 @@ const Board = () => {
               </label>
               <ReactQuill
                 value={desc}
-                onChange={(value) => setDesc(value)}
+                onChange={(e) => {
+                  console.log(e);
+                  setDesc(e);
+                }}
                 modules={modules}
                 formats={formats}
+                theme="snow"
               />
             </div>
             <div className="button1">
@@ -215,17 +202,6 @@ const Board = () => {
                 임시저장하기
               </button>
             </div>
-            {/* <div className="input-group mb-3">
-              <input
-                type="file"
-                className="form-control"
-                id="inputGroupFile02"
-                onChange={onUploadFile}
-              />
-              <label className="input-group-text" htmlFor="inputGroupFile02">
-                Upload
-              </label>
-            </div> */}
             <div className="btnn">
               <div>
                 <button
@@ -255,23 +231,3 @@ const Board = () => {
 };
 
 export default Board;
-export const formats = [
-  "header",
-  "font",
-  "size",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "align",
-  "blockquote",
-  "list",
-  "bullet",
-  "indent",
-  "background",
-  "color",
-  "link",
-  "image",
-  "video",
-  "width",
-];

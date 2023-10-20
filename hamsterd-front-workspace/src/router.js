@@ -13,9 +13,9 @@ import ScheduleMain from "./pages/studygroup/ScheduleMain";
 import BoardList from "./pages/board/BoardList";
 import Board from "./pages/board/Board";
 import SignUp from "./pages/member/SignUp";
+import BoardDetail from "./pages/board/BoardDetail";
 import Fire from "./pages/member/Fire";
 import Update from "./pages/member/Update";
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -29,6 +29,14 @@ const router = createBrowserRouter([
       {
         path: "/mypage",
         element: <MyPage />,
+      },
+      {
+        path: "/update",
+        element: <Update />,
+      },
+      {
+        path: "/fire",
+        element: <Fire />,
       },
       {
         path: "/studygroup",
@@ -58,7 +66,6 @@ const router = createBrowserRouter([
         path: "/scheduleMain",
         element: <ScheduleMain />,
       },
-
       {
         path: "/signup",
         element: <SignUp />,
@@ -72,15 +79,9 @@ const router = createBrowserRouter([
         element: <Board />,
       },
       {
-        path: "/fire",
-        element: <Fire />,
+        path: "/post/:postNo",
+        element: <BoardDetail />,
       },
-
-      {
-        path: "/update",
-        element: <Update />,
-      },
-      
     ],
   },
 ]);

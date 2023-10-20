@@ -4,6 +4,10 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/login";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { asyncLogin } from "../store/userSlice";
+import { useSelector } from "react-redux";
+import { userSave } from "../store/userSlice";
 
 const customStyles = {
   overlay: {
@@ -80,21 +84,37 @@ const StyleTest = styled.div`
 `;
 
 function ModalSub() {
-  const session = () => {
-    return window.sessionStorage.getItem("member");
-  };
-  // console.log(session());
-  const [isOpen, setIsOpen] = useState(true); // Modal 표시여부
+  const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => {
+    return state.user;
+  });
+
+  useEffect(() => {
+    if (Object.keys(user).length === 0 && save !== null) {
+      // store에 키값(식별자)이 없으면서 로컬 스토리지에 유저정보가 존재하면 저장
+      dispatch(userSave(JSON.parse(save)));
+    } else if (Object.keys(user).length !== 0 && save !== null) {
+      // 유저정보가 저장되어 있다면 modal 내리기
+      closeTab();
+    }
+  }, [save]);
+
+  console.log(user);
+  useEffect(() => {
+    // modal 상태에 따라 body 고정여부
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [isOpen]);
 
   const closeTab = () => {
     setIsOpen(false);
   };
-  useEffect(() => {
-    if (session() != null) {
-      closeTab();
-    }
-  }, [sessionStorage]);
 
   const handleSignUpClick = () => {
     // 회원가입 버튼 클릭 시 '/signup' 경로로 이동
@@ -105,30 +125,22 @@ function ModalSub() {
   const handleSubmit = (e) => {
     // 로그인 버튼 클릭시 로그인
     e.preventDefault();
+
     const idValue = e.target.elements.id.value; //아이디
     const passwordValue = e.target.elements.password.value; //비번
-    const formData2 = { idValue, passwordValue };
+    // const formData2 = { idValue, passwordValue };
+    // login(formData2);
 
-    const result = login(formData2);
-    // console.log(result);
+    const id = e.target.elements.id.value; //아이디
+    const password = e.target.elements.password.value; //비번
 
-    if (result != null) {
-      result.then(function (data) {
-        // console.log(data);
-        window.sessionStorage.setItem("member", JSON.stringify(data));
-        setIsOpen(false);
-      });
-    }
+    // 로그인 시도
+    dispatch(asyncLogin({ id, password }));
     navigate("/");
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      style={customStyles}
-      contentLabel="modal"
-      ariaHideApp={false}
-    >
+    <Modal isOpen={isOpen} style={customStyles} contentLabel="modal">
       <StyleTest>
         <div className="mainModal">
           <br></br>

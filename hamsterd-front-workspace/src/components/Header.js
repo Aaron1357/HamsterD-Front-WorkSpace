@@ -3,6 +3,9 @@ import styled from "styled-components";
 import logo from "../resource/logo.jpg";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import ModalSub from "../components/ModalSub";
+import { useNavigate } from "react-router-dom";
+import { userLogout } from "../store/userSlice";
+import { useDispatch } from "react-redux";
 
 const Test = styled.div`
   .header-section {
@@ -10,7 +13,7 @@ const Test = styled.div`
     width: 100%;
     height: 120px;
   }
-
+  ////
   .header {
     display: flex;
     align-items: center;
@@ -70,20 +73,31 @@ const Test = styled.div`
     justify-content: space-around;
   }
 
-  .logout{
-
+  .logout {
     margin-top: -150px;
     margin-left: 200px;
   }
+
   /* 사이드바 CSS */
 `;
 
 const Sub = styled.div``;
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const home = () => {
+    // 로고 클릭시 메인페이지 이동
+    navigate("/");
+  };
+
   const logout = () => {
-    window.sessionStorage.clear(); // 세션 제거
-    window.location.reload(true); // 새로고침
+    console.log("logout!");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    dispatch(userLogout());
+    window.location.reload(true);
   };
 
   return (
@@ -105,9 +119,9 @@ const Header = () => {
                 <Link to="/mypage">마이 페이지</Link>
               </div>
               <div className="submenu">
-                <a href="#">마이페이지</a>
+                <a href="/mypage">마이페이지</a>
                 <Link to="/changeinfo">개인정보수정</Link>
-                <Link to="/fire">탈퇴</Link>
+                <a href="/fire">탈퇴</a>
               </div>
             </div>
             <div className="menu" id="board">
@@ -126,7 +140,7 @@ const Header = () => {
               </div>
               <div className="submenu">
                 <Link to="/groupreview">그룹평가</Link>
-                <Link to="/schedule">스케쥴</Link>
+                <Link to="/scheduleMain">스케쥴</Link>
               </div>
             </div>
             <div className="menu" id="social">
@@ -137,23 +151,8 @@ const Header = () => {
                 <a href="#">서브메뉴 1</a>
                 <a href="#">서브메뉴 2</a>
                 <a href="#">서브메뉴 3</a>
-              </div>  
-            </div>
-
-            <div className="menu" id="logout">
-              <div className="logout">
-              <button 
-                type="button"
-                id="signUpbtn"
-                className="btn btn-danger" 
-                onClick={logout}
-              >
-                로그아웃
-              </button>
               </div>
-           
-          </div>
-
+            </div>
           </div>
         </div>
       </div>

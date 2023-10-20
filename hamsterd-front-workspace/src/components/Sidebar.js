@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const Test2 = styled.div`
   /* 로고영역 */
@@ -66,7 +67,7 @@ const Test2 = styled.div`
     text-align: center;
   }
 
-  .myinfo button {
+  .myinfo div {
     border: 3px solid rgba(211, 157, 87);
     border-radius: 10px;
     box-shadow: var(
@@ -90,6 +91,10 @@ const Test2 = styled.div`
   .btn {
     color: rgba(211, 157, 87);
   }
+  .main-page {
+  }
+  width: 600px;
+  margin-top: -10px;
 `;
 
 const Sidebar = () => {
@@ -104,23 +109,13 @@ const Sidebar = () => {
         <div className="main-section">
           <div className="section" id="section3">
             <div className="myinfo">
-              <div>
-                <button className="btn" onClick={handleStudyGroupClick}>
-                  내 스터디
-                </button>
+              <div className="mystudy" a href="/grouppage">
+                <Link to="/grouppage">내 스터디</Link>
               </div>
-              <div className="myweight">
-                <button className="btn">내 몸무게</button>
-              </div>
-              <div className="mycalender">
-                <button className="btn">내 일정</button>
-              </div>
-              <div className="mypost">
-                <button className="btn">내 게시글</button>
-              </div>
-              <div className="mycomment">
-                <button className="btn">내 댓글</button>
-              </div>
+              <div className="myweight">내 몸무게</div>
+              <div className="mycalender">내 일정</div>
+              <div className="mypost">내 게시글</div>
+              <div className="mycomment">내 댓글</div>
             </div>
           </div>
         </div>
