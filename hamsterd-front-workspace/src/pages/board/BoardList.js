@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { updateBoardView } from "../../api/boardFile";
-import { useSelector } from "react-redux";
+import ReactPaginate from "react-paginate";
 
 const BoardStyle = styled.div`
   .boardListHead1 {
@@ -30,17 +30,17 @@ const BoardStyle = styled.div`
 
 const BoardList = () => {
   const [boardList, setBoardList] = useState([]);
-  const token = localStorage.getItem("token");
 
-  const user = useSelector((state) => {
-    return state.user;
-  });
-
-  // console.log(user.id);
+  //페이지 처리
+  const [currentItems, setCurrentItems] = useState(null);
+  const [page, setPage] = useState(1);
+  const [itemOffset, setItemOffset] = useState(0);
 
   useEffect(() => {
-    searchBoardList().then((res) => setBoardList(res));
-
+    searchBoardList(page).then((res) => setBoardList(res));
+    // const res = await searchBoardList(page);
+    // setBoardList(res);
+    console.log("페이지 나와라");
     // console.log("로컬스토리지 닉네임 " + localStorage.getItem("nickname"));
   }, []);
 
@@ -86,11 +86,9 @@ const BoardList = () => {
                   <td>{index + 1}</td>
                   <td>{item?.postTitle}</td>
                   <td>
-                    {item?.securityCheck === "y" ? (
-                      <div>"익명"</div>
-                    ) : (
-                      <div>{item?.member?.nickname}</div>
-                    )}
+                    {item?.securityCheck === "y"
+                      ? "익명"
+                      : item?.member?.nickname}
                   </td>
                   <td>
                     {item?.createTime
@@ -106,6 +104,14 @@ const BoardList = () => {
               ))}
             </tbody>
           </table>
+          <tfoot>
+            {/* {currentItems &&
+              currentItems.map((item) => (
+                <div>
+                  <h3>Item #{item}</h3>
+                </div>
+              ))} */}
+          </tfoot>
         </div>
       </div>
     </BoardStyle>

@@ -12,7 +12,9 @@ const BoardDetail = () => {
   console.log(board);
 
   const getLoding = async (postNo) => {
+    console.log("getLoading " + postNo);
     const resp = await detailBoard(postNo);
+    console.log("getloading " + resp);
     setBoard(resp);
 
     // const resp = await axios.get(

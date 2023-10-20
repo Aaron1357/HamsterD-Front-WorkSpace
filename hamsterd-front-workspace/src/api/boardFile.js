@@ -33,9 +33,12 @@ export const updateBoardView = async (postNo) => {
 };
 
 //db에 있는 데이터 끌어와서 전체 게시물 리스트 보기
-export const searchBoardList = async () => {
+export const searchBoardList = async (page) => {
+  console.log(page);
+  let url = `posts?page=${page}`;
+
   try {
-    const res = await instance.get("post");
+    const res = await instance.get(url);
     return res.data;
   } catch (error) {
     console.error(error);

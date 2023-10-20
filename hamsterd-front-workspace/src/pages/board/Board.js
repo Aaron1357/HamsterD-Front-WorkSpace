@@ -47,14 +47,13 @@ const Board = () => {
   //게시물 이미지 업로드시 여러개 넣을 수 있게 배열로 만들어줌
   const images = [];
 
-  const token = localStorage.getItem("token");
+  const token = localStorage;
 
   const navigate = useNavigate();
 
   const formData = new FormData();
 
   const onClick = async () => {
-    console.log("onClick 호출호추");
     formData.append("title", title);
     formData.append("desc", desc);
     formData.append("securityCheck", securityCheck);
