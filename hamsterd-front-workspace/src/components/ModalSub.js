@@ -90,6 +90,7 @@ function ModalSub() {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => {
+    console.log("state.user : " + state.user);
     return state.user;
   });
 

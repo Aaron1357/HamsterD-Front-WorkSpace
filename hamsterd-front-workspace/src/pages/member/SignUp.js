@@ -25,6 +25,11 @@ const SignUpStyle = styled.div`
 `;
 
 const SignUp = () => {
+  const convertToDate = (dateString) => {
+    const date = new Date(dateString);
+    return date;
+  };
+
   // const [id, setId] = useState([]);
   // const [nickname, setNickname] = useState([]);
   // const [password, setPw] = useState([]);
@@ -39,6 +44,7 @@ const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const formData2 = {
       id: e.target.id.value,
       nickname: e.target.nickname.value,
@@ -73,9 +79,6 @@ const SignUp = () => {
                   className="form-control"
                   aria-describedby="passwordHelpInline"
                   name="id"
-                  // onChange={(e) => {
-                  //   setId(e.target.value);
-                  // }}
                   required
                 />
                 <button
@@ -100,9 +103,6 @@ const SignUp = () => {
                   className="form-control"
                   aria-describedby="passwordHelpInline"
                   name="nickname"
-                  // onChange={(e) => {
-                  //   setNickname(e.target.value);
-                  // }}
                   required
                 />
                 <button
@@ -125,11 +125,8 @@ const SignUp = () => {
                 id="inputPassword"
                 className="form-control"
                 aria-describedby="passwordHelpInline"
-                name="password"
-                // onChange={(e) => {
-                //   setPw(e.target.value);
-                // }}
                 required
+                name="password"
               />
               <span id="passwordHelpInline" className="form-text">
                 8-20자의 비밀번호를 입력하세요.
@@ -161,9 +158,6 @@ const SignUp = () => {
                 id="name"
                 className="form-control"
                 aria-describedby="passwordHelpInline"
-                // onChange={(e) => {
-                //   setName(e.target.value);
-                // }}
                 required
                 name="name"
               />
@@ -178,9 +172,6 @@ const SignUp = () => {
                 id="birth"
                 type="date"
                 placeholder="생일"
-                // onChange={(e) => {
-                //   setBirth(e.target.value);
-                // }}
                 required
                 name="birth"
               />
@@ -195,12 +186,6 @@ const SignUp = () => {
                   name="gender"
                   id="flexRadioDefault1"
                   value="man"
-                  readOnly
-                  // if (checked) {
-                  //   onChange={(e) => {
-                  //     setGender(e.target.value);
-                  //   }}
-                  // }
                 />
                 <label className="form-check-label" htmlFor="flexRadioDefault1">
                   남자
@@ -214,7 +199,6 @@ const SignUp = () => {
                   value="woman"
                   id="flexRadioDefault2"
                   checked
-                  readOnly
                 />
                 <label className="form-check-label" htmlFor="flexRadioDefault2">
                   여자

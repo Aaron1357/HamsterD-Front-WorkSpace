@@ -1,15 +1,9 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import styled from "styled-components";
 import logo from "../resource/logo.jpg";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Link,
-  useNavigate,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import ModalSub from "../components/ModalSub";
-
+import { useNavigate } from "react-router-dom";
 import { userLogout } from "../store/userSlice";
 import { useDispatch } from "react-redux";
 
@@ -116,7 +110,7 @@ const Header = () => {
 
       <div className="header-section">
         <div id="logo">
-          <img className="logoimg" src={logo} alt="Logo" onClick={home} />
+          <img className="logoimg" src={logo} alt="Logo" />
         </div>
         <div className="realheader">
           <div className="header">
@@ -146,7 +140,7 @@ const Header = () => {
               </div>
               <div className="submenu">
                 <Link to="/groupreview">그룹평가</Link>
-                <Link to="/schedule">스케쥴</Link>
+                <Link to="/scheduleMain">스케쥴</Link>
               </div>
             </div>
             <div className="menu" id="social">
@@ -157,19 +151,6 @@ const Header = () => {
                 <a href="#">서브메뉴 1</a>
                 <a href="#">서브메뉴 2</a>
                 <a href="#">서브메뉴 3</a>
-              </div>
-            </div>
-
-            <div className="menu" id="logout">
-              <div className="logout">
-                <button
-                  type="button"
-                  id="signUpbtn"
-                  className="btn btn-danger"
-                  onClick={logout}
-                >
-                  로그아웃
-                </button>
               </div>
             </div>
           </div>

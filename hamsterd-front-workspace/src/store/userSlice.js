@@ -3,9 +3,8 @@ import { updateMember, deleteMember, login } from "../api/login";
 import { useDispatch } from "react-redux";
 
 const asyncLogin = createAsyncThunk("userSlice/asyncLogin", async (data) => {
-  //   console.log(data);
   const result = await login(data);
-  console.log(result.data);
+  console.log("result : " + result.data);
   return result.data;
 });
 
