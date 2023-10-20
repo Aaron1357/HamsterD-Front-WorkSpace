@@ -1,15 +1,10 @@
 import styled from "styled-components";
 import profile from "../../resource/종빈22.png";
-import groupimg from "../../resource/오리.jpg";
+
 import { useNavigate, useLocation } from "react-router-dom";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import ScheduleMain from "./ScheduleMain";
-import {
-  viewManager,
-  viewMemberList,
-  viewStudyGroup,
-} from "../../api/studygroup";
 
 const GroupPageTest = styled.div`
   .mainsection {
@@ -154,41 +149,17 @@ const GroupPageTest = styled.div`
 
 const GroupPage = () => {
   const navigate = useNavigate();
-
   const location = useLocation();
-  const number = location.state.data; // 선택한 스터디그룹 넘버를 들고 온다.
-
-  const [memberlist, setMemberlist] = useState([]);
-  const [viewGroup, setViewGroup] = useState([]);
 
   const handleGroupReviewClick = () => {
     navigate("/groupreview");
   };
 
-  const MemberManager = (num) => {
-    //  스터디그룹 그룹장 멤버 조회
-    const result = viewManager(num);
-    return result;
-  };
-  // MemberManager(number).then((result) => {
-  //   console.log(result);
-  // });
-
-  const MemberList = (num) => {
-    //  스터디그룹 멤버 리스트 조회
-    return viewMemberList(num);
-  };
-  MemberList(number).then((result) => {
-    setMemberlist(result);
-  });
-
-  const ViewGroup = (num) => {
-    //  스터디그룹 조회
-    return viewStudyGroup(num);
-  };
-  ViewGroup(number).then((result) => {
-    setViewGroup(result);
-  });
+  const number = Number(location.state.data);
+  const members = location.state.members;
+  const group = location.state.group;
+  console.log(members);
+  console.log(group);
 
   const modalRef = useRef(null);
 
@@ -203,17 +174,20 @@ const GroupPage = () => {
 
   return (
     <GroupPageTest>
-      {console.log(memberlist)}
       <div className="mainsection">
         <div className="section">
           <div>
             <div className="groupinfo">
               <div className="group-container">
                 <div id="group">
-                  <img className="groupimg" src={groupimg} alt="Group" />
+                  <img
+                    className="groupimg"
+                    src={`/upload/${group.groupImage.split("\\").pop()}`}
+                    alt="Group"
+                  />
                 </div>
                 <div id="groupintro">
-                  <div id="groupname">'그룹명' ex 오리 </div>
+                  <div id="groupname">{group.groupName}</div>
                   <div id="grouppoint">그룹 점수 ex 4.7점</div>
                   <div className="btn">
                     <div className="App">
@@ -231,12 +205,11 @@ const GroupPage = () => {
                   </div>
                 </div>
               </div>
-              {console.log("하이2" + memberlist)}
               <div id="info">
                 <div id="info2">'그룹 소개' ex 우리는 멋진 오리에요! </div>
                 <br />
                 <div className="group-container">
-                  {memberlist.map((item, index) => (
+                  {members.map((item, index) => (
                     <div>
                       <div className="photo">
                         <img
@@ -248,28 +221,17 @@ const GroupPage = () => {
                       <div>{item.nickname}</div>
                     </div>
                   ))}
-
-                  <div>
-                    <div className="photo">
-                      <img
-                        className="profileimg2"
-                        src={profile}
-                        alt="Profile"
-                      />
-                    </div>
-                    <div>윤종빈</div>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          {console.log("하이" + memberlist)}
+
           <br />
           <br />
           <div>
             <div id="schedule">스케쥴</div>
             <div className="horizonline"></div>
-            <ScheduleMain className="scheduleMain" />
+            <ScheduleMain className="scheduleMain" groupNo={number} />
           </div>
           <div>
             <div id="comments">Comments</div>
@@ -290,7 +252,7 @@ const GroupPage = () => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">모달 참여하기</h5>
+              <h5 className="modal-title"> 참여하기</h5>
               <button
                 type="button"
                 className="btn-close"

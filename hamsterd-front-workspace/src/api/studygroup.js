@@ -15,6 +15,12 @@ export const getStudyGroupList = async () => {
   return await instance.get("studygroup");
 };
 
+// 스터디그룹의 방장 목록 받아오기
+export const getManagerList = async () => {
+  console.log("dddd");
+  return await instance.get("member/manager");
+};
+
 // 그룹넘버를 기본키로 가지고 있는 스터디그룹
 export const viewStudyGroup = async (groupNo) => {
   const result = await instance.get(`studygroup/${groupNo}`);
@@ -30,7 +36,7 @@ export const viewMemberList = async (groupNo) => {
 // 그룹넘버를 기본키로 가지고 있는 스터디그룹 방장 멤버
 export const viewManager = async (groupNo) => {
   // console.log("그룹넘버" + groupNo);
-  const result = await instance.get(`studygroup/${groupNo}/manager`);
+  const result = await instance.get(`studygroup/manager/${groupNo}`);
   // console.log(result.data);
   return result.data;
 };

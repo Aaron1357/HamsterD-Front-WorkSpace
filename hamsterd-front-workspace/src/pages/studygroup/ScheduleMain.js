@@ -136,7 +136,8 @@ const ScheduleStyle = styled.div`
   }
 `;
 
-const ScheduleMain = () => {
+const ScheduleMain = (props) => {
+  console.log(props.groupNo);
   const user = localStorage.getItem("user");
   console.log("user : " + user);
 
@@ -346,7 +347,6 @@ const ScheduleMain = () => {
       <div className="content">
         <div className="calendar-section">
           {/* 달력 영역 */}
-          {console.log("범인검거3.")}
           <div className="calendar">
             <FullCalendar
               plugins={[dayGridPlugin, interactionPlugin]}

@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addStudyGroup } from "../../api/studygroup";
+import { useSelector } from "react-redux";
 
 const CreateGroupStyle = styled.div`
   .mainsection {
@@ -28,9 +29,12 @@ const CreateGroupStyle = styled.div`
 `;
 
 const CreateGroup = () => {
-  const memberData = JSON.parse(sessionStorage.getItem("member")); // 로그인한 회원 정보 세션으로 불러옴
-  console.log(memberData);
-  console.log(memberData.id);
+  const user = useSelector((state) => {
+    return state.user;
+  });
+
+  console.log(user);
+  console.log(user.id);
 
   const [title, setTitle] = useState([]);
   const [content, setContent] = useState([]);
@@ -46,7 +50,7 @@ const CreateGroup = () => {
     formData.append("groupacademy", academy);
     formData.append("groupimage", image);
     // console.log(memberData.id);
-    formData.append("id", memberData.id);
+    formData.append("id", user.id);
 
     // const formData2 = {
     //   title : ndsklanlkdnal,
