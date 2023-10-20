@@ -55,5 +55,5 @@ const userSlice = createSlice({
 });
 
 export default userSlice;
-export { asyncLogin, putMember };
+export { asyncLogin, putMember, delMember };
 export const { userSave, userLogout } = userSlice.actions;

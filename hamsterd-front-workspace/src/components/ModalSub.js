@@ -84,6 +84,7 @@ const StyleTest = styled.div`
 `;
 
 function ModalSub() {
+  const save = localStorage.getItem("user");
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
