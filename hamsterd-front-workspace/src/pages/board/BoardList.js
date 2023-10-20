@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { updateBoardView } from "../../api/boardFile";
+import { useSelector } from "react-redux";
 
 const BoardStyle = styled.div`
   .boardListHead1 {
@@ -29,9 +30,13 @@ const BoardStyle = styled.div`
 
 const BoardList = () => {
   const [boardList, setBoardList] = useState([]);
+  const token = localStorage.getItem("token");
 
-  // const user = JSON.parse(localStorage.getItem("user"));
-  // const nickname = storedData.nickname;
+  const user = useSelector((state) => {
+    return state.user;
+  });
+
+  // console.log(user.id);
 
   useEffect(() => {
     searchBoardList().then((res) => setBoardList(res));
@@ -71,32 +76,34 @@ const BoardList = () => {
               </tr>
             </thead>
             <tbody>
-              {boardList &&
-                boardList.map((item, index) => (
-                  <tr
-                    id="boardView"
-                    key={item.postNo}
-                    onClick={() => onClickView(item.postNo)}
-                  >
-                    <td>{index + 1}</td>
-
-                    <td>{item.postTitle}</td>
-
-                    <td>
-                      {item.securityCheck === "y" ? "익명" : item.securityCheck}
-                    </td>
-                    <td>
-                      {item.createTime
-                        ? new Date(item.createTime).toLocaleString("en-US", {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                          })
-                        : ""}
-                    </td>
-                    <td>{item.boardView}</td>
-                  </tr>
-                ))}
+              {boardList?.map((item, index) => (
+                <tr
+                  id="boardView"
+                  key={item?.postNo}
+                  onClick={() => onClickView(item?.postNo)}
+                >
+                  {console.log(item)}
+                  <td>{index + 1}</td>
+                  <td>{item?.postTitle}</td>
+                  <td>
+                    {item?.securityCheck === "y" ? (
+                      <div>"익명"</div>
+                    ) : (
+                      <div>{item?.member?.nickname}</div>
+                    )}
+                  </td>
+                  <td>
+                    {item?.createTime
+                      ? new Date(item?.createTime).toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })
+                      : ""}
+                  </td>
+                  <td>{item?.boardView}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

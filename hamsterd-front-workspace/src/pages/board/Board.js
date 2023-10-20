@@ -7,6 +7,7 @@ import ImageResize from "quill-image-resize";
 import "react-quill/dist/quill.snow.css";
 import { addFile } from "../../api/boardFile";
 import ImageUploader from "quill-image-uploader";
+import { useSelector } from "react-redux";
 
 const BoardStyle = styled.div`
   /* 스타일 내용 입력 */
@@ -46,14 +47,18 @@ const Board = () => {
   //게시물 이미지 업로드시 여러개 넣을 수 있게 배열로 만들어줌
   const images = [];
 
+  const token = localStorage.getItem("token");
+
   const navigate = useNavigate();
 
   const formData = new FormData();
 
   const onClick = async () => {
+    console.log("onClick 호출호추");
     formData.append("title", title);
     formData.append("desc", desc);
     formData.append("securityCheck", securityCheck);
+    formData.append("token", token);
     console.log(desc);
     console.log(img);
     // data-type : clob <-- 한 컬럼에 html 통째로!
