@@ -1,4 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -78,6 +79,17 @@ const Test2 = styled.div`
     margin-bottom: 20px;
     margin-top: 20px;
     line-height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .main-page {
+    width: 600px;
+    margin-top: -10px;
+  }
+  .btn {
+    color: rgba(211, 157, 87);
   }
   .main-page {
   }
@@ -86,6 +98,11 @@ const Test2 = styled.div`
 `;
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const handleStudyGroupClick = () => {
+    // 회원가입 버튼 클릭 시 '/signup' 경로로 이동
+    navigate("/grouppage");
+  };
   return (
     <Test2>
       <div className="main-page">

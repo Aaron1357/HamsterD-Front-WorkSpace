@@ -136,7 +136,8 @@ const ScheduleStyle = styled.div`
   }
 `;
 
-const ScheduleMain = () => {
+const ScheduleMain = (props) => {
+  console.log(props.groupNo);
   const user = localStorage.getItem("user");
   console.log("user : " + user);
 

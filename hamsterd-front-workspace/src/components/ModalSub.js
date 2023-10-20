@@ -84,8 +84,9 @@ const StyleTest = styled.div`
 `;
 
 function ModalSub() {
-  const save = localStorage.getItem("user"); // 로컬스토리지에 user정보 호출
-  const [isOpen, setIsOpen] = useState(true); // Modal 표시여부
+  const save = localStorage.getItem("user");
+  const [isOpen, setIsOpen] = useState(true);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -98,10 +99,13 @@ function ModalSub() {
     if (Object.keys(user).length === 0 && save !== null) {
       // store에 키값(식별자)이 없으면서 로컬 스토리지에 유저정보가 존재하면 저장
       dispatch(userSave(JSON.parse(save)));
-    } else if (Object.keys(user).length !== 0 && save !== null) {
+      closeTab();
+    } else if (Object.keys(user).length) {
       // 유저정보가 저장되어 있다면 modal 내리기
       closeTab();
-    }
+    } //else if (Object.keys(user).length === 0) {
+    //   setIsOpen(true);
+    // }
   }, [save]);
 
   console.log(user);
