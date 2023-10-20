@@ -30,6 +30,18 @@ const SignUp = () => {
     return date;
   };
 
+  // const [id, setId] = useState([]);
+  // const [nickname, setNickname] = useState([]);
+  // const [password, setPw] = useState([]);
+  // const [name, setName] = useState([]);
+  // const [birth, setBirth] = useState([]);
+  // const [gender, setGender] = useState([]);
+  // const [phone, setPhone] = useState([]);
+  // const [academy, setAcademy] = useState([]);
+  // const [address, setAddr] = useState([]);
+
+  const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -47,12 +59,8 @@ const SignUp = () => {
 
     console.log(formData2.id);
 
-    // formData.set("birth", convertToDate(formData.get("birth")));
     addMember(formData2);
-    // .then((response) => {
-    //   console.log(response);
-    // });
-    // navigate("/");
+    navigate("/");
   };
 
   return (

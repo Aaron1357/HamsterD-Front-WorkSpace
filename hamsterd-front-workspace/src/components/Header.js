@@ -119,9 +119,9 @@ const Header = () => {
                 <Link to="/mypage">마이 페이지</Link>
               </div>
               <div className="submenu">
-                <a href="#">마이페이지</a>
+                <a href="/mypage">마이페이지</a>
                 <Link to="/changeinfo">개인정보수정</Link>
-                <a href="#">탈퇴</a>
+                <a href="/fire">탈퇴</a>
               </div>
             </div>
             <div className="menu" id="board">
