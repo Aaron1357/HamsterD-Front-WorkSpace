@@ -14,7 +14,7 @@ import { getScheduleOfGroup } from "../../api/schedule";
 import { getScheduleofGroupDate } from "../../api/schedule";
 import { useNavigate } from "react-router-dom";
 import { getOneSchedule } from "../../api/schedule";
-
+import { useSelector } from "react-redux";
 // css
 const ScheduleStyle = styled.div`
   .content {
@@ -137,9 +137,11 @@ const ScheduleStyle = styled.div`
 `;
 
 const ScheduleMain = (props) => {
-  console.log(props.groupNo);
-  const user = localStorage.getItem("user");
-  console.log("user : " + user);
+  const user = useSelector((state) => {
+    return state.user;
+  });
+
+  console.log(user.studyGroup);
 
   // if (user) {
   //   const userObject = JSON.parse(user);

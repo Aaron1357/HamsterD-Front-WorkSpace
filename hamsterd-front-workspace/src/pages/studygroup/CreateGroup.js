@@ -52,6 +52,8 @@ const CreateGroup = () => {
     // console.log(memberData.id);
     formData.append("id", user.id);
 
+    console.log("formData : " + formData);
+
     // const formData2 = {
     //   title : ndsklanlkdnal,
     //   content : dnlksanldasnkd,
