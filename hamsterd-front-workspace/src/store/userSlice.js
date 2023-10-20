@@ -38,7 +38,7 @@ const userSlice = createSlice({
     builder.addCase(asyncLogin.fulfilled, (state, action) => {
       // 로그인 성공시 localStorage로 해당 정보 관리
       localStorage.setItem("token", action.payload.token);
-      localStorage.setItem("user", JSON.parse(action.payload));
+      localStorage.setItem("user", JSON.stringify(action.payload));
       return action.payload;
     });
 
