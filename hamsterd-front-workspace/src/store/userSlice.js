@@ -44,15 +44,16 @@ const userSlice = createSlice({
 
     // 유저 정상적으로 수정시
     builder.addCase(putMember.fulfilled, (state, action) => {
-      console.log(action);
-      return state;
+      // console.log(action);
+      localStorage.setItem("token", action.payload.token);
+      localStorage.setItem("user", JSON.stringify(action.payload));
+      return action.payload;
     });
 
     // 유저 정상적으로 삭제 시
     builder.addCase(delMember.fulfilled, (state, action) => {
-      const dispatch = useDispatch();
       localStorage.clear();
-      dispatch(userLogout());
+      return {};
     });
   },
 });
