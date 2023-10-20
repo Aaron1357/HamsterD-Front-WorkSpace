@@ -41,6 +41,7 @@ const Board = () => {
 
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
+  const [securityCheck, setSecurityCheck] = useState("n");
   const [img, setImg] = useState([]);
   //게시물 이미지 업로드시 여러개 넣을 수 있게 배열로 만들어줌
   const images = [];
@@ -52,11 +53,12 @@ const Board = () => {
   const onClick = async () => {
     formData.append("title", title);
     formData.append("desc", desc);
+    formData.append("securityCheck", securityCheck);
     console.log(desc);
     console.log(img);
     // data-type : clob <-- 한 컬럼에 html 통째로!
 
-    addFile(formData);
+    await addFile(formData);
     navigate("/boardList");
   };
 
@@ -156,11 +158,17 @@ const Board = () => {
                   type="radio"
                   name="flexRadioDefault"
                   id="flexRadioDefault1"
+                  value="y"
+                  checked={securityCheck === "y"}
+                  onChange={(e) => {
+                    setSecurityCheck(e.target.value);
+                  }}
                 />
                 <label className="form-check-label" htmlFor="flexRadioDefault1">
                   익명
                 </label>
               </div>
+
               <div className="form-check">
                 <input
                   className="form-check-input"

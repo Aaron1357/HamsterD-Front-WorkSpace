@@ -20,6 +20,8 @@ const BoardUpdate = ({ postNo, initialTitle, initialDesc }) => {
   console.log("기존 내용 " + initialTitle);
   console.log("수정 내용 " + desc);
 
+  const [securityCheck, setSecurityCheck] = useState();
+
   const formData = new FormData();
   const navigate = useNavigate();
 
@@ -27,12 +29,15 @@ const BoardUpdate = ({ postNo, initialTitle, initialDesc }) => {
     formData.append("postNo", postNo);
     formData.append("title", title);
     formData.append("desc", desc);
+    formData.append("securityCheck", securityCheck);
     console.log("클릭 후 postNo : " + postNo);
     console.log("클릭 후 title : " + title);
     console.log("클릭 후 desc : " + desc);
     // data-type : clob <-- 한 컬럼에 html 통째로!
-    updateBoard(formData);
-    navigate("/boardList");
+    if (formData != null) {
+      await updateBoard(formData);
+      navigate("/boardList");
+    }
   };
 
   const formats = [
@@ -152,6 +157,11 @@ const BoardUpdate = ({ postNo, initialTitle, initialDesc }) => {
                 type="radio"
                 name="flexRadioDefault"
                 id="flexRadioDefault1"
+                value="y"
+                checked={securityCheck === "y"}
+                onChange={(e) => {
+                  setSecurityCheck(e.target.value);
+                }}
               />
               <label className="form-check-label" htmlFor="flexRadioDefault1">
                 익명
