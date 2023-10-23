@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { updateBoardView } from "../../api/boardFile";
-import ReactPaginate from "react-paginate";
+import Pagination from "react-js-pagination";
 
 const BoardStyle = styled.div`
   .boardListHead1 {
@@ -28,13 +28,64 @@ const BoardStyle = styled.div`
   }
 `;
 
+const PaginationBox = styled.div`
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  ul.pagination li {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #e2e2e2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+  }
+  ul.pagination li:first-child {
+    border-radius: 5px 0 0 5px;
+  }
+  ul.pagination li:last-child {
+    border-radius: 0 5px 5px 0;
+  }
+  ul.pagination li a {
+    text-decoration: none;
+    color: #337ab7;
+    font-size: 1rem;
+  }
+  ul.pagination li.active a {
+    color: white;
+  }
+  ul.pagination li.active {
+    background-color: #337ab7;
+  }
+  ul.pagination li a:hover,
+  ul.pagination li a.active {
+    color: blue;
+  }
+`;
+
 const BoardList = () => {
   const [boardList, setBoardList] = useState([]);
 
+  const handlePageChange = (page) => {
+    setPage(page);
+  };
   //페이지 처리
-  const [currentItems, setCurrentItems] = useState(null);
+
+  //페이지 초기 값은 1페이지
   const [page, setPage] = useState(1);
-  const [itemOffset, setItemOffset] = useState(0);
+
+  // const listPerPage = 8;
+
+  // const [groundList, setGroundList] = useRecoilState(groundPhotoListState);
+  // const totalPage = Math.ceil(groundList.length / listPerPage);
 
   useEffect(() => {
     searchBoardList(page).then((res) => setBoardList(res));
@@ -44,6 +95,17 @@ const BoardList = () => {
     // console.log("로컬스토리지 닉네임 " + localStorage.getItem("nickname"));
   }, []);
 
+  // useEffect(async () => {
+  //   const result = await searchBoardList(
+  //     `grounds?location=${location}&search=${searchInput}&offset=${
+  //       (page - 1) * listPerPage
+  //     }&count=${listPerPage}`
+  //   );
+  //   setGroundList({
+  //     length: result.data.length,
+  //     data: result.data.grounds,
+  //   });
+  // }, [page]);
   const navigate = useNavigate();
   //게시판 작성하기
   const onClick = () => {
@@ -105,12 +167,21 @@ const BoardList = () => {
             </tbody>
           </table>
           <tfoot>
-            {/* {currentItems &&
-              currentItems.map((item) => (
-                <div>
-                  <h3>Item #{item}</h3>
-                </div>
-              ))} */}
+            <PaginationBox>
+              <Pagination
+                // totalPage={totalPage}
+                // 현재 보고있는 페이지
+                activePage={1}
+                // 한페이지에 출력할 아이템수
+                itemsCountPerPage={2}
+                // 총 아이템수
+                totalItemsCount={300}
+                // 표시할 페이지수
+                pageRangeDisplayed={5}
+                // 함수
+                onChange={handlePageChange}
+              ></Pagination>
+            </PaginationBox>
           </tfoot>
         </div>
       </div>

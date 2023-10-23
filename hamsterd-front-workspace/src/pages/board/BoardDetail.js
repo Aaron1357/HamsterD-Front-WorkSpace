@@ -2,6 +2,7 @@ import { detailBoard } from "../../api/boardFile";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import BoardView from "./BoardView";
+import BoardComment from "../board/BoardComment";
 // import { viewPostNo } from "../../store/postSlice";
 
 const BoardDetail = () => {
@@ -37,6 +38,7 @@ const BoardDetail = () => {
         title={board.postTitle}
         desc={board.postContent}
       />
+      <BoardComment postNo={postNo} />
     </div>
   );
 };

@@ -11,7 +11,7 @@ export const addFile = async (data) => {
   return await instance.post("post", data);
 };
 
-//기존 게시물에서 업데이트 후 수정하기
+//기존 게시물에서 수정하기
 export const updateBoard = async (data) => {
   try {
     const res = await instance.put("updatePost", data);
