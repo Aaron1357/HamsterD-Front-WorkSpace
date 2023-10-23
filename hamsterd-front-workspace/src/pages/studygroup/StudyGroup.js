@@ -230,7 +230,10 @@ const StudyGroup = () => {
           <br />
           <br />
           {managerList.map((item, index) => (
-            <div key={index}>
+            <div
+              key={item.studyGroup.groupNo}
+              id={`${item.studyGroup.groupNo}`}
+            >
               <div className="profile-container">
                 <div id="profile">
                   {/* <img
@@ -241,10 +244,12 @@ const StudyGroup = () => {
                 </div>
                 <div>
                   <div>
+                    {console.log(item)}
                     <div
                       id="grouptext"
                       onClick={onClick}
-                      groupNo={item.studyGroup && item.studyGroup.groupNo} // 선택한 스터디 그룹의 그룹넘버를 value 속성에 저장
+                      groupNo={item?.studyGroup && item?.studyGroup?.groupNo}
+                      // 선택한 스터디 그룹의 그룹넘버를 value 속성에 저장
                     >
                       {item.nickname}
                     </div>

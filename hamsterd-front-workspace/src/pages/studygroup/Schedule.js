@@ -132,7 +132,7 @@ const Update = () => {
   const location = useLocation();
 
   const [schedule, setSchedule] = useState(location.state.schedule);
-  const [groupNo, setGroupNo] = useState(location.state.groupNo);
+  const groupNo = location.state.groupNo;
   const [scheduleNo, setScheduleNo] = useState(location.state.scheduleNo);
 
   const [title, setTitle] = useState(schedule.scheduleTitle);
@@ -145,20 +145,18 @@ const Update = () => {
 
   // 수정 버튼
   const updateEvent = async () => {
+    const token = localStorage.getItem("token");
+
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
     formData.append("date", date);
     formData.append("scheduleNo", location.state.scheduleNo);
-
-    console.log("title : " + formData.get("title"));
-    console.log("content : " + formData.get("content"));
-    console.log("date : " + formData.get("date"));
-    console.log("scheduleNo : " + formData.get("scheduleNo"));
+    formData.append("token", token);
 
     try {
       await updateSchedule(formData); // 비동기 작업 완료 대기
-      navigate("/grouppage"); // 파일 업로드가 완료되면 페이지 이동
+      navigate("/scheduleMain"); // 파일 업로드가 완료되면 페이지 이동
     } catch (error) {
       // 에러 처리
       console.error("오류 발생 : ", error);
@@ -183,7 +181,7 @@ const Update = () => {
   };
 
   return (
-    <form className="registerSchedule">
+    <form className="registerSchedule" method="POST">
       <div className="add">
         <input
           hidden
@@ -243,9 +241,13 @@ const Update = () => {
 const Add = () => {
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState();
-  const [content, setContent] = useState();
-  const [date, setDate] = useState();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [date, setDate] = useState("");
+
+  const location = useLocation();
+
+  const token = localStorage.getItem("token");
 
   // 추가 버튼(기존 정보 있으면 수정)
   const plus = async () => {
@@ -253,14 +255,12 @@ const Add = () => {
     formData.append("title", title);
     formData.append("content", content);
     formData.append("date", date);
-
-    console.log("title : " + formData.get("title"));
-    console.log("content : " + formData.get("content"));
-    console.log("date : " + formData.get("date"));
+    // 멤버 정보 담기 위해 token 같이 담아서 전송
+    formData.append("token", token);
 
     try {
       await addSchedule(formData); // 비동기 작업 완료 대기
-      navigate("/grouppage"); // 파일 업로드가 완료되면 페이지 이동
+      navigate("/grouppage/"); // 파일 업로드가 완료되면 페이지 이동
     } catch (error) {
       // 에러 처리
       console.error("오류 발생 : ", error);
@@ -269,11 +269,11 @@ const Add = () => {
 
   // 닫기 버튼 클릭 시 grouppage 메인으로 돌아감
   const close = () => {
-    navigate("/grouppage");
+    navigate("/scheduleMain");
   };
 
   return (
-    <form className="registerSchedule">
+    <form className="registerSchedule" method="POST">
       <div className="add">
         <div className="mb-3">
           <input
@@ -324,6 +324,9 @@ const Schedule = () => {
 
   const groupNo = location.state?.groupNo;
   const scheduleNo = location.state?.scheduleNo;
+
+  console.log("groupNo : " + groupNo);
+  console.log("scheduleNo : " + scheduleNo);
 
   const renderUpdateOrAdd = () => {
     if (groupNo && scheduleNo) {

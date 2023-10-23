@@ -109,7 +109,7 @@ const Sidebar = () => {
         <div className="main-section">
           <div className="section" id="section3">
             <div className="myinfo">
-              <div className="mystudy" a href="/grouppage">
+              <div className="mystudy">
                 <Link to="/grouppage">내 스터디</Link>
               </div>
               <div className="myweight">내 몸무게</div>

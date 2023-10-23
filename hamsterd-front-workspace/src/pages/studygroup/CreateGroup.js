@@ -1,7 +1,8 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addStudyGroup } from "../../api/studygroup";
+import { showMember } from "../../api/studygroup";
 import { useSelector } from "react-redux";
 
 const CreateGroupStyle = styled.div`
@@ -29,12 +30,14 @@ const CreateGroupStyle = styled.div`
 `;
 
 const CreateGroup = () => {
+  // const user = JSON.parse(localStorage.getItem("user"));
+
   const user = useSelector((state) => {
     return state.user;
   });
 
-  console.log(user);
-  console.log(user.id);
+  const id = user.id;
+  console.log(id);
 
   const [title, setTitle] = useState([]);
   const [content, setContent] = useState([]);
@@ -43,30 +46,54 @@ const CreateGroup = () => {
 
   const navigate = useNavigate();
 
-  const onClick = async () => {
+  const onClick = async (e) => {
+    console.log(e);
+    e.preventDefault();
     const formData = new FormData();
     formData.append("grouptitle", title);
     formData.append("groupcontent", content);
     formData.append("groupacademy", academy);
     formData.append("groupimage", image);
-    // console.log(memberData.id);
-    formData.append("id", user.id);
+    formData.append("id", id);
 
     console.log("formData : " + formData);
 
-    // const formData2 = {
-    //   title : ndsklanlkdnal,
-    //   content : dnlksanldasnkd,
+    //   // const formData2 = {
+    //   //   title : ndsklanlkdnal,
+    //   //   content : dnlksanldasnkd,
+    //   // }
+
+    // try {
+    const response = await addStudyGroup(formData); // 비동기 작업 완료 대기
+
+    console.log(response);
+    console.log(response.data.groupNo);
+
+    // 계정 수정 -> 감으로 수정
+    // const user = JSON.parse(localStorage.getItem("user"));
+    user.studyGroup = response.data.groupNo;
+    localStorage.setItem("user", user);
+
+    //   setImage(response.data.image);
+
+    console.log(user);
+
+    navigate("/studygroup"); // 파일 업로드가 완료되면 페이지 이동
+    // } catch (error) {
+    //   // 에러 처리
+    //   console.error("파일 업로드 중 오류 발생:", error);
     // }
-    try {
-      const response = await addStudyGroup(formData); // 비동기 작업 완료 대기
-      setImage(response.data.image);
-      navigate("/studygroup"); // 파일 업로드가 완료되면 페이지 이동
-    } catch (error) {
-      // 에러 처리
-      console.error("파일 업로드 중 오류 발생:", error);
-    }
   };
+
+  useEffect(() => {}, []);
+
+  //토큰 정보 수정
+  // const saveUser = () => {
+  //   const member = showMember(id);
+  //   console.log("member : " + member);
+  //   localStorage.setItem("user", member);
+  // };
+
   // input 태그에 파일이 들어왔을때
   const onUploadImage = (e) => {
     // e.target.files은 list 타입으로 반환된다.
@@ -78,7 +105,7 @@ const CreateGroup = () => {
     <CreateGroupStyle>
       <div className="mainsection">
         <div className="section" id="section2">
-          <form className="creategroup">
+          <form className="creategroup" method="POST" onSubmit={onClick}>
             <div className="mb-3">
               <label htmlFor="nickName" className="form-label">
                 스터디그룹명
@@ -111,7 +138,6 @@ const CreateGroup = () => {
                 이미지 파일을 업로드하세요 (jpg, png 등)
               </span>
             </div>
-
             <div className="mb-3">
               <label htmlFor="name" className="form-label">
                 그룹 소개
@@ -129,7 +155,6 @@ const CreateGroup = () => {
                 스터디그룹에 대한 간략한 소개를 적어주세요
               </span>
             </div>
-
             <div className="mb-3">
               <label htmlFor="academy" className="form-label">
                 학원 이름
@@ -147,15 +172,15 @@ const CreateGroup = () => {
                 현재 다니고 계신 학원 명을 입력해 주세요
               </span>
             </div>
-
-            <button
+            <input
               type="submit"
               id="signupbtn"
               className="btn btn-primary"
-              onClick={onClick}
-            >
-              스터디그룹 생성
-            </button>
+              // onClick={}
+              value="스터디그룹 생성"
+            />
+            {/* 스터디그룹 생성 */}
+            {/* </input> */}
           </form>
         </div>
       </div>
