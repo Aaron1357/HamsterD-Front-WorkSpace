@@ -100,6 +100,11 @@ const Header = () => {
     window.location.reload(true);
   };
 
+  const logout2 = () => {
+    window.sessionStorage.clear(); // 세션 제거
+    window.location.reload(true); // 새로고침
+  };
+
   return (
     <Test>
       <Sub>

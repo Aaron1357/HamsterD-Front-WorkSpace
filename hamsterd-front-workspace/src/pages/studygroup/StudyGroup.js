@@ -6,6 +6,7 @@ import {
   viewStudyGroup,
   viewMemberList,
   getManagerList,
+  viewManager,
 } from "../../api/studygroup";
 import { useState, useEffect } from "react";
 
@@ -174,6 +175,9 @@ const StudyGroup = () => {
 
   const [managerList, setManagerList] = useState([]);
 
+  const [page, setPage] = useState(1); // 페이지 번호
+  const itemsPerPage = 5; // 페이지당 항목 수
+
   const getStudyGroupListAPI = async () => {
     //  그룹전체API 호출
     const result = await getManagerList();
@@ -195,15 +199,23 @@ const StudyGroup = () => {
 
     const result1 = await viewMemberList(idex);
     const result2 = await viewStudyGroup(idex);
+    const result3 = await viewManager(idex);
 
     navigate("/grouppage", {
       state: {
         data: idex,
         members: result1,
         group: result2,
+        manager: result3,
       },
     });
   };
+
+  // 현재 페이지에 해당하는 항목만 추출
+  const displayedGroups = managerList.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
 
   return (
     <StudyGroupTest>
@@ -286,6 +298,19 @@ const StudyGroup = () => {
               <br />
             </div>
           ))}
+          {/* 페이지네이션을 추가 */}
+          <div className="pagination">
+            <button onClick={() => setPage(page - 1)} disabled={page === 1}>
+              이전 페이지
+            </button>
+            <span>페이지 {page}</span>
+            <button
+              onClick={() => setPage(page + 1)}
+              disabled={page * itemsPerPage >= managerList.length}
+            >
+              다음 페이지
+            </button>
+          </div>
         </div>
       </div>
     </StudyGroupTest>

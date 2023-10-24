@@ -1,7 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { viewMemberList, viewStudyGroup } from "../api/studygroup";
+import { useSelector } from "react-redux";
 
 const Test2 = styled.div`
   /* 로고영역 */
@@ -98,19 +99,45 @@ const Test2 = styled.div`
 `;
 
 const Sidebar = () => {
+  const user = useSelector((state) => {
+    return state.user;
+  });
+
+  console.log(user.studyGroup);
+
   const navigate = useNavigate();
+
   const handleStudyGroupClick = () => {
     // 회원가입 버튼 클릭 시 '/signup' 경로로 이동
     navigate("/grouppage");
   };
+
+  const myStudyGroup = () => {
+    // if (user.studyGroup !== null) {
+    //   const idex = user.studyGroup.groupNo;
+    //   const result1 = viewMemberList(idex);
+    //   const result2 = viewStudyGroup(idex);
+    //   navigate("/grouppage", {
+    //     state: {
+    //       groupno: idex,
+    //       members: result1,
+    //       group: result2,
+    //     },
+    //   });
+    // } else {
+    //   navigate("/studygroup");
+    // }
+    navigate("/studygroup");
+  };
+
   return (
     <Test2>
       <div className="main-page">
         <div className="main-section">
           <div className="section" id="section3">
             <div className="myinfo">
-              <div className="mystudy" a href="/grouppage">
-                <Link to="/grouppage">내 스터디</Link>
+              <div className="mystudy" onClick={myStudyGroup}>
+                내 스터디
               </div>
               <div className="myweight">내 몸무게</div>
               <div className="mycalender">내 일정</div>

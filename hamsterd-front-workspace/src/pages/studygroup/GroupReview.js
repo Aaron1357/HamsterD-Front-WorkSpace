@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import profile from "../../resource/종빈22.png";
 import groupimg from "../../resource/오리.jpg";
+import { useLocation } from "react-router-dom";
 
 const GroupReviewStyle = styled.div`
   .mainsection {
@@ -126,9 +127,22 @@ const GroupReviewStyle = styled.div`
 const GroupReview = () => {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
-    // TODO: Handle the file upload logic here
-    console.log("Selected file:", file);
+    // // TODO: Handle the file upload logic here
+    // console.log("Selected file:", file);
   };
+
+  const location = useLocation();
+
+  const number = Number(location.state.data);
+  const members = location.state.members;
+  const group = location.state.group;
+  const manager = location.state.manager;
+
+  console.log(number);
+  console.log(manager);
+  console.log(group);
+  console.log(members);
+
   return (
     <GroupReviewStyle>
       <div className="mainsection">
@@ -136,30 +150,45 @@ const GroupReview = () => {
           <div>
             <div className="profile-container">
               <div id="profile">
-                <img className="profileimg" src={profile} alt="Profile" />
+                {/* <img
+                  className="profileimg"
+                  src={`/upload/${manager.profile.split("\\").pop()}`}
+                  alt="Profile"
+                /> */}
               </div>
               <div>
-                <div id="grouptext">'그룹장'님의 스터디그룹</div>
-                <div id="academyname">학원명</div>
+                <div id="grouptext">{manager.nickname}님의 스터디그룹</div>
+                <div id="academyname">{manager.academyName}</div>
               </div>
             </div>
             <div className="groupinfo">
               <div className="group-container">
                 <div id="group">
-                  <img className="groupimg" src={groupimg} alt="Group" />
+                  <img
+                    className="groupimg"
+                    src={`/upload/${group.groupImage.split("\\").pop()}`}
+                    alt="Group"
+                  />
                 </div>
                 <div id="groupintro">
-                  <div id="groupname">'그룹명' ex 오리 </div>
-                  <div>'그룹 소개' ex 우리는 멋진 오리에요! </div>
+                  <div id="groupname">그룹명 : {group.groupName} </div>
+                  <div>그룹 소개 : {group.groupContent} </div>
                 </div>
               </div>
 
               <div className="horizonline"></div>
               <div className="group-container">
-                <div>
-                  <img className="profileimg2" src={profile} alt="Profile" />
-                </div>
-                <div>외 '그룹인원'명 참여 중</div>
+                {members.map((item, index) => (
+                  // <div>
+                  //   <img
+                  //     className="profileimg2"
+                  //     src={`/upload/${item.profile.split("\\").pop()}`}
+                  //     alt="Profile"
+                  //   />
+                  // </div>
+                  <div>{item.nickname}</div>
+                ))}
+                <div>외 {members.length}명 참여 중</div>
                 <div id="grouppoint">그룹 점수 ex 4.7점</div>
               </div>
             </div>
