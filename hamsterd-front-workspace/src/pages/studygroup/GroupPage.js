@@ -20,7 +20,7 @@ const GroupPageTest = styled.div`
   }
   .btn {
     padding: 20px;
-  }//
+  } //
   #btn1 {
     height: 40px;
     width: 150px;
@@ -157,13 +157,14 @@ const GroupPage = () => {
   const user = useSelector((state) => {
     return state.user;
   });
+  // const user = JSON.parse(localStorage.getItem("user"));
 
   const number = Number(location.state.data);
   const members = location.state.members;
   const group = location.state.group;
   const manager = location.state.manager;
   console.log(manager);
-
+  setGroupNo = number;
   const [groupNo, setGroupNo] = useState(number);
   console.log(members);
   console.log(group);
@@ -228,10 +229,20 @@ const GroupPage = () => {
                   <div id="grouppoint">그룹 점수 ex 4.7점</div>
                   <div className="btn">
                     <div className="App">
-                      <button type="button" id="btn1" onClick={handleClick}>
+                      <button
+                        type="button"
+                        id="btn1"
+                        onClick={user.groupNo === number ? null : handleClick}
+                        disabled={user.groupNo === number}
+                      >
                         참여하기
                       </button>
-                      <button type="button" id="btn2" onClick={groupReview}>
+                      <button
+                        type="button"
+                        id="btn2"
+                        onClick={user.groupNo === number ? null : groupReview}
+                        disabled={user.groupNo === number}
+                      >
                         평가하기
                       </button>
                     </div>

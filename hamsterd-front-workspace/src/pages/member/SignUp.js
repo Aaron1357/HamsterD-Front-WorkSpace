@@ -55,8 +55,10 @@ const SignUp = () => {
       phone: e.target.phone.value,
       academyName: e.target.academyName.value,
       address: e.target.address.value,
+      profile:
+        "D:\\HamsterD-Front-WorkSpace\\hamsterd-front-workspace\\public\\upload\\hamster.png",
     };
-//
+    //
     console.log(formData2.id);
 
     addMember(formData2);
@@ -115,7 +117,7 @@ const SignUp = () => {
                 </button>
               </div>
             </div>
-          
+
             <div className="mb-3">
               <label htmlFor="inputPassword" className="form-label">
                 비밀번호
@@ -224,7 +226,7 @@ const SignUp = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="academy" className="form-label">
+              <label htmlFor="academyName" className="form-label">
                 학원 이름
               </label>
               <input

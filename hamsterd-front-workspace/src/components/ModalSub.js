@@ -91,9 +91,10 @@ function ModalSub() {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => {
-    console.log("state.user : " + state.user);
     return state.user;
   });
+
+  // const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     if (Object.keys(user).length === 0 && save !== null) {
@@ -125,9 +126,8 @@ function ModalSub() {
 
   const closeTab = () => {
     // modal 내리기
-
     setIsOpen(false);
-  };//
+  }; //
 
   const handleSignUpClick = () => {
     // 회원가입 버튼 클릭 시 '/signup' 경로로 이동

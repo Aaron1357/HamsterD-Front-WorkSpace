@@ -184,10 +184,12 @@ const StudyGroup = () => {
     setManagerList(result.data);
   };
 
+  console.log(managerList);
+
   useEffect(() => {
     getStudyGroupListAPI();
     // 처음 페이지 접근했을 떄 호출
-  }, []);//
+  }, []); //
 
   const handleCreateGroupClick = () => {
     //생성버튼 페이지 이동
@@ -245,25 +247,25 @@ const StudyGroup = () => {
             <div
               key={item.studyGroup.groupNo}
               id={`${item.studyGroup.groupNo}`}
+              onClick={onClick}
             >
               <div className="profile-container">
                 <div id="profile">
-                  {/* <img
+                  <img
                     className="groupimg"
                     src={`/upload/${item.profile.split("\\").pop()}`}
                     alt="Profile"
-                  /> */}
+                  />
                 </div>
                 <div>
                   <div>
                     {console.log(item)}
                     <div
                       id="grouptext"
-                      onClick={onClick}
                       groupNo={item?.studyGroup && item?.studyGroup?.groupNo}
                       // 선택한 스터디 그룹의 그룹넘버를 value 속성에 저장
                     >
-                      {item.nickname}
+                      {item.nickname} 님의 스터디그룹
                     </div>
                   </div>
                   <div id="academyname">{item.academyName}</div>
@@ -291,10 +293,6 @@ const StudyGroup = () => {
                 </div>
                 <div className="horizonline"></div>
                 <div className="group-container">
-                  <div>
-                    <img className="profileimg2" src={profile} alt="Profile" />
-                  </div>
-                  <div>외 '그룹인원'명 참여 중</div>
                   <div id="grouppoint">그룹 점수 ex 4.7점</div>
                 </div>
               </div>

@@ -30,11 +30,11 @@ const CreateGroupStyle = styled.div`
 `;
 //
 const CreateGroup = () => {
-  // const user = JSON.parse(localStorage.getItem("user"));
-
   const user = useSelector((state) => {
     return state.user;
   });
+
+  // const user = JSON.parse(localStorage.getItem("user"));
 
   const id = user.id;
   console.log(id);
@@ -58,12 +58,6 @@ const CreateGroup = () => {
 
     console.log("formData : " + formData);
 
-    //   // const formData2 = {
-    //   //   title : ndsklanlkdnal,
-    //   //   content : dnlksanldasnkd,
-    //   // }
-
-    // try {
     const response = await addStudyGroup(formData); // 비동기 작업 완료 대기
 
     console.log(response);
@@ -86,13 +80,6 @@ const CreateGroup = () => {
   };
 
   useEffect(() => {}, []);
-
-  //토큰 정보 수정
-  // const saveUser = () => {
-  //   const member = showMember(id);
-  //   console.log("member : " + member);
-  //   localStorage.setItem("user", member);
-  // };
 
   // input 태그에 파일이 들어왔을때
   const onUploadImage = (e) => {
@@ -176,11 +163,8 @@ const CreateGroup = () => {
               type="submit"
               id="signupbtn"
               className="btn btn-primary"
-              // onClick={}
               value="스터디그룹 생성"
             />
-            {/* 스터디그룹 생성 */}
-            {/* </input> */}
           </form>
         </div>
       </div>
