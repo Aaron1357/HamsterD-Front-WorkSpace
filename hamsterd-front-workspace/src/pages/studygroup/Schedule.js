@@ -24,7 +24,7 @@ const ScheduleStyle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-  }
+  }//
   .scheduleContent {
     width: 600px;
     height: 600px;

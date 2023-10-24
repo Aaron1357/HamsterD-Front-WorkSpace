@@ -56,7 +56,7 @@ const SignUp = () => {
       academyName: e.target.academyName.value,
       address: e.target.address.value,
     };
-
+//
     console.log(formData2.id);
 
     addMember(formData2);
@@ -115,7 +115,7 @@ const SignUp = () => {
                 </button>
               </div>
             </div>
-
+          
             <div className="mb-3">
               <label htmlFor="inputPassword" className="form-label">
                 비밀번호

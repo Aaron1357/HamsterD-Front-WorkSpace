@@ -7,7 +7,8 @@ export const addStudyGroup = async (data) => {
   console.log(data);
   return await instance.post("studygroup", data);
 };
-// 스터디그룹 목록 받아오기
+
+// 스//터디그룹 목록 받아오기
 export const getStudyGroupList = async () => {
   return await instance.get("studygroup");
 };

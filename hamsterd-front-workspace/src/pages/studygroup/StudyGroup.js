@@ -187,7 +187,7 @@ const StudyGroup = () => {
   useEffect(() => {
     getStudyGroupListAPI();
     // 처음 페이지 접근했을 떄 호출
-  }, []);
+  }, []);//
 
   const handleCreateGroupClick = () => {
     //생성버튼 페이지 이동

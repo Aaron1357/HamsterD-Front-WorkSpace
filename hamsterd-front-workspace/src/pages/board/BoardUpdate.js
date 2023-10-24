@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 Quill.register("modules/imageUploader", ImageUploader);
 //이미지 사이즈 크기 조정 quill에 추가
 Quill.register("modules/imageResize", ImageResize);
-
+//
 const BoardUpdate = ({ postNo, initialTitle, initialDesc }) => {
   const [title, setTitle] = useState(initialTitle);
   console.log("기존 타이틀 " + initialTitle);

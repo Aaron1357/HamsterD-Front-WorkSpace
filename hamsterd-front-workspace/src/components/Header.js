@@ -88,7 +88,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   const home = () => {
-    // 로고 클릭시 메인페이지 이동
+    // 로고 //클릭시 메인페이지 이동
     navigate("/");
   };
 

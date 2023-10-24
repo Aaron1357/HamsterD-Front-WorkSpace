@@ -26,7 +26,7 @@ const ScheduleStyle = styled.div`
     justify-content: center;
     /* background-color: white; */
     /* border: 1px solid lightgray; */
-  }
+  }//
 
   .calendar-section {
     width: 600px;
