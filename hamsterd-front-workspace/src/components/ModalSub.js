@@ -86,17 +86,19 @@ const StyleTest = styled.div`
 function ModalSub() {
   const save = localStorage.getItem("user");
   const [isOpen, setIsOpen] = useState(true);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const user = useSelector((state) => {
+    console.log("state.user : " + state.user);
     return state.user;
   });
 
   useEffect(() => {
     if (Object.keys(user).length === 0 && save !== null) {
       // store에 키값(식별자)이 없으면서 로컬 스토리지에 유저정보가 존재하면 저장
-      dispatch(userSave(JSON.parse(save)));
+      dispatch(userSave(JSON.stringify(save)));
       closeTab();
     } else if (Object.keys(user).length) {
       // 유저정보가 저장되어 있다면 modal 내리기
@@ -117,6 +119,8 @@ function ModalSub() {
   }, [isOpen]);
 
   const closeTab = () => {
+    // modal 내리기
+
     setIsOpen(false);
   };
 
@@ -144,7 +148,12 @@ function ModalSub() {
   };
 
   return (
-    <Modal isOpen={isOpen} style={customStyles} contentLabel="modal">
+    <Modal
+      isOpen={isOpen}
+      style={customStyles}
+      contentLabel="modal"
+      ariaHideApp={false}
+    >
       <StyleTest>
         <div className="mainModal">
           <br></br>

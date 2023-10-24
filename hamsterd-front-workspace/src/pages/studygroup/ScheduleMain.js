@@ -14,7 +14,9 @@ import { getScheduleOfGroup } from "../../api/schedule";
 import { getScheduleofGroupDate } from "../../api/schedule";
 import { useNavigate } from "react-router-dom";
 import { getOneSchedule } from "../../api/schedule";
-
+import { useSelector } from "react-redux";
+import { useInView } from "react-intersection-observer";
+import InfiniteScroll from "react-infinite-scroller";
 // css
 const ScheduleStyle = styled.div`
   .content {
@@ -137,39 +139,23 @@ const ScheduleStyle = styled.div`
 `;
 
 const ScheduleMain = (props) => {
-  console.log(props.groupNo);
-  const user = localStorage.getItem("user");
-  console.log("user : " + user);
-
-  // if (user) {
-  //   const userObject = JSON.parse(user);
-
-  //   // user 객체에서 nickname 값 가져오기
-  //   const nickname = userObject.nickname;
-
-  //   // nickname 값을 사용
-  //   console.log("nickname: " + nickname);
-  // } else {
-  //   console.log("user 데이터가 존재하지 않습니다.");
-  // }
-
   // 추가 버튼 누르면 Schedule 페이지로 이동
   const navigate = useNavigate();
+
+  // groupNo 초기값 나중에 token에서 땡겨와야함
+  const [groupNo, setGroupNo] = useState(props.groupNo);
+  const [scheduleDate, setScheduleDate] = useState();
+  const [scheduleNo, setScheduleNo] = useState(0);
 
   // 목록의 추가(+) 버튼 클릭 시 schedule 등록 폼으로 이동
   const onClick = () => {
     navigate("/schedule", {
       state: {
         groupNo: groupNo,
-        scheduleNo: 0,
+        scheduleNo: scheduleNo,
       },
     });
   };
-
-  // 스터디그룹 넘버 임시 지정(1)
-  const [groupNo, setGroupNo] = useState(1);
-  const [scheduleDate, setScheduleDate] = useState();
-  const [scheduleNo, setScheduleNo] = useState();
 
   // 특정 그룹의 schedule 목록 받아오기(우측 목록용)
   const [schedulesOfGroup, setschedulesOfGroup] = useState([]);
@@ -190,12 +176,8 @@ const ScheduleMain = (props) => {
     const data = result.data.map((item) => {
       const originalDate = new Date(item.scheduleDate);
 
-      //console.log(nextDay); // Fri Oct 13 2023 09:00:00 GMT+0900
-
       const newDate = new Date(originalDate);
       newDate.setDate(newDate.getDate());
-
-      //console.log("newDate : " + newDate);
 
       const date = new Date(newDate);
       const year = date.getFullYear().toString().slice(-4); // 년도의 마지막 두 자리를 가져옴
@@ -203,7 +185,6 @@ const ScheduleMain = (props) => {
       const day = date.getDate().toString().padStart(2, "0"); // 일도 두 자리로 맞춤
 
       const yyyymmdd = year + "-" + month + "-" + day;
-      //console.log(yyyymmdd);
       return {
         scheduleNo: item.scheduleNo,
         scheduleTitle: item.scheduleTitle,
@@ -211,7 +192,9 @@ const ScheduleMain = (props) => {
         scheduleDate: yyyymmdd,
       };
     });
-    setschedulesOfGroup(data); // 일정 목록
+
+    // 우측 일정 목록(계속 나오게 무한처리)
+    setschedulesOfGroup(data);
     setschedulesOfGroup2(data); // 캘린더
   };
 
@@ -222,7 +205,6 @@ const ScheduleMain = (props) => {
 
   // 캘린더용 그룹별 일정 목록
   // 특정 그룹 목록 받아오는 로직(groupNo 넘김) + 날짜 변경처리
-
   // array.map으로 새로 배열만들기(배열 내 key 이름 일치시키기 위해서)
   const newList = schedulesOfGroup2.map((item) => {
     return {
@@ -287,7 +269,6 @@ const ScheduleMain = (props) => {
     setschedulesOfGroup(data); // 캘린더는 전체 목록으로 두고 우측 목록만 특정 날짜의 목록으로 변경
   };
 
-  // // useEffect 내부에서 API 호출
   useEffect(() => {
     if (scheduleDate !== undefined) {
       scheduleOfGroupDateAPI(groupNo, scheduleDate);
@@ -382,6 +363,7 @@ const ScheduleMain = (props) => {
               // onChange={(e) => setTitle(e.target.value)}
             />
           </div>
+
           <div className="scheduleTable">
             <table className="table">
               <thead>

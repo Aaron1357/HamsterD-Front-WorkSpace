@@ -7,6 +7,7 @@ import { useState, useRef, useEffect } from "react";
 import ScheduleMain from "./ScheduleMain";
 import { useSelector } from "react-redux";
 import { viewManager } from "../../api/studygroup";
+import GroupComment from "./GroupComment";
 
 const GroupPageTest = styled.div`
   .mainsection {
@@ -163,6 +164,10 @@ const GroupPage = () => {
   const manager = location.state.manager;
   console.log(manager);
 
+  const [groupNo, setGroupNo] = useState(number);
+  console.log(members);
+  console.log(group);
+
   const modalRef = useRef(null);
 
   const handleClick = () => {
@@ -238,7 +243,7 @@ const GroupPage = () => {
                 <br />
                 <div className="group-container">
                   {members.map((item, index) => (
-                    <div>
+                    <div key={item.memberNo}>
                       <div className="photo">
                         <img
                           className="profileimg2"
@@ -259,11 +264,12 @@ const GroupPage = () => {
           <div>
             <div id="schedule">스케쥴</div>
             <div className="horizonline"></div>
-            <ScheduleMain className="scheduleMain" groupNo={number} />
+            <ScheduleMain className="scheduleMain" groupNo={groupNo} />
           </div>
           <div>
             <div id="comments">Comments</div>
             <div className="horizonline"></div>
+            <GroupComment className="GroupComment" groupNo={groupNo} />
           </div>
         </div>
       </div>
