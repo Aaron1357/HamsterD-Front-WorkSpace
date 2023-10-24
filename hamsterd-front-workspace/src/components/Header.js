@@ -96,7 +96,6 @@ const Header = () => {
     console.log("logout!");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    dispatch(userLogoust());
     window.location.reload(true);
   };
 
