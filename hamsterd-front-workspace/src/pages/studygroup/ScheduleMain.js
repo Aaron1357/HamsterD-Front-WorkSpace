@@ -6,7 +6,6 @@ import interactionPlugin from "@fullcalendar/interaction";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 //import { getScheduleList } from "../../api/schedule";
@@ -14,8 +13,12 @@ import { getScheduleOfGroup } from "../../api/schedule";
 import { getScheduleofGroupDate } from "../../api/schedule";
 import { useNavigate } from "react-router-dom";
 import { getOneSchedule } from "../../api/schedule";
-import { useSelector } from "react-redux";
-import { useInView } from "react-intersection-observer";
+import { showMember } from "../../api/studygroup";
+import {
+  getScheduleByTitle,
+  getScheduleByMember,
+  getScheduleByContent,
+} from "../../api/schedule";
 import InfiniteScroll from "react-infinite-scroller";
 // css
 const ScheduleStyle = styled.div`
@@ -81,12 +84,14 @@ const ScheduleStyle = styled.div`
 
   .scheduleTable {
     height: 530px;
+    padding-top: 10px;
   }
 
   .table {
-    width: 450px;
-    min-width: 350px;
+    width: 500px;
+    min-width: 400px;
     --bs-table-bg: #fff0;
+    font-size: 0.8rem;
   }
 
   .fc .fc-button-primary {
@@ -142,19 +147,37 @@ const ScheduleMain = (props) => {
   // 추가 버튼 누르면 Schedule 페이지로 이동
   const navigate = useNavigate();
 
-  // groupNo 초기값 나중에 token에서 땡겨와야함
   const [groupNo, setGroupNo] = useState(props.groupNo);
   const [scheduleDate, setScheduleDate] = useState();
   const [scheduleNo, setScheduleNo] = useState(0);
 
+  // 유저 정보(수정, 삭제 활성화 위해)
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userid = user.id;
+  const userNo = user.memberNo;
+
+  // 검색 필터
+  const [filter, setFilter] = useState();
+  const [searchKeyword, setsearchKeyword] = useState([]);
+  // 검색 관련
+
   // 목록의 추가(+) 버튼 클릭 시 schedule 등록 폼으로 이동
-  const onClick = () => {
-    navigate("/schedule", {
-      state: {
-        groupNo: groupNo,
-        scheduleNo: scheduleNo,
-      },
-    });
+  const onClick = async () => {
+    console.log(userid);
+    const result = await showMember(userid);
+    const num = result["studyGroup"]["groupNo"];
+    console.log("num : " + num);
+
+    if (num == groupNo) {
+      navigate("/schedule", {
+        state: {
+          groupNo: groupNo,
+          scheduleNo: scheduleNo,
+        },
+      });
+    } else {
+      alert("그룹 멤버가 아닙니다!");
+    }
   };
 
   // 특정 그룹의 schedule 목록 받아오기(우측 목록용)
@@ -172,7 +195,6 @@ const ScheduleMain = (props) => {
   // 특정 그룹 목록 받아오는 로직(groupNo 넘김) + 날짜 변경처리
   const scheduleOfGroupAPI = async () => {
     const result = await getScheduleOfGroup(groupNo);
-    //console.log(result.data);
     const data = result.data.map((item) => {
       const originalDate = new Date(item.scheduleDate);
 
@@ -185,11 +207,15 @@ const ScheduleMain = (props) => {
       const day = date.getDate().toString().padStart(2, "0"); // 일도 두 자리로 맞춤
 
       const yyyymmdd = year + "-" + month + "-" + day;
+
+      console.log(item.member.nickname);
+
       return {
         scheduleNo: item.scheduleNo,
         scheduleTitle: item.scheduleTitle,
         scheduleContent: item.scheduleContent,
         scheduleDate: yyyymmdd,
+        nickname: item.member.nickname,
       };
     });
 
@@ -197,7 +223,6 @@ const ScheduleMain = (props) => {
     setschedulesOfGroup(data);
     setschedulesOfGroup2(data); // 캘린더
   };
-
   // 처음 화면 띄울때 1번만 그룹별 일정 목록 받아옴
   useEffect(() => {
     scheduleOfGroupAPI();
@@ -264,6 +289,7 @@ const ScheduleMain = (props) => {
         scheduleTitle: item.scheduleTitle,
         scheduleContent: item.scheduleContent,
         scheduleDate: yyyymmdd,
+        nickname: item.member.nickname,
       };
     });
     setschedulesOfGroup(data); // 캘린더는 전체 목록으로 두고 우측 목록만 특정 날짜의 목록으로 변경
@@ -299,14 +325,24 @@ const ScheduleMain = (props) => {
     return schedule2;
   };
 
-  // 캘린더 상단 + 버튼 클릭시 등록 폼으로 이동
-  const handleAddEvent = () => {
-    navigate("/schedule", {
-      state: {
-        groupNo: groupNo,
-        scheduleNo: 0,
-      },
-    });
+  // 캘린더 상단 + 버튼 클릭시 등록 폼으로 이동(내 그룹일때만)
+  const handleAddEvent = async () => {
+    console.log(userid);
+
+    const result = await showMember(userid);
+    const num = result["studyGroup"]["groupNo"];
+    console.log("num : " + num);
+
+    if (num == groupNo) {
+      navigate("/schedule", {
+        state: {
+          groupNo: groupNo,
+          scheduleNo: scheduleNo,
+        },
+      });
+    } else {
+      alert("그룹 멤버가 아닙니다!");
+    }
   };
 
   // 목록에서 일정 제목 클릭 시 등록(수정삭제)화면으로 이동
@@ -321,6 +357,44 @@ const ScheduleMain = (props) => {
         schedule: scheduleData,
       },
     });
+  };
+
+  // 검색 필터 선택 시 필터값 처리하는 함수
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
+  };
+
+  // 검색 버튼 클릭 시 search api 적용하는 함수
+  const handleSearch = async () => {
+    console.log(filter); // 검색 필터
+    console.log(groupNo);
+    console.log(searchKeyword); // 검색 내용
+
+    if (filter == "title") {
+      const result = await getScheduleByTitle(groupNo, searchKeyword);
+      if (result) {
+        setschedulesOfGroup(result.data);
+        setschedulesOfGroup2(result.data);
+      } else {
+        console.log("검색 결과가 없습니다!");
+      }
+    } else if (filter == "content") {
+      const result = await getScheduleByContent(groupNo, searchKeyword);
+      if (result) {
+        setschedulesOfGroup(result.data);
+        setschedulesOfGroup2(result.data);
+      } else {
+        console.log("검색 결과가 없습니다!");
+      }
+    } else if (filter == "user") {
+      const result = await getScheduleByMember(searchKeyword);
+      if (result) {
+        setschedulesOfGroup(result.data);
+        setschedulesOfGroup2(result.data);
+      } else {
+        console.log("검색 결과가 없습니다!");
+      }
+    }
   };
 
   return (
@@ -353,15 +427,30 @@ const ScheduleMain = (props) => {
         {/* 일정 목록 */}
         <div className="schedule-list">
           {/* 일정 검색창 */}
-          <FontAwesomeIcon icon={faMagnifyingGlass} />
           <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              id="exampleFormControlInput1"
-              // value={title}
-              // onChange={(e) => setTitle(e.target.value)}
-            />
+            <form>
+              <select
+                class="form-select form-select-sm"
+                aria-label="Small select example"
+                onChange={handleFilterChange}
+              >
+                <option selected>카테고리</option>
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="user">작성자</option>
+              </select>
+              <input
+                type="text"
+                className="form-control"
+                id="exampleFormControlInput1"
+                value={searchKeyword}
+                onChange={(e) => setsearchKeyword(e.target.value)}
+              />
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                onClick={handleSearch}
+              />
+            </form>
           </div>
 
           <div className="scheduleTable">
@@ -369,31 +458,34 @@ const ScheduleMain = (props) => {
               <thead>
                 <tr>
                   <th scope="col" width="50">
-                    번호
+                    <FontAwesomeIcon
+                      icon={faPlus}
+                      onClick={() => onClick(userid)}
+                    />
                   </th>
-                  <th scope="col" width="100">
+                  <th scope="col" width="150">
                     날짜
                   </th>
                   <th scope="col" width="200">
                     제목
                   </th>
-                  <th scope="col" width="10">
-                    <FontAwesomeIcon icon={faPlus} onClick={onClick} />
+                  <th scope="col" width="100">
+                    작성자
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {schedulesOfGroup.map((item, index) => (
+                {schedulesOfGroup?.map((item, index) => (
                   <tr key={item.scheduleNo}>
-                    <th scope="row">{index + 1}</th>
+                    <td scope="row">{index + 1}</td>
                     <td>{item.scheduleDate}</td>
                     <td
                       id="scheduleTitle"
-                      colSpan={2}
                       onClick={() => viewDetail(item.scheduleNo)}
                     >
                       {item.scheduleTitle}
                     </td>
+                    <td>{item.nickname}</td>
                   </tr>
                 ))}
               </tbody>

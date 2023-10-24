@@ -13,6 +13,7 @@ import {
   deleteSchedule,
   updateSchedule,
 } from "../../api/schedule";
+import { viewMemberList, viewStudyGroup } from "../../api/studygroup";
 import { useNavigate, useLocation } from "react-router-dom";
 
 // css
@@ -145,6 +146,9 @@ const Update = () => {
 
   // 수정 버튼
   const updateEvent = async () => {
+    const result1 = await viewMemberList(groupNo);
+    const result2 = await viewStudyGroup(groupNo);
+
     const token = localStorage.getItem("token");
 
     const formData = new FormData();
@@ -156,7 +160,13 @@ const Update = () => {
 
     try {
       await updateSchedule(formData); // 비동기 작업 완료 대기
-      navigate("/scheduleMain"); // 파일 업로드가 완료되면 페이지 이동
+      navigate("/grouppage", {
+        state: {
+          data: groupNo,
+          members: result1,
+          group: result2,
+        },
+      });
     } catch (error) {
       // 에러 처리
       console.error("오류 발생 : ", error);
@@ -165,10 +175,19 @@ const Update = () => {
 
   // 삭제버튼 클릭 시
   const deleteEvent = async () => {
+    const result1 = await viewMemberList(groupNo);
+    const result2 = await viewStudyGroup(groupNo);
+
     if (scheduleNo) {
       try {
         await deleteSchedule(scheduleNo); // 비동기 작업 완료 대기
-        navigate("/grouppage"); // 파일 업로드가 완료되면 페이지 이동
+        navigate("/grouppage", {
+          state: {
+            data: groupNo,
+            members: result1,
+            group: result2,
+          },
+        });
       } catch (error) {
         console.error("오류 발생 : " + error);
       }
@@ -176,8 +195,17 @@ const Update = () => {
   };
 
   // 닫기 버튼 클릭 시 grouppage 메인으로 돌아감
-  const close = () => {
-    navigate("/grouppage");
+  const close = async () => {
+    const result1 = await viewMemberList(groupNo);
+    const result2 = await viewStudyGroup(groupNo);
+
+    navigate("/grouppage", {
+      state: {
+        data: groupNo,
+        members: result1,
+        group: result2,
+      },
+    });
   };
 
   return (
@@ -240,17 +268,20 @@ const Update = () => {
 
 const Add = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [date, setDate] = useState("");
-
-  const location = useLocation();
+  const groupNo = location.state.groupNo;
 
   const token = localStorage.getItem("token");
 
-  // 추가 버튼(기존 정보 있으면 수정)
+  // 추가 버튼
   const plus = async () => {
+    const result1 = await viewMemberList(groupNo);
+    const result2 = await viewStudyGroup(groupNo);
+
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
@@ -260,7 +291,13 @@ const Add = () => {
 
     try {
       await addSchedule(formData); // 비동기 작업 완료 대기
-      navigate("/grouppage/"); // 파일 업로드가 완료되면 페이지 이동
+      navigate("/grouppage", {
+        state: {
+          data: groupNo,
+          members: result1,
+          group: result2,
+        },
+      });
     } catch (error) {
       // 에러 처리
       console.error("오류 발생 : ", error);
@@ -268,8 +305,17 @@ const Add = () => {
   };
 
   // 닫기 버튼 클릭 시 grouppage 메인으로 돌아감
-  const close = () => {
-    navigate("/scheduleMain");
+  const close = async () => {
+    const result1 = await viewMemberList(groupNo);
+    const result2 = await viewStudyGroup(groupNo);
+
+    navigate("/grouppage", {
+      state: {
+        data: groupNo,
+        members: result1,
+        group: result2,
+      },
+    });
   };
 
   return (

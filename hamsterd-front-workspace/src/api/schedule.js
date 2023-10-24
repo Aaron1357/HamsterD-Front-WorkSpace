@@ -40,3 +40,20 @@ export const deleteSchedule = async (scheduleNo) => {
 export const updateSchedule = async (data) => {
   return await instance.put("schedule", data);
 };
+
+// 작성자로 스케줄 검색(/schedule/member/{memberNo})
+export const getScheduleByMember = async (nickname) => {
+  return await instance.get(`/schedule/member/${nickname}`);
+};
+
+// 제목으로 스케줄 검색(/study/{groupNo}/{scheduleTitle}")
+export const getScheduleByTitle = async (groupNo, scheduleTitle) => {
+  return await instance.get(`/study/${groupNo}/${scheduleTitle}`);
+};
+
+// 내용으로 스케줄 검색(/study/{groupNo}/scheduleContent/{scheduleContent})
+export const getScheduleByContent = async (groupNo, scheduleContent) => {
+  return await instance.get(
+    `/study/${groupNo}/scheduleContent/${scheduleContent}`
+  );
+};

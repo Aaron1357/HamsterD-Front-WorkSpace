@@ -10,6 +10,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const GroupComment = (props) => {
   // 그룹별 댓글 목록
   const [gComments, setgComments] = useState([]);
+
+  // 현재 들어온 grouppage에 해당하는 그룹넘버를 초기값으로 담음
   const [groupNo, setGroupNo] = useState(props.groupNo);
 
   // 댓글 입력값
@@ -42,13 +44,9 @@ const GroupComment = (props) => {
       formData.append("groupNo", groupNo);
       formData.append("token", token);
 
-      try {
-        await addgComment(formData);
-        gCommentOfGroup();
-        e.target.value = null;
-      } catch (error) {
-        console.error("오류 발생 : ", error);
-      }
+      await addgComment(formData);
+      gCommentOfGroup();
+      e.target.value = null;
     } else {
       alert("댓글을 입력해주세요!");
     }
@@ -56,20 +54,24 @@ const GroupComment = (props) => {
 
   // 댓글 수정 버튼
   const update = async (e) => {
+    console.log(newComment);
+    console.log(groupNo);
     // setSelectedCommentNo(e.target.closest(".comment").id);
-    // console.log(editComment);
-    // console.log(groupNo);
-    // const formData = new FormData();
-    // formData.append("newComment", newComment);
-    // formData.append("groupNo", groupNo);
-    // formData.append("token", token);
-    // await updategComment(formData);
-    // // gCommentOfGroup();
-    // setNewComment("");
+    if (newComment) {
+      const formData = new FormData();
+      formData.append("newComment", newComment);
+      formData.append("groupNo", groupNo);
+      formData.append("gcommentNo", e.target.closest(".comment").id);
+      formData.append("token", token);
+      await updategComment(formData);
+      gCommentOfGroup();
+      setSelectedCommentNo(0);
+    } else {
+      alert("댓글을 입력해주세요!");
+    }
   };
 
   const handler = async (e) => {
-    console.log(e.target.value);
     setNewComment(e.target.value);
   };
 
@@ -79,6 +81,10 @@ const GroupComment = (props) => {
     setSelectedCommentNo(e.target.closest(".comment").id);
   };
   console.log("selectedCommentNo : " + selectedCommentNo);
+
+  const closeTab = () => {
+    setSelectedCommentNo(0);
+  };
 
   // 댓글 삭제(아래에서 유저 정보 확인하여 일치할때만 활성화 처리)
   const minusgComment = async (gcommentNo) => {
@@ -158,6 +164,9 @@ const GroupComment = (props) => {
                     <button onClick={() => minusgComment(item.gcommentNo)}>
                       삭제
                     </button>
+                  ) : null}
+                  {id === item.member.id ? (
+                    <button onClick={closeTab}>취소</button>
                   ) : null}
                 </tr>
               ) : (
