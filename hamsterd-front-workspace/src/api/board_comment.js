@@ -36,3 +36,15 @@ export const updateComment = async (data) => {
     console.error(error);
   }
 };
+
+//댓글 삭제
+export const deleteComment = async (CommentNo) => {
+  try {
+    const res = await instance.delete(`post/pcomment/${CommentNo}`);
+    console.log("delete의 res" + res);
+    console.log("delete의 CommentNo" + CommentNo);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
