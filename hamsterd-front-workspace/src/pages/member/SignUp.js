@@ -53,7 +53,7 @@ const SignUp = () => {
       birth: e.target.birth.value,
       gender: e.target.gender.value,
       phone: e.target.phone.value,
-      academy: e.target.academy.value,
+      academyName: e.target.academyName.value,
       address: e.target.address.value,
     };
 
@@ -229,7 +229,7 @@ const SignUp = () => {
               </label>
               <input
                 type="text"
-                id="academy"
+                id="academyName"
                 className="form-control"
                 aria-describedby="passwordHelpInline"
                 required
