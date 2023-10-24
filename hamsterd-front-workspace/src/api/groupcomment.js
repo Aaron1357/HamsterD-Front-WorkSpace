@@ -5,8 +5,8 @@ const instance = axios.create({
 });
 
 // 그룹 댓글 등록
-export const addgComment = async (newComment) => {
-  return await instance.post("studyGroup/gcomment", newComment);
+export const addgComment = async (data) => {
+  return await instance.post("studyGroup/gcomment", data);
 };
 
 // 특정 그룹 댓글 목록 받아오기
