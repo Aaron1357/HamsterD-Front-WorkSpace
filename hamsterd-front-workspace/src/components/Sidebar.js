@@ -1,6 +1,6 @@
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const Test2 = styled.div`
   /* 로고영역 */
@@ -11,7 +11,7 @@ const Test2 = styled.div`
     display: flex;
     justify-content: center;
   }
-//
+  //
   /* 로고 이미지 */
   #logo img {
     width: 250px;
@@ -19,17 +19,17 @@ const Test2 = styled.div`
     top: -10px;
   } //
   .section {
-    border: 4px solid rgba(211,157,87);
+    border: 4px solid rgba(211, 157, 87);
     border-radius: 20px;
     box-shadow: var(
       --shadows-gray-blue-3-5-b-box-shadow,
       0px 2px 5px 0px rgba(38, 51, 77, 0.03)
     );
-   
+
     height: 700px;
     margin-top: 3px;
     padding: 30px;
-    color: rgba(211,157,87);
+    color: rgba(211, 157, 87);
     font-weight: bold;
   }
 
@@ -67,7 +67,7 @@ const Test2 = styled.div`
   }
 
   .myinfo div {
-    border: 3px solid rgba(211,157,87);
+    border: 3px solid rgba(211, 157, 87);
     border-radius: 10px;
     box-shadow: var(
       --shadows-gray-blue-3-5-b-box-shadow,
@@ -79,7 +79,8 @@ const Test2 = styled.div`
     margin-top: 20px;
     line-height: 45px;
   }
-  .main-page{}
+  .main-page {
+  }
   width: 600px;
   margin-top: -10px;
 `;
@@ -90,9 +91,10 @@ const Sidebar = () => {
       <div className="main-page">
         <div className="main-section">
           <div className="section" id="section3">
-            
             <div className="myinfo">
-              <div className="mystudy">내 스터디</div>
+              {/* <div className="mystudy"> a href="/grouppage"> */}
+              <Link to="/grouppage">내 스터디</Link>
+              {/* </div> */}
               <div className="myweight">내 몸무게</div>
               <div className="mycalender">내 일정</div>
               <div className="mypost">내 게시글</div>

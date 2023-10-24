@@ -2,6 +2,7 @@ import styled from "styled-components";
 import profile from "../../resource/종빈22.png";
 import groupimg from "../../resource/오리.jpg";
 import { useNavigate } from "react-router-dom";
+import ScheduleMain from "./ScheduleMain";
 
 const GroupPageTest = styled.div`
   .mainsection {
@@ -133,6 +134,15 @@ const GroupPageTest = styled.div`
   .photo {
     width: 70px;
   }
+  #schedule {
+    font-size: 25px;
+    font-weight: bold;
+  }
+
+  #comments {
+    font-size: 25px;
+    font-weight: bold;
+  }
 `;
 
 const GroupPage = () => {
@@ -224,8 +234,17 @@ const GroupPage = () => {
               </div>
             </div>
           </div>
-          <div>스케쥴</div>
-          <div>Comments</div>
+          <br />
+          <br />
+          <div>
+            <div id="schedule">스케쥴</div>
+            <div className="horizonline"></div>
+            <ScheduleMain className="scheduleMain" />
+          </div>
+          <div>
+            <div id="comments">Comments</div>
+            <div className="horizonline"></div>
+          </div>
         </div>
       </div>
     </GroupPageTest>

@@ -25,6 +25,11 @@ const SignUpStyle = styled.div`
 `;
 
 const SignUp = () => {
+  const convertToDate = (dateString) => {
+    const date = new Date(dateString);
+    return date;
+  };
+
   // const [id, setId] = useState([]);
   // const [nickname, setNickname] = useState([]);
   // const [password, setPw] = useState([]);
@@ -37,17 +42,9 @@ const SignUp = () => {
 
   const navigate = useNavigate();
 
-  const convertToDate = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 1을 더하고 2자리로 포맷
-    const day = String(date.getDate()).padStart(2, "0"); // 일도 2자리로 포맷
-
-    return `${year}-${month}-${day}`;
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const formData2 = {
       id: e.target.id.value,
       nickname: e.target.nickname.value,
@@ -56,19 +53,13 @@ const SignUp = () => {
       birth: e.target.birth.value,
       gender: e.target.gender.value,
       phone: e.target.phone.value,
-      academyName: e.target.academy.value,
+      academy: e.target.academy.value,
       address: e.target.address.value,
-     
     };
 
     console.log(formData2.id);
 
- 
-    // formData.set("birth", convertToDate(formData.get("birth")));
     addMember(formData2);
-    // .then((response) => {
-    //   console.log(response);
-    // });
     navigate("/");
   };
 
@@ -88,9 +79,6 @@ const SignUp = () => {
                   className="form-control"
                   aria-describedby="passwordHelpInline"
                   name="id"
-                  // onChange={(e) => {
-                  //   setId(e.target.value);
-                  // }}
                   required
                 />
                 <button
@@ -115,9 +103,6 @@ const SignUp = () => {
                   className="form-control"
                   aria-describedby="passwordHelpInline"
                   name="nickname"
-                  // onChange={(e) => {
-                  //   setNickname(e.target.value);
-                  // }}
                   required
                 />
                 <button
@@ -140,11 +125,8 @@ const SignUp = () => {
                 id="inputPassword"
                 className="form-control"
                 aria-describedby="passwordHelpInline"
-                name="password"
-                // onChange={(e) => {
-                //   setPw(e.target.value);
-                // }}
                 required
+                name="password"
               />
               <span id="passwordHelpInline" className="form-text">
                 8-20자의 비밀번호를 입력하세요.
@@ -176,9 +158,6 @@ const SignUp = () => {
                 id="name"
                 className="form-control"
                 aria-describedby="passwordHelpInline"
-                // onChange={(e) => {
-                //   setName(e.target.value);
-                // }}
                 required
                 name="name"
               />
@@ -193,9 +172,6 @@ const SignUp = () => {
                 id="birth"
                 type="date"
                 placeholder="생일"
-                // onChange={(e) => {
-                //   setBirth(e.target.value);
-                // }}
                 required
                 name="birth"
               />
@@ -210,12 +186,6 @@ const SignUp = () => {
                   name="gender"
                   id="flexRadioDefault1"
                   value="man"
-                  readOnly
-                  // if (checked) {
-                  //   onChange={(e) => {
-                  //     setGender(e.target.value);
-                  //   }}
-                  // }
                 />
                 <label className="form-check-label" htmlFor="flexRadioDefault1">
                   남자
@@ -229,7 +199,6 @@ const SignUp = () => {
                   value="woman"
                   id="flexRadioDefault2"
                   checked
-                  readOnly
                 />
                 <label className="form-check-label" htmlFor="flexRadioDefault2">
                   여자

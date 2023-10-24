@@ -5,18 +5,20 @@ import NotFound from "./pages/NotFound";
 import MyPage from "./pages/member/MyPage";
 import StudyGroup from "./pages/studygroup/StudyGroup";
 import GroupPage from "./pages/studygroup/GroupPage";
+import CreateGroup from "./pages/studygroup/CreateGroup";
+import GroupReview from "./pages/studygroup/GroupReview";
 import Social from "./pages/social/Social";
 import Schedule from "./pages/studygroup/Schedule";
-import GroupEval from "./pages/studygroup/GroupEval";
+import ScheduleMain from "./pages/studygroup/ScheduleMain";
 import BoardList from "./pages/board/BoardList";
 import Board from "./pages/board/Board";
 import SignUp from "./pages/member/SignUp";
+import BoardDetail from "./pages/board/BoardDetail";
 import Fire from "./pages/member/Fire";
 import Update from "./pages/member/Update";
-
+import BoardComment from "./pages/board/BoardComment";
 const router = createBrowserRouter([
   {
-    //
     path: "/",
     element: <Layout />,
     errorElement: <NotFound />,
@@ -30,12 +32,28 @@ const router = createBrowserRouter([
         element: <MyPage />,
       },
       {
+        path: "/update",
+        element: <Update />,
+      },
+      {
+        path: "/fire",
+        element: <Fire />,
+      },
+      {
         path: "/studygroup",
         element: <StudyGroup />,
       },
       {
         path: "/grouppage",
         element: <GroupPage />,
+      },
+      {
+        path: "/creategroup",
+        element: <CreateGroup />,
+      },
+      {
+        path: "/groupreview",
+        element: <GroupReview />,
       },
       {
         path: "/social",
@@ -46,8 +64,8 @@ const router = createBrowserRouter([
         element: <Schedule />,
       },
       {
-        path: "/groupeval",
-        element: <GroupEval />,
+        path: "/scheduleMain",
+        element: <ScheduleMain />,
       },
       {
         path: "/signup",
@@ -62,15 +80,12 @@ const router = createBrowserRouter([
         element: <Board />,
       },
       {
-        path: "/fire",
-        element: <Fire />,
+        path: "/post/:postNo",
+        element: <BoardDetail />,
+        children: [
+          { path: "/post/:postNo/pcomment", element: <BoardComment /> },
+        ],
       },
-
-      {
-        path: "/update",
-        element: <Update />,
-      },
-      
     ],
   },
 ]);

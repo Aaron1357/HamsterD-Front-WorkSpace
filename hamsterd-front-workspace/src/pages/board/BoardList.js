@@ -2,87 +2,10 @@ import { searchBoardList } from "../../api/boardFile";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { updateBoardView } from "../../api/boardFile";
+import Pagination from "react-js-pagination";
 
 const BoardStyle = styled.div`
-  body {
-    background-color: rgb(231, 250, 215);
-  }
-
-  .head1 {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb(255, 247, 237);
-  }
-
-  .head2 {
-    border: 5px solid rgb(228, 192, 228);
-    border-radius: 10px;
-    background-color: white;
-    width: 600px;
-    height: 700px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  form {
-    border-radius: 10px;
-    width: 500px;
-    height: 650px;
-
-    background-color: white;
-  }
-  .head {
-    border: 4px #808080;
-    padding: 10px;
-  }
-
-  .headName {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: plum;
-  }
-
-  .form-select {
-    margin-bottom: 15px;
-  }
-
-  .formCheck {
-    display: flex;
-    justify-content: flex-end;
-    margin-left: 10px;
-  }
-
-  .form-check {
-    margin: 5px;
-  }
-
-  .button1 {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 10px;
-  }
-
-  #button1 {
-    font-size: 10px;
-    text-align: center;
-  }
-
-  #button2 {
-    margin: 10px;
-  }
-
-  .btnn {
-    width: 100%;
-    height: 50px;
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 10px;
-  }
-
   .boardListHead1 {
     display: flex;
     flex-direction: column;
@@ -99,30 +22,107 @@ const BoardStyle = styled.div`
     width: 160px;
     height: 40px;
   }
+
+  #boardView :hover {
+    cursor: pointer;
+  }
+`;
+
+const PaginationBox = styled.div`
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  ul.pagination li {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #e2e2e2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+  }
+  ul.pagination li:first-child {
+    border-radius: 5px 0 0 5px;
+  }
+  ul.pagination li:last-child {
+    border-radius: 0 5px 5px 0;
+  }
+  ul.pagination li a {
+    text-decoration: none;
+    color: #337ab7;
+    font-size: 1rem;
+  }
+  ul.pagination li.active a {
+    color: white;
+  }
+  ul.pagination li.active {
+    background-color: #337ab7;
+  }
+  ul.pagination li a:hover,
+  ul.pagination li a.active {
+    color: blue;
+  }
 `;
 
 const BoardList = () => {
-  const session = sessionStorage.getItem("member");
   const [boardList, setBoardList] = useState([]);
 
+  const handlePageChange = (page) => {
+    setPage(page);
+  };
+  //페이지 처리
+
+  //페이지 초기 값은 1페이지
+  const [page, setPage] = useState(1);
+
+  // const listPerPage = 8;
+
+  // const [groundList, setGroundList] = useRecoilState(groundPhotoListState);
+  // const totalPage = Math.ceil(groundList.length / listPerPage);
+
   useEffect(() => {
-    searchBoardList().then((res) => setBoardList(res));
+    searchBoardList(page).then((res) => setBoardList(res));
+    // const res = await searchBoardList(page);
+    // setBoardList(res);
+    console.log("페이지 나와라");
+    // console.log("로컬스토리지 닉네임 " + localStorage.getItem("nickname"));
   }, []);
 
+  // useEffect(async () => {
+  //   const result = await searchBoardList(
+  //     `grounds?location=${location}&search=${searchInput}&offset=${
+  //       (page - 1) * listPerPage
+  //     }&count=${listPerPage}`
+  //   );
+  //   setGroundList({
+  //     length: result.data.length,
+  //     data: result.data.grounds,
+  //   });
+  // }, [page]);
   const navigate = useNavigate();
-
-  const boardClick = (e) => {
-    e.preventDefault();
+  //게시판 작성하기
+  const onClick = () => {
     navigate("/board");
   };
-
-  console.log(`boardlist : ${JSON.parse(session)}`);
+  //조회수 1씩 업데이트하기
+  const onClickView = async (postNo) => {
+    await updateBoardView(postNo);
+    console.log("조회수 1씩 업데이트 버튼 클릭 " + postNo);
+    navigate(`/post/${postNo}`);
+  };
 
   return (
     <BoardStyle>
       <div className="boardListHead1">
         <div className="boardListHead2">
-          <button onClick={boardClick} className="boardButton">
+          <button onClick={onClick} className="boardButton">
             게시물 작성하기
           </button>
         </div>
@@ -138,20 +138,51 @@ const BoardList = () => {
               </tr>
             </thead>
             <tbody>
-              {boardList &&
-                boardList.map((item) => (
-                  <tr key={item.postNo}>
-                    <td>{item.postNo}</td>
-                    <td>{item.postContent}</td>
-                    <td>
-                      {item.member == null ? "익명" : item.member.nickname}
-                    </td>
-                    <td>{item.createTime}</td>
-                    <td>22</td>
-                  </tr>
-                ))}
+              {boardList?.map((item, index) => (
+                <tr
+                  id="boardView"
+                  key={item?.postNo}
+                  onClick={() => onClickView(item?.postNo)}
+                >
+                  {console.log(item)}
+                  <td>{index + 1}</td>
+                  <td>{item?.postTitle}</td>
+                  <td>
+                    {item?.securityCheck === "y"
+                      ? "익명"
+                      : item?.member?.nickname}
+                  </td>
+                  <td>
+                    {item?.createTime
+                      ? new Date(item?.createTime).toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })
+                      : ""}
+                  </td>
+                  <td>{item?.boardView}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
+          <tfoot>
+            <PaginationBox>
+              <Pagination
+                // totalPage={totalPage}
+                // 현재 보고있는 페이지
+                activePage={1}
+                // 한페이지에 출력할 아이템수
+                itemsCountPerPage={2}
+                // 총 아이템수
+                totalItemsCount={300}
+                // 표시할 페이지수
+                pageRangeDisplayed={5}
+                // 함수
+                onChange={handlePageChange}
+              ></Pagination>
+            </PaginationBox>
+          </tfoot>
         </div>
       </div>
     </BoardStyle>
