@@ -55,6 +55,8 @@ const SignUp = () => {
       phone: e.target.phone.value,
       academyName: e.target.academyName.value,
       address: e.target.address.value,
+      profile:
+        "D:\\HamsterD-Front-WorkSpace\\hamsterd-front-workspace\\public\\upload\\hamster.png",
     };
 //
     console.log(formData2.id);
