@@ -2,64 +2,78 @@ import {
   addComment,
   viewComment,
   updateComment,
+  deleteComment,
 } from "../../api/board_comment";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import BoardCommentUpdate from "../board/BoardCommentUpdate";
+
 const BoardComment = ({ postNo }) => {
+  //댓글 저장해서 db로 넘기는 곳
   const [comments, setComments] = useState([]);
+
+  //댓글 값 넣는 곳
   const [text, setText] = useState("");
 
+  //댓글 번호 확인하기 위한 상태관리
   const [selectedCommentIndex, setSelectedCommentIndex] = useState(0);
-  const [openInputNo, setOpenInputNo] = useState(0);
+  // const [openInputNo, setOpenInputNo] = useState(0);
 
   //user를 직접 사용하기 전에 JSON 문자열을 파싱하여 객체로 변환
   const user = JSON.parse(localStorage.getItem("user"));
 
-  const onClick = async () => {
-    console.log("user" + user.nickname);
-    const data = {
-      commentContent: text,
-      post: { postNo: postNo }, // post 객체를 포함하여 전달
-    };
-    await addComment(data);
-  };
-
+  //처음 페이지 들어왔을때 댓글 보기
   const getCommentHandler = async () => {
     const response = await viewComment(postNo);
-    console.log(response);
     setComments(response);
   };
 
+  //댓글 추가하기 버튼
+  const onClick = async () => {
+    const data = {
+      commentContent: text,
+      post: { postNo: postNo },
+      member: { memberNo: user.memberNo },
+    };
+    const result = await addComment(data);
+    console.log(result);
+    setComments([result, ...comments]);
+    // getCommentHandler();
+  };
+
+  //댓글 수정하기 버튼
   const updateClick = async (e) => {
     setSelectedCommentIndex(e.target.closest(".comment").id);
     const data = {
       commentNo: e.target.closest(".comment").id,
       commentContent: text,
-      postNo: postNo, // post 객체를 포함하여 전달
+      post: { postNo: postNo },
     };
     await updateComment(data);
-
-    console.log(data);
+    setSelectedCommentIndex(0);
+    getCommentHandler();
   };
 
-  const deleteClick = () => {};
+  //댓글 삭제버튼
+  const deleteClick = async (e) => {
+    await deleteComment(e.target.closest(".comment").id);
+    getCommentHandler();
+    //페이지 새로고침
+    // window.location.reload();
+  };
 
+  //수정하기 눌렀을때 댓글 번호 담아주기
+  //댓글 번호가 selectedCommentIndex와 같으면 수정할수있음
   const openUpdateModal = async (e) => {
-    console.log(e.target.closest(".comment").id);
-
     setSelectedCommentIndex(e.target.closest(".comment").id);
-    setOpenInputNo(e.target.closest(".comment").id);
-    // updateClick(selectedCommentIndex);
   };
   console.log("selectedCommentIndex" + selectedCommentIndex);
 
-  //input란에 값을 넣으면 setText로 값 이동
+  //input란에 값 댓글 추가할 값 넣으면 setText로 값 이동
   const handler = async (e) => {
     console.log(e.target.value);
     setText(e.target.value);
   };
 
+  //실행되자마자 댓글 뿌리기
   useEffect(() => {
     getCommentHandler();
   }, [postNo]);
@@ -95,15 +109,13 @@ const BoardComment = ({ postNo }) => {
           <div>
             {comments?.map((item, index) => (
               <div key={item.commentNo} id={item.commentNo} className="comment">
-                {selectedCommentIndex == item.commentNo ? (
+                {selectedCommentIndex === item.commentNo ? (
                   <tr>
                     <td>{index + 1}</td>
                     <td>닉네임: {item?.member?.nickname}</td>
-                    {console.log(openInputNo)}
-                    {console.log(selectedCommentIndex)}
 
                     <td>
-                      <label>댓글</label>
+                      <label>댓글 :</label>
                       <input type="text" onChange={handler} />
                     </td>
                     <button onClick={updateClick}>수정하기</button>
@@ -113,6 +125,7 @@ const BoardComment = ({ postNo }) => {
                   <tr>
                     <td>{index + 1}</td>
                     <td>닉네임: {item?.member?.nickname}</td>
+                    <td>댓글: {item?.commentContent}</td>
                     <button onClick={updateClick}>수정하기</button>
                     <button onClick={deleteClick}>삭제하기</button>
                   </tr>
