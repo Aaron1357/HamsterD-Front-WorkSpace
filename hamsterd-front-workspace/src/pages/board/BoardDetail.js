@@ -11,7 +11,7 @@ const BoardDetail = () => {
   console.log(postNo);
   const [board, setBoard] = useState([]);
   console.log(board);
-
+//
   const getLoding = async (postNo) => {
     console.log("getLoading " + postNo);
     const resp = await detailBoard(postNo);

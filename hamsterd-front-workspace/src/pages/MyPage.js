@@ -15,7 +15,7 @@ const MypageTest = styled.div`
     margin-top: 30px;
     color: rgba(211, 157, 87);
     // 메인콘테이너//
-  }
+  }//
 
   .profileimg {
     justify-content: center;

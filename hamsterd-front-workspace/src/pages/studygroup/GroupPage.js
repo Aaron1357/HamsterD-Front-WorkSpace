@@ -17,7 +17,7 @@ const GroupPageTest = styled.div`
   }
   .btn {
     padding: 20px;
-  }
+  }//
   #btn1 {
     height: 40px;
     width: 150px;

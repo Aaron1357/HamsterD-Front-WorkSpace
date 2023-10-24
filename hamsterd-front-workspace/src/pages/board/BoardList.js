@@ -12,7 +12,7 @@ const BoardStyle = styled.div`
     width: 1000px;
     height: 100vh;
   }
-
+//
   .boardListHead2 {
     display: flex;
     justify-content: end;

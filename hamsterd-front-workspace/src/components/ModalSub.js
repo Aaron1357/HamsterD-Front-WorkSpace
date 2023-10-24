@@ -126,7 +126,7 @@ function ModalSub() {
     // modal 내리기
 
     setIsOpen(false);
-  };
+  };//
 
   const handleSignUpClick = () => {
     // 회원가입 버튼 클릭 시 '/signup' 경로로 이동

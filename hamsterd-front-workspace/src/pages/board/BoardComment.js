@@ -12,7 +12,7 @@ const BoardComment = ({ postNo }) => {
 
   //댓글 값 넣는 곳
   const [text, setText] = useState("");
-
+//
   //댓글 번호 확인하기 위한 상태관리
   const [selectedCommentIndex, setSelectedCommentIndex] = useState(0);
   // const [openInputNo, setOpenInputNo] = useState(0);

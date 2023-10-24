@@ -27,7 +27,7 @@ const CreateGroupStyle = styled.div`
     height: 100px;
   }
 `;
-
+//
 const CreateGroup = () => {
   const user = useSelector((state) => {
     return state.user;

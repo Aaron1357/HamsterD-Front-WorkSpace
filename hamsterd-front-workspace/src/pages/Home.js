@@ -8,7 +8,7 @@ const HomeTest = styled.div`
     flex-direction: column;
     justify-content: center;
     color: var(--grey-blue-60, #6b7a99);
-  }
+  }//
   /* 하단 메인페이지 */
   .main-section {
     display: flex;
