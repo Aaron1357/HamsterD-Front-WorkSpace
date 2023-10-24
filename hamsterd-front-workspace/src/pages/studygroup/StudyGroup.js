@@ -1,8 +1,13 @@
 import styled from "styled-components";
 import profile from "../../resource/종빈22.png";
-import groupimg from "../../resource/오리.jpg";
 import search from "../../resource/search.png";
 import { useNavigate } from "react-router-dom";
+import {
+  viewStudyGroup,
+  viewMemberList,
+  getManagerList,
+} from "../../api/studygroup";
+import { useState, useEffect } from "react";
 
 const StudyGroupTest = styled.div`
   .mainsection {
@@ -95,11 +100,13 @@ const StudyGroupTest = styled.div`
   }
 
   #grouptext {
-    color: rgba(163, 157, 139);
     font-weight: bold;
     font-size: 20px;
     margin-left: 10px; /* 조절 가능한 마진 값 */
+    text-decoration: none;
+    color: rgba(163, 157, 139);
   }
+
   #academyname {
     margin-top: 2px;
     color: rgba(163, 157, 139);
@@ -141,11 +148,13 @@ const StudyGroupTest = styled.div`
     border-radius: 20%;
   }
 
-  #groupintro {
+  .groupintro {
     margin-left: 30px;
     font-size: 15px;
+    text-decoration: none;
+    color: orange;
   }
-  #groupname {
+  .groupname {
     font-size: 25px;
     font-weight: bold;
   }
@@ -161,18 +170,46 @@ const StudyGroupTest = styled.div`
 `;
 
 const StudyGroup = () => {
-  const navigate = useNavigate;
+  const navigate = useNavigate();
 
-  const handleSignUpClick = () => {
-    // 회원가입 버튼 클릭 시 '/signup' 경로로 이동
-    navigate("/signup");
+  const [managerList, setManagerList] = useState([]);
+
+  const getStudyGroupListAPI = async () => {
+    //  그룹전체API 호출
+    const result = await getManagerList();
+    setManagerList(result.data);
+  };
+
+  useEffect(() => {
+    getStudyGroupListAPI();
+    // 처음 페이지 접근했을 떄 호출
+  }, []);
+
+  const handleCreateGroupClick = () => {
+    //생성버튼 페이지 이동
+    navigate("/creategroup");
+  };
+
+  const onClick = async (e) => {
+    const idex = e.target.getAttribute("groupNo"); // 선택한 스터디 그룹의 그룹넘버를 state에 담아서 navigate로 넘긴다
+
+    const result1 = await viewMemberList(idex);
+    const result2 = await viewStudyGroup(idex);
+
+    navigate("/grouppage", {
+      state: {
+        data: idex,
+        members: result1,
+        group: result2,
+      },
+    });
   };
 
   return (
     <StudyGroupTest>
       <div className="mainsection">
         <div className="createbtn">
-          <button type="button" id="createbtn" onClick={handleSignUpClick}>
+          <button type="button" id="createbtn" onClick={handleCreateGroupClick}>
             + 스터디그룹 생성
           </button>
         </div>
@@ -192,70 +229,63 @@ const StudyGroup = () => {
           <div className="horizonline"></div>
           <br />
           <br />
-          <div>
-            <div className="profile-container">
-              <div id="profile">
-                <img className="profileimg" src={profile} alt="Profile" />
-              </div>
-              <div>
-                <div id="grouptext">'그룹장'님의 스터디그룹</div>
-                <div id="academyname">학원명</div>
-              </div>
-            </div>
-            <div className="groupinfo">
-              <div className="group-container">
-                <div id="group">
-                  <img className="groupimg" src={groupimg} alt="Group" />
+          {managerList.map((item, index) => (
+            <div key={index}>
+              <div className="profile-container">
+                <div id="profile">
+                  {/* <img
+                    className="groupimg"
+                    src={`/upload/${item.profile.split("\\").pop()}`}
+                    alt="Profile"
+                  /> */}
                 </div>
-                <div id="groupintro">
-                  <div id="groupname">'그룹명' ex 오리 </div>
-                  <div>'그룹 소개' ex 우리는 멋진 오리에요! </div>
+                <div>
+                  <div>
+                    <div
+                      id="grouptext"
+                      onClick={onClick}
+                      groupNo={item.studyGroup && item.studyGroup.groupNo} // 선택한 스터디 그룹의 그룹넘버를 value 속성에 저장
+                    >
+                      {item.nickname}
+                    </div>
+                  </div>
+                  <div id="academyname">{item.academyName}</div>
+                </div>
+              </div>
+              <div className="groupinfo">
+                <div className="group-container">
+                  <div id="group">
+                    <img
+                      className="groupimg"
+                      src={`/upload/${
+                        item.studyGroup &&
+                        item.studyGroup.groupImage.split("\\").pop()
+                      }`}
+                      alt="Group"
+                    />
+                  </div>
+                  <div className="groupintro" onClick={onClick}>
+                    <div className="groupname">
+                      {" "}
+                      {item.studyGroup && item.studyGroup.groupName}
+                    </div>
+                    <div>{item.studyGroup && item.studyGroup.groupContent}</div>
+                  </div>
+                </div>
+                <div className="horizonline"></div>
+                <div className="group-container">
+                  <div>
+                    <img className="profileimg2" src={profile} alt="Profile" />
+                  </div>
+                  <div>외 '그룹인원'명 참여 중</div>
+                  <div id="grouppoint">그룹 점수 ex 4.7점</div>
                 </div>
               </div>
 
-              <div className="horizonline"></div>
-              <div className="group-container">
-                <div>
-                  <img className="profileimg2" src={profile} alt="Profile" />
-                </div>
-                <div>외 '그룹인원'명 참여 중</div>
-                <div id="grouppoint">그룹 점수 ex 4.7점</div>
-              </div>
+              <br />
+              <br />
             </div>
-          </div>
-          <br />
-          <br />
-          <div>
-            <div className="profile-container">
-              <div id="profile">
-                <img className="profileimg" src={profile} alt="Profile" />
-              </div>
-              <div>
-                <div id="grouptext">'그룹장22'님의 스터디그룹</div>
-                <div id="academyname">학원명</div>
-              </div>
-            </div>
-            <div className="groupinfo">
-              <div className="group-container">
-                <div id="group">
-                  <img className="groupimg" src={groupimg} alt="Group" />
-                </div>
-                <div id="groupintro">
-                  <div id="groupname">'그룹명' ex 오리22 </div>
-                  <div>'그룹 소개' ex 우리는 멋진 오리에요! </div>
-                </div>
-              </div>
-
-              <div className="horizonline"></div>
-              <div className="group-container">
-                <div>
-                  <img className="profileimg2" src={profile} alt="Profile" />
-                </div>
-                <div>외 '그룹인원'명 참여 중</div>
-                <div id="grouppoint">그룹 점수 ex 4.7점</div>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </StudyGroupTest>

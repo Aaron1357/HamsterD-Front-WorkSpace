@@ -84,8 +84,8 @@ const StyleTest = styled.div`
 `;
 
 function ModalSub() {
-  const save = localStorage.getItem("user"); // 로컬스토리지에 user정보 호출
-  const [isOpen, setIsOpen] = useState(true); // Modal 표시여부
+  const save = localStorage.getItem("user");
+  const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

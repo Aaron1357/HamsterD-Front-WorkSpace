@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import profile from "../../resource/종빈22.png";
-import groupimg from "../../resource/오리.jpg";
-import { useNavigate } from "react-router-dom";
+
+import { useNavigate, useLocation } from "react-router-dom";
+
+import { useState, useRef, useEffect } from "react";
 import ScheduleMain from "./ScheduleMain";
 
 const GroupPageTest = styled.div`
@@ -146,11 +148,28 @@ const GroupPageTest = styled.div`
 `;
 
 const GroupPage = () => {
-  const navigate = useNavigate;
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleSignUpClick = () => {
-    // 회원가입 버튼 클릭 시 '/signup' 경로로 이동
-    navigate("/signup");
+  const handleGroupReviewClick = () => {
+    navigate("/groupreview");
+  };
+
+  const number = Number(location.state.data);
+  const members = location.state.members;
+  const group = location.state.group;
+  console.log(members);
+  console.log(group);
+
+  const modalRef = useRef(null);
+
+  const handleClick = () => {
+    // Bootstrap Modal을 JavaScript로 열기
+    const myModal = modalRef.current;
+    if (myModal) {
+      myModal.classList.add("show");
+      myModal.style.display = "block";
+    }
   };
 
   return (
@@ -161,18 +180,28 @@ const GroupPage = () => {
             <div className="groupinfo">
               <div className="group-container">
                 <div id="group">
-                  <img className="groupimg" src={groupimg} alt="Group" />
+                  <img
+                    className="groupimg"
+                    src={`/upload/${group.groupImage.split("\\").pop()}`}
+                    alt="Group"
+                  />
                 </div>
                 <div id="groupintro">
-                  <div id="groupname">'그룹명' ex 오리 </div>
+                  <div id="groupname">{group.groupName}</div>
                   <div id="grouppoint">그룹 점수 ex 4.7점</div>
                   <div className="btn">
-                    <button type="button" id="btn1" onClick={handleSignUpClick}>
-                      참여하기
-                    </button>
-                    <button type="button" id="btn2" onClick={handleSignUpClick}>
-                      평가하기
-                    </button>
+                    <div className="App">
+                      <button type="button" id="btn1" onClick={handleClick}>
+                        참여하기
+                      </button>
+                      <button
+                        type="button"
+                        id="btn2"
+                        onClick={handleGroupReviewClick}
+                      >
+                        평가하기
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -180,70 +209,80 @@ const GroupPage = () => {
                 <div id="info2">'그룹 소개' ex 우리는 멋진 오리에요! </div>
                 <br />
                 <div className="group-container">
-                  <div>
-                    <div className="photo">
-                      <img
-                        className="profileimg2"
-                        src={profile}
-                        alt="Profile"
-                      />
+                  {members.map((item, index) => (
+                    <div>
+                      <div className="photo">
+                        <img
+                          className="profileimg2"
+                          src={profile}
+                          alt="Profile"
+                        />
+                      </div>
+                      <div>{item.nickname}</div>
                     </div>
-                    <div>윤종빈</div>
-                  </div>
-                  <div>
-                    <div className="photo">
-                      <img
-                        className="profileimg2"
-                        src={profile}
-                        alt="Profile"
-                      />
-                    </div>
-                    <div>윤종빈</div>
-                  </div>
-                  <div>
-                    <div className="photo">
-                      <img
-                        className="profileimg2"
-                        src={profile}
-                        alt="Profile"
-                      />
-                    </div>
-                    <div>윤종빈</div>
-                  </div>
-                  <div>
-                    <div className="photo">
-                      <img
-                        className="profileimg2"
-                        src={profile}
-                        alt="Profile"
-                      />
-                    </div>
-                    <div>윤종빈</div>
-                  </div>
-                  <div>
-                    <div className="photo">
-                      <img
-                        className="profileimg2"
-                        src={profile}
-                        alt="Profile"
-                      />
-                    </div>
-                    <div>윤종빈</div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
+
           <br />
           <br />
           <div>
             <div id="schedule">스케쥴</div>
             <div className="horizonline"></div>
-            <ScheduleMain className="scheduleMain" />
+            <ScheduleMain className="scheduleMain" groupNo={number} />
           </div>
           <div>
             <div id="comments">Comments</div>
             <div className="horizonline"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bootstrap Modal 요소 */}
+      <div
+        ref={modalRef}
+        className="modal fade"
+        id="myModal"
+        tabIndex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title"> 참여하기</h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              <p className="text">
+                선택하신 상품이
+                <br />
+                장바구니에 추가 되었습니다.
+              </p>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                쇼핑 계속하기
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                data-bs-dismiss="modal"
+              >
+                장바구니로 이동
+              </button>
+            </div>
           </div>
         </div>
       </div>
