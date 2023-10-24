@@ -98,10 +98,18 @@ function ModalSub() {
     if (Object.keys(user).length === 0 && save !== null) {
       // store에 키값(식별자)이 없으면서 로컬 스토리지에 유저정보가 존재하면 저장
       dispatch(userSave(JSON.parse(save)));
-    } else if (Object.keys(user).length !== 0 && save !== null) {
+      closeTab();
+    } else if (Object.keys(user).length) {
       // 유저정보가 저장되어 있다면 modal 내리기
       closeTab();
     }
+    window.addEventListener("storage", (event) => {
+      if (event.key === "user") {
+        save = JSON.parse(event.newValue);
+        dispatch(userSave(save));
+        // 업데이트된 데이터를 페이지에 반영
+      }
+    });
   }, [save]);
 
   console.log(user);
