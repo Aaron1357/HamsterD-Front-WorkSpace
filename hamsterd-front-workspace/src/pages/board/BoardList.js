@@ -166,7 +166,7 @@ const BoardList = () => {
               ))}
             </tbody>
           </table>
-          <tfoot>
+          <div>
             <PaginationBox>
               <Pagination
                 // totalPage={totalPage}
@@ -182,7 +182,7 @@ const BoardList = () => {
                 onChange={handlePageChange}
               ></Pagination>
             </PaginationBox>
-          </tfoot>
+          </div>
         </div>
       </div>
     </BoardStyle>

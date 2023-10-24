@@ -5,8 +5,12 @@ import {
   deleteComment,
 } from "../../api/board_comment";
 import { useState, useEffect } from "react";
+import BoardInComment from "../board/BoardInComment";
+import { useParams } from "react-router-dom";
 
 const BoardComment = ({ postNo }) => {
+  const { commentNo } = useParams();
+
   //댓글 저장해서 db로 넘기는 곳
   const [comments, setComments] = useState([]);
 
@@ -15,7 +19,12 @@ const BoardComment = ({ postNo }) => {
 
   //댓글 번호 확인하기 위한 상태관리
   const [selectedCommentIndex, setSelectedCommentIndex] = useState(0);
-  // const [openInputNo, setOpenInputNo] = useState(0);
+
+  //댓글 번호 확인하기 위한(대댓글처리) 상태관리
+  const [selectedInCommentIndex, setSelectedInCommentIndex] = useState(0);
+
+  //대댓글 컴포넌트로 이동하는 상태관리
+  const [inCommentShow, setInCommentShow] = useState(false);
 
   //user를 직접 사용하기 전에 JSON 문자열을 파싱하여 객체로 변환
   const user = JSON.parse(localStorage.getItem("user"));
@@ -35,8 +44,8 @@ const BoardComment = ({ postNo }) => {
     };
     const result = await addComment(data);
     console.log(result);
+    //추가 시 닉네임 새로고침해야지 받아와짐 변경 필요
     setComments([result, ...comments]);
-    // getCommentHandler();
   };
 
   //댓글 수정하기 버튼
@@ -73,6 +82,11 @@ const BoardComment = ({ postNo }) => {
     setText(e.target.value);
   };
 
+  const inCommentClick = (e) => {
+    setInCommentShow(true);
+    setSelectedInCommentIndex(e.target.closest(".comment").id);
+  };
+
   //실행되자마자 댓글 뿌리기
   useEffect(() => {
     getCommentHandler();
@@ -86,53 +100,85 @@ const BoardComment = ({ postNo }) => {
         <button onClick={onClick}>댓글 작성하기</button>
       </div>
       <div>
+        {/* 값이 0 초기값일때는 기본 댓글만 보여짐 */}
         {selectedCommentIndex <= 0 ? (
-          <div>
-            {comments?.map((item, index) => (
-              <div
-                key={item.commentNo}
-                id={`${item.commentNo}`}
-                className="comment"
-              >
-                {console.log("댓글 뿌리기 " + item)}
-                <tr>
+          <table>
+            <tbody>
+              {comments?.map((item, index) => (
+                <tr
+                  key={item.commentNo}
+                  id={`${item.commentNo}`}
+                  className="comment"
+                >
+                  {console.log("댓글 뿌리기 " + item)}
+
                   <td>{index + 1}</td>
                   <td>닉네임: {item?.member?.nickname}</td>
                   <td>댓글: {item?.commentContent}</td>
-                  <button onClick={openUpdateModal}>수정하기</button>
-                  <button onClick={deleteClick}>삭제하기</button>
+                  <td>
+                    <button onClick={openUpdateModal}>수정하기</button>
+                  </td>
+                  <td>
+                    <button onClick={deleteClick}>삭제하기</button>
+                  </td>
+                  <td>
+                    <button onClick={inCommentClick}>대댓글 작성하기</button>
+                  </td>
+                  {selectedInCommentIndex == item.commentNo &&
+                    inCommentShow == true && (
+                      <BoardInComment commentNo={selectedInCommentIndex} />
+                    )}
                 </tr>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div>
-            {comments?.map((item, index) => (
-              <div key={item.commentNo} id={item.commentNo} className="comment">
-                {selectedCommentIndex === item.commentNo ? (
-                  <tr>
-                    <td>{index + 1}</td>
-                    <td>닉네임: {item?.member?.nickname}</td>
 
-                    <td>
-                      <label>댓글 :</label>
-                      <input type="text" onChange={handler} />
-                    </td>
-                    <button onClick={updateClick}>수정하기</button>
-                    <button onClick={deleteClick}>삭제하기</button>
-                  </tr>
-                ) : (
-                  <tr>
-                    <td>{index + 1}</td>
-                    <td>닉네임: {item?.member?.nickname}</td>
-                    <td>댓글: {item?.commentContent}</td>
-                    <button onClick={updateClick}>수정하기</button>
-                    <button onClick={deleteClick}>삭제하기</button>
-                  </tr>
-                )}
-              </div>
-            ))}
-          </div>
+                //map뿌리는거 끝남
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          //내가 선택한 댓글 넘버와 index 번호 일치 시 댓글 수정 가능
+          <table>
+            <tbody>
+              {comments?.map((item, index) => (
+                <tr
+                  key={item.commentNo}
+                  id={item.commentNo}
+                  className="comment"
+                >
+                  {selectedCommentIndex == item.commentNo ? (
+                    <tr>
+                      <td>{index + 1}</td>
+                      <td>닉네임: {item?.member?.nickname}</td>
+                      <td>
+                        <label>댓글 :</label>
+                        <input type="text" onChange={handler} />
+                      </td>
+                      <td>
+                        <button onClick={updateClick}>수정하기</button>
+                      </td>
+                      <td>
+                        <button onClick={deleteClick}>삭제하기</button>
+                      </td>
+                    </tr>
+                  ) : (
+                    <tr>
+                      <td>{index + 1}</td>
+                      <td>닉네임: {item?.member?.nickname}</td>
+                      <td>댓글: {item?.commentContent}</td>
+                      <td>
+                        <button onClick={updateClick}>수정하기</button>
+                      </td>
+                      <td>
+                        <button onClick={deleteClick}>삭제하기</button>
+                      </td>
+                    </tr>
+                    //수정 commentNo 일치여부 확인
+                  )}
+                </tr>
+                //map 뿌리는거 여기서 끝남
+              ))}
+            </tbody>
+          </table>
+          //맨처음
         )}
       </div>
     </div>

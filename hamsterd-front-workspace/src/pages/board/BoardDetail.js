@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import BoardView from "./BoardView";
 import BoardComment from "../board/BoardComment";
-// import { viewPostNo } from "../../store/postSlice";
 
 const BoardDetail = () => {
   const { postNo } = useParams();
+
   // const dispatch = useDispatch();
   console.log(postNo);
   const [board, setBoard] = useState([]);
