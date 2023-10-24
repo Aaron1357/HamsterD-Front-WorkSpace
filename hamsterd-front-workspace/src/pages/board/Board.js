@@ -100,7 +100,7 @@ const Board = () => {
                 method: "POST",
                 body: formData,
               }
-            )
+            )//
               .then((response) => response.json())
               .then((result) => {
                 console.log(file);

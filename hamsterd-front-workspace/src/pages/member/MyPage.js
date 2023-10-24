@@ -240,7 +240,7 @@ const MyPage = () => {
         
             <div className="photo-line">
               <div className="photo">
-                
+              //
                 <img
                   className="profileimg"
                    src={`/upload/${parseValue.profile.split("\\").pop()}`}

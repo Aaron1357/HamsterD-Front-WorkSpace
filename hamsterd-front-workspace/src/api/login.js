@@ -15,7 +15,7 @@ export const addMember = async (member) => {
     headers: {
       "Content-Type": `application/json`,
     },
-  });
+  });//
 };
 
 export const updateMember = async (member) => {

@@ -13,7 +13,7 @@ const Test2 = styled.div`
     display: flex;
     justify-content: center;
   }
-  //
+  ////
   /* 로고 이미지 */
   #logo img {
     width: 250px;

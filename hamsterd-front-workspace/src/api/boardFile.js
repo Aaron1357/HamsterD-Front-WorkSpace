@@ -9,7 +9,7 @@ export const addFile = async (data) => {
   console.log(data);
 
   return await instance.post("post", data);
-};
+};//
 
 //기존 게시물에서 수정하기
 export const updateBoard = async (data) => {

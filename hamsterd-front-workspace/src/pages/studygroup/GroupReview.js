@@ -21,7 +21,7 @@ const GroupReviewStyle = styled.div`
     margin-left: 200px;
     width: 500px;
     height: 1000px;
-  }
+  }//
   #description {
     height: 100px;
   }

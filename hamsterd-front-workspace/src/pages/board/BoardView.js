@@ -13,7 +13,7 @@ const BoardView = ({ postNo, title, desc }) => {
   const onClickUpdate = () => {
     setUpdateVisible(true);
   };
-
+//
   const navigate = useNavigate();
   //삭제하기 버튼 클릭 시 해당 게시물 삭제 후 게시판 전체조회로 이동
   const onClickDelete = async () => {

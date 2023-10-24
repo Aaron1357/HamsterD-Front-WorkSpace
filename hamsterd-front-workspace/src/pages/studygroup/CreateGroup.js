@@ -28,7 +28,7 @@ const CreateGroupStyle = styled.div`
     height: 100px;
   }
 `;
-
+//
 const CreateGroup = () => {
   // const user = JSON.parse(localStorage.getItem("user"));
 

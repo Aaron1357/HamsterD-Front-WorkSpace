@@ -14,7 +14,7 @@ export const addComment = async (data) => {
     console.error(error);
   }
 };
-
+//
 //댓글 조회하기
 export const viewComment = async (postNo) => {
   try {

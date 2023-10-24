@@ -9,7 +9,7 @@ const SignUpStyle = styled.div`
     width: 1600px;
     margin-top: 30px;
     color: rgba(211,157,87);
-    
+    //
   }//
   .section {
     box-shadow: var(
