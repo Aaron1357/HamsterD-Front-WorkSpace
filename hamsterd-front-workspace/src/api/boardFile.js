@@ -11,7 +11,7 @@ export const addFile = async (data) => {
   return await instance.post("post", data);
 };
 
-//기존 게시물에서 업데이트 후 수정하기
+//기존 게시물에서 수정하기
 export const updateBoard = async (data) => {
   try {
     const res = await instance.put("updatePost", data);
@@ -33,9 +33,12 @@ export const updateBoardView = async (postNo) => {
 };
 
 //db에 있는 데이터 끌어와서 전체 게시물 리스트 보기
-export const searchBoardList = async () => {
+export const searchBoardList = async (page) => {
+  console.log(page);
+  let url = `posts?page=${page}`;
+
   try {
-    const res = await instance.get("post");
+    const res = await instance.get(url);
     return res.data;
   } catch (error) {
     console.error(error);

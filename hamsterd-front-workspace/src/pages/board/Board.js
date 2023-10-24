@@ -44,6 +44,7 @@ const Board = () => {
   const [desc, setDesc] = useState("");
   const [securityCheck, setSecurityCheck] = useState("n");
   const [img, setImg] = useState([]);
+
   //게시물 이미지 업로드시 여러개 넣을 수 있게 배열로 만들어줌
   const images = [];
 
@@ -54,7 +55,6 @@ const Board = () => {
   const formData = new FormData();
 
   const onClick = async () => {
-    console.log("onClick 호출호추");
     formData.append("title", title);
     formData.append("desc", desc);
     formData.append("securityCheck", securityCheck);
@@ -62,7 +62,7 @@ const Board = () => {
     console.log(desc);
     console.log(img);
     // data-type : clob <-- 한 컬럼에 html 통째로!
-
+    console.log(token);
     await addFile(formData);
     navigate("/boardList");
   };

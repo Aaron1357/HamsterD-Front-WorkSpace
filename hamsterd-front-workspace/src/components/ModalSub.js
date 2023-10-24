@@ -103,9 +103,14 @@ function ModalSub() {
     } else if (Object.keys(user).length) {
       // 유저정보가 저장되어 있다면 modal 내리기
       closeTab();
-    } //else if (Object.keys(user).length === 0) {
-    //   setIsOpen(true);
-    // }
+    }
+    window.addEventListener("storage", (event) => {
+      if (event.key === "user") {
+        save = JSON.parse(event.newValue);
+        dispatch(userSave(save));
+        // 업데이트된 데이터를 페이지에 반영
+      }
+    });
   }, [save]);
 
   console.log(user);
@@ -178,7 +183,7 @@ function ModalSub() {
               <br></br> <br></br>
               <input
                 className="set"
-                type="text"
+                type="password"
                 placeholder="  비밀번호를 입력하세요.."
                 name="password"
               ></input>

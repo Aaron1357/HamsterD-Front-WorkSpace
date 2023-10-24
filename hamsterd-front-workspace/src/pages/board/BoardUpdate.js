@@ -5,6 +5,7 @@ import ImageUploader from "quill-image-uploader";
 import { useState, useMemo } from "react";
 import { updateBoard } from "../../api/boardFile";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 //이미지 업로드 시 quill에 추가
 Quill.register("modules/imageUploader", ImageUploader);
@@ -25,6 +26,10 @@ const BoardUpdate = ({ postNo, initialTitle, initialDesc }) => {
   const formData = new FormData();
   const navigate = useNavigate();
 
+  const user = useSelector((state) => {
+    return state.user;
+  });
+
   const onClick = async () => {
     formData.append("postNo", postNo);
     formData.append("title", title);
@@ -33,7 +38,7 @@ const BoardUpdate = ({ postNo, initialTitle, initialDesc }) => {
     console.log("클릭 후 postNo : " + postNo);
     console.log("클릭 후 title : " + title);
     console.log("클릭 후 desc : " + desc);
-    // data-type : clob <-- 한 컬럼에 html 통째로!
+
     if (formData != null) {
       await updateBoard(formData);
       navigate("/boardList");
@@ -160,7 +165,9 @@ const BoardUpdate = ({ postNo, initialTitle, initialDesc }) => {
                 value="y"
                 checked={securityCheck === "y"}
                 onChange={(e) => {
-                  setSecurityCheck(e.target.value);
+                  {
+                    setSecurityCheck(e.target.value);
+                  }
                 }}
               />
               <label className="form-check-label" htmlFor="flexRadioDefault1">

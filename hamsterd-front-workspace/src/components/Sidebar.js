@@ -139,6 +139,7 @@ const Sidebar = () => {
               <div className="mystudy" onClick={myStudyGroup}>
                 내 스터디
               </div>
+
               <div className="myweight">내 몸무게</div>
               <div className="mycalender">내 일정</div>
               <div className="mypost">내 게시글</div>
