@@ -57,11 +57,24 @@ export const detailBoard = async (postNo) => {
   }
 };
 
-//검색창에 조회한 내용 전체조회
+//검색창에 조회한 postContent 내용 전체조회
+export const searchPostContent = async (data) => {
+  try {
+    console.log(data);
+    console.log("검색창 조회 api 잘 넘어갔닝? 제발 넘어가줘" + data);
+    const res = await instance.get(`post/search/postContents/${data}`);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+//검색창에 조회한 postContent 내용 전체조회
 export const searchPostTitle = async (data) => {
   try {
+    console.log(data);
     console.log("검색창 조회 api 잘 넘어갔닝? 제발 넘어가줘" + data);
-    const res = await instance.get("post/search/postContents", data);
+    const res = await instance.get(`post/search/postTitles/${data}`);
     return res.data;
   } catch (error) {
     console.error(error);

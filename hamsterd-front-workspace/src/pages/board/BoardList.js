@@ -1,4 +1,8 @@
-import { searchBoardList, searchPostTitle } from "../../api/boardFile";
+import {
+  searchBoardList,
+  searchPostContent,
+  searchPostTitle,
+} from "../../api/boardFile";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -88,7 +92,8 @@ const BoardList = () => {
   //검색창 value값
   const [searchPost, setSearchPost] = useState("");
 
-  const formData = new FormData();
+  //검색창 option 값 상태관리
+  const [searchOption, setSearchOption] = useState("");
 
   //검색창이 작성되면 onChange
   const onChangePost = (e) => {
@@ -96,13 +101,21 @@ const BoardList = () => {
     console.log(e.target.value);
   };
 
+  //option 값 변경될때마다 바꿔주는 onChange
+  const onChangeOption = (e) => {
+    setSearchOption(e.target.value);
+  };
+
   //검색창 클릭
-  const searchPostClick = async (searchPost) => {
+  const searchPostClick = async () => {
     console.log(searchPost);
-    formData.append("postContent", searchPost);
-    console.log(formData);
-    const result = await searchPostTitle(formData);
-    setBoardList(result);
+    if (searchOption == "searchPostContent") {
+      const result = await searchPostContent(searchPost);
+      setBoardList(result);
+    } else if (searchOption == "searchPostTitle") {
+      const result = await searchPostTitle(searchPost);
+      setBoardList(result);
+    }
   };
 
   //페이지 바뀔때 페이지 번호 바꿔주고 true로 변환
@@ -156,11 +169,11 @@ const BoardList = () => {
     <BoardStyle>
       <div className="boardListHead1">
         <div className="boardListHead2">
-          <select>
-            <option value="postTitle">제목</option>
-            <option value="postContent">내용</option>
-            <option value="nickname">작성자</option>
-            <option value="createTime">작성일</option>
+          <select value={searchOption} onChange={onChangeOption}>
+            <option value="searchPostTitle">제목</option>
+            <option value="searchPostContent">내용</option>
+            <option value="searchNickname">작성자</option>
+            <option value="searchCreateTime">작성일</option>
           </select>
           <input type="text" value={searchPost} onChange={onChangePost}></input>
           <button onClick={searchPostClick}>조회</button>
