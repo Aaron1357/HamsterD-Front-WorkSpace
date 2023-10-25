@@ -12,6 +12,9 @@ import ModalSub from "../components/ModalSub";
 
 import { userLogout } from "../store/userSlice";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux/es/hooks/useSelector";
+import { useEffect } from "react";
+import { userSave } from "../store/userSlice";
 
 const Test = styled.div`
   .header-section {
@@ -90,6 +93,7 @@ const Test = styled.div`
 const Sub = styled.div``;
 
 const Header = () => {
+  const save = localStorage.getItem("user"); // 로컬스토리지에 user정보 호출
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -106,11 +110,42 @@ const Header = () => {
     window.location.reload(true);
   };
 
+  const user = useSelector((state) => {
+    return state.user;
+  });
+
+  console.log(user);
+
+  useEffect(() => {
+    if (Object.keys(user).length === 0 && save !== null) {
+      // store에 키값(식별자)이 없으면서 로컬 스토리지에 유저정보가 존재하면 저장
+      dispatch(userSave(JSON.parse(save)));
+      // closeTab();
+    } //else if (Object.keys(user).length !== 0) {
+    //   // 유저정보가 저장되어 있다면 modal 내리기
+    //   closeTab();
+    // }
+    // window.addEventListener("storage", (event) => {
+    //   if (event.key === "user") {
+    //     save = JSON.parse(event.newValue);
+    //     dispatch(userSave(save));
+    //     // 업데이트된 데이터를 페이지에 반영
+    //   }
+    // });
+
+    // modal 상태에 따라 body 고정여부
+    // if (isOpen) {
+    //   document.body.style.overflow = "hidden";
+    // } else {
+    //   document.body.style.overflow = "auto";
+    // }
+  }, [user]);
+
   return (
     <Test>
       <Sub>
         <div>
-          <ModalSub />
+          <ModalSub user={user} />
         </div>
       </Sub>
 

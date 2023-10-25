@@ -83,43 +83,35 @@ const StyleTest = styled.div`
   }
 `;
 
-function ModalSub() {
+function ModalSub(props) {
+  console.log(props.user);
   const save = localStorage.getItem("user"); // 로컬스토리지에 user정보 호출
   const [isOpen, setIsOpen] = useState(true); // Modal 표시여부
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const user = useSelector((state) => {
-    return state.user;
-  });
+  // const user = useSelector((state) => {
+  //   return state.user;
+  // });
+
+  // console.log(user);
 
   useEffect(() => {
-    if (Object.keys(user).length === 0 && save !== null) {
-      // store에 키값(식별자)이 없으면서 로컬 스토리지에 유저정보가 존재하면 저장
-      dispatch(userSave(JSON.parse(save)));
-      closeTab();
-    } else if (Object.keys(user).length) {
-      // 유저정보가 저장되어 있다면 modal 내리기
-      closeTab();
-    }
-    window.addEventListener("storage", (event) => {
-      if (event.key === "user") {
-        save = JSON.parse(event.newValue);
-        dispatch(userSave(save));
-        // 업데이트된 데이터를 페이지에 반영
-      }
-    });
-  }, [save]);
+    console.log(Object.keys(props.user).length);
 
-  console.log(user);
-  useEffect(() => {
+    // setIsOpen(Object.keys(props.user).length !== 0);
+
     // modal 상태에 따라 body 고정여부
     if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
-  }, [isOpen]);
+  }, []);
+
+  // useEffect(() => {
+
+  // }, []);
 
   const closeTab = () => {
     // modal 내리기

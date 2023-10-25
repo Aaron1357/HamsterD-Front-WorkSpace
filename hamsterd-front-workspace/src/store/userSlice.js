@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 const asyncLogin = createAsyncThunk("userSlice/asyncLogin", async (data) => {
   //   console.log(data);
   const result = await login(data);
-  console.log(result.data);
+  // console.log(result.data);
   return result.data;
 });
 
@@ -19,7 +19,7 @@ const putMember = createAsyncThunk("userSlice/putMember", async (data) => {
 const delMember = createAsyncThunk("userSlice/deleteMember", async (data) => {
   //   console.log(data);
   const result = await deleteMember(data);
-  console.log(result.data);
+  // console.log(result.data);
   return result.data;
 });
 
@@ -53,6 +53,7 @@ const userSlice = createSlice({
     // 유저 정상적으로 삭제 시
     builder.addCase(delMember.fulfilled, (state, action) => {
       localStorage.clear();
+      userLogout();
       return {};
     });
   },
