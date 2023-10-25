@@ -130,7 +130,7 @@ const MyPage = () => {
   // console.log(user);
   // console.log(user.profile);
 
-  let user = useSelector((state) => {
+  const user = useSelector((state) => {
     console.log(state.user);
     // console.log(JSON.parse(state.user));
     return state.user;
