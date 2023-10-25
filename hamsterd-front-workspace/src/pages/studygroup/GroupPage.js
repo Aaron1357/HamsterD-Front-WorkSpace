@@ -160,8 +160,8 @@ const GroupPage = () => {
   const members = location.state.members;
   const group = location.state.group;
   const [groupNo, setGroupNo] = useState(number);
-  console.log(members);
-  console.log(group);
+  //console.log(members);
+  //console.log(group);
 
   const modalRef = useRef(null);
 

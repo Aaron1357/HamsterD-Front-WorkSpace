@@ -91,14 +91,14 @@ function ModalSub() {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => {
-    console.log("state.user : " + state.user);
+    //console.log("state.user : " + state.user);
     return state.user;
   });
 
   useEffect(() => {
     if (Object.keys(user).length === 0 && save !== null) {
       // store에 키값(식별자)이 없으면서 로컬 스토리지에 유저정보가 존재하면 저장
-      dispatch(userSave(JSON.stringify(save)));
+      dispatch(userSave(JSON.parse(save)));
       closeTab();
     } else if (Object.keys(user).length) {
       // 유저정보가 저장되어 있다면 modal 내리기
