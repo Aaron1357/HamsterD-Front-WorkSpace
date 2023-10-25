@@ -96,6 +96,7 @@ const Header = () => {
     console.log("logout!");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+
     window.location.reload(true);
   };
 
@@ -151,7 +152,7 @@ const Header = () => {
                 <a href="#">서브메뉴 2</a>
                 <a href="#">서브메뉴 3</a>
               </div>
-             <button onClick={logout}>로그아웃 </button>
+              <button onClick={logout}>로그아웃</button>
             </div>
           </div>
         </div>

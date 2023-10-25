@@ -40,3 +40,11 @@ export const viewManager = async (groupNo) => {
   // console.log(result.data);
   return result.data;
 };
+
+// 멤버 id로 조회
+export const showMember = async (id) => {
+  const result = await instance.get(`member/${id}`);
+  return result.data;
+};
+
+// 스터디그룹 가입

@@ -5,6 +5,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 import { useState, useRef, useEffect } from "react";
 import ScheduleMain from "./ScheduleMain";
+import { useSelector } from "react-redux";
+import { viewManager } from "../../api/studygroup";
+import GroupComment from "./GroupComment";
 
 const GroupPageTest = styled.div`
   .mainsection {
@@ -17,7 +20,7 @@ const GroupPageTest = styled.div`
   }
   .btn {
     padding: 20px;
-  }//
+  } //
   #btn1 {
     height: 40px;
     width: 150px;
@@ -151,13 +154,18 @@ const GroupPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleGroupReviewClick = () => {
-    navigate("/groupreview");
-  };
+  const user = useSelector((state) => {
+    return state.user;
+  });
+  // const user = JSON.parse(localStorage.getItem("user"));
 
   const number = Number(location.state.data);
   const members = location.state.members;
   const group = location.state.group;
+  const manager = location.state.manager;
+  console.log(manager);
+  setGroupNo = number;
+  const [groupNo, setGroupNo] = useState(number);
   console.log(members);
   console.log(group);
 
@@ -170,6 +178,36 @@ const GroupPage = () => {
       myModal.classList.add("show");
       myModal.style.display = "block";
     }
+  };
+
+  const modalClose = () => {
+    // 모달창 닫기
+    const myModal = modalRef.current;
+    if (myModal) {
+      myModal.classList.remove("show");
+      myModal.style.display = "none";
+    }
+  };
+
+  const joinStudyGroup = () => {
+    if (user.studyGroup == null) {
+      alert("이미 가입한 스터디 그룹이 있습니다.");
+    } else {
+      alert("이미 가입한 스터디 그룹이 있습니다.");
+    }
+    modalClose();
+  };
+
+  const groupReview = async () => {
+    console.log("매니저" + manager);
+    navigate("/groupreview", {
+      state: {
+        data: number,
+        members: members,
+        group: group,
+        manager: manager,
+      },
+    });
   };
 
   return (
@@ -191,13 +229,19 @@ const GroupPage = () => {
                   <div id="grouppoint">그룹 점수 ex 4.7점</div>
                   <div className="btn">
                     <div className="App">
-                      <button type="button" id="btn1" onClick={handleClick}>
+                      <button
+                        type="button"
+                        id="btn1"
+                        onClick={user.groupNo === number ? null : handleClick}
+                        disabled={user.groupNo === number}
+                      >
                         참여하기
                       </button>
                       <button
                         type="button"
                         id="btn2"
-                        onClick={handleGroupReviewClick}
+                        onClick={user.groupNo === number ? null : groupReview}
+                        disabled={user.groupNo === number}
                       >
                         평가하기
                       </button>
@@ -210,7 +254,7 @@ const GroupPage = () => {
                 <br />
                 <div className="group-container">
                   {members.map((item, index) => (
-                    <div>
+                    <div key={item.memberNo}>
                       <div className="photo">
                         <img
                           className="profileimg2"
@@ -231,11 +275,12 @@ const GroupPage = () => {
           <div>
             <div id="schedule">스케쥴</div>
             <div className="horizonline"></div>
-            <ScheduleMain className="scheduleMain" groupNo={number} />
+            <ScheduleMain className="scheduleMain" groupNo={groupNo} />
           </div>
           <div>
             <div id="comments">Comments</div>
             <div className="horizonline"></div>
+            <GroupComment className="GroupComment" groupNo={groupNo} />
           </div>
         </div>
       </div>
@@ -252,19 +297,20 @@ const GroupPage = () => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title"> 참여하기</h5>
+              <h5 className="modal-title"> 스터디그룹 참여하기</h5>
               <button
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
+                onClick={modalClose}
               ></button>
             </div>
             <div className="modal-body">
               <p className="text">
-                선택하신 상품이
+                스터디그룹 : {group.groupName}
                 <br />
-                장바구니에 추가 되었습니다.
+                그룹에 참여하시겠습니까?
               </p>
             </div>
             <div className="modal-footer">
@@ -272,15 +318,17 @@ const GroupPage = () => {
                 type="button"
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
+                onClick={joinStudyGroup}
               >
-                쇼핑 계속하기
+                참여하기
               </button>
               <button
                 type="button"
                 className="btn btn-primary"
                 data-bs-dismiss="modal"
+                onClick={modalClose}
               >
-                장바구니로 이동
+                취소
               </button>
             </div>
           </div>

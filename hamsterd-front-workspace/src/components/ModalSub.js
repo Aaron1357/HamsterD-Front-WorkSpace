@@ -86,18 +86,20 @@ const StyleTest = styled.div`
 function ModalSub() {
   const save = localStorage.getItem("user");
   const [isOpen, setIsOpen] = useState(true);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const user = useSelector((state) => {
-    console.log("state.user : " + state.user);
     return state.user;
   });
+
+  // const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     if (Object.keys(user).length === 0 && save !== null) {
       // store에 키값(식별자)이 없으면서 로컬 스토리지에 유저정보가 존재하면 저장
-      dispatch(userSave(JSON.parse(save)));
+      dispatch(userSave(JSON.stringify(save)));
       closeTab();
     } else if (Object.keys(user).length) {
       // 유저정보가 저장되어 있다면 modal 내리기
@@ -124,9 +126,8 @@ function ModalSub() {
 
   const closeTab = () => {
     // modal 내리기
-
     setIsOpen(false);
-  };//
+  }; //
 
   const handleSignUpClick = () => {
     // 회원가입 버튼 클릭 시 '/signup' 경로로 이동

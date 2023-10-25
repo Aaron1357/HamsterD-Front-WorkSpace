@@ -6,6 +6,7 @@ import {
   viewStudyGroup,
   viewMemberList,
   getManagerList,
+  viewManager,
 } from "../../api/studygroup";
 import { useState, useEffect } from "react";
 
@@ -174,16 +175,21 @@ const StudyGroup = () => {
 
   const [managerList, setManagerList] = useState([]);
 
+  const [page, setPage] = useState(1); // 페이지 번호
+  const itemsPerPage = 5; // 페이지당 항목 수
+
   const getStudyGroupListAPI = async () => {
     //  그룹전체API 호출
     const result = await getManagerList();
     setManagerList(result.data);
   };
 
+  console.log(managerList);
+
   useEffect(() => {
     getStudyGroupListAPI();
     // 처음 페이지 접근했을 떄 호출
-  }, []);//
+  }, []); //
 
   const handleCreateGroupClick = () => {
     //생성버튼 페이지 이동
@@ -195,15 +201,23 @@ const StudyGroup = () => {
 
     const result1 = await viewMemberList(idex);
     const result2 = await viewStudyGroup(idex);
+    const result3 = await viewManager(idex);
 
     navigate("/grouppage", {
       state: {
         data: idex,
         members: result1,
         group: result2,
+        manager: result3,
       },
     });
   };
+
+  // 현재 페이지에 해당하는 항목만 추출
+  const displayedGroups = managerList.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
 
   return (
     <StudyGroupTest>
@@ -230,23 +244,28 @@ const StudyGroup = () => {
           <br />
           <br />
           {managerList.map((item, index) => (
-            <div key={index}>
+            <div
+              key={item.studyGroup.groupNo}
+              id={`${item.studyGroup.groupNo}`}
+              onClick={onClick}
+            >
               <div className="profile-container">
                 <div id="profile">
-                  {/* <img
+                  <img
                     className="groupimg"
                     src={`/upload/${item.profile.split("\\").pop()}`}
                     alt="Profile"
-                  /> */}
+                  />
                 </div>
                 <div>
                   <div>
+                    {console.log(item)}
                     <div
                       id="grouptext"
-                      onClick={onClick}
-                      groupNo={item.studyGroup && item.studyGroup.groupNo} // 선택한 스터디 그룹의 그룹넘버를 value 속성에 저장
+                      groupNo={item?.studyGroup && item?.studyGroup?.groupNo}
+                      // 선택한 스터디 그룹의 그룹넘버를 value 속성에 저장
                     >
-                      {item.nickname}
+                      {item.nickname} 님의 스터디그룹
                     </div>
                   </div>
                   <div id="academyname">{item.academyName}</div>
@@ -274,10 +293,6 @@ const StudyGroup = () => {
                 </div>
                 <div className="horizonline"></div>
                 <div className="group-container">
-                  <div>
-                    <img className="profileimg2" src={profile} alt="Profile" />
-                  </div>
-                  <div>외 '그룹인원'명 참여 중</div>
                   <div id="grouppoint">그룹 점수 ex 4.7점</div>
                 </div>
               </div>
@@ -286,6 +301,19 @@ const StudyGroup = () => {
               <br />
             </div>
           ))}
+          {/* 페이지네이션을 추가 */}
+          <div className="pagination">
+            <button onClick={() => setPage(page - 1)} disabled={page === 1}>
+              이전 페이지
+            </button>
+            <span>페이지 {page}</span>
+            <button
+              onClick={() => setPage(page + 1)}
+              disabled={page * itemsPerPage >= managerList.length}
+            >
+              다음 페이지
+            </button>
+          </div>
         </div>
       </div>
     </StudyGroupTest>

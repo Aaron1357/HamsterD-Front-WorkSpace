@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import profile from "../../resource/오리.jpg";
 import { useState } from "react";
-
+import { useSelector } from "react-redux";
 
 const MypageTest = styled.div`
   .maincontain {
@@ -121,31 +121,31 @@ const MypageTest = styled.div`
 `;
 
 const MyPage = () => {
-  
-
   const logout = () => {
     window.sessionStorage.clear(); // 세션 제거
     window.location.reload(true); // 새로고침
   };
 
-  // window.sessionStorage.getItem("member");
-  const sessionValue = sessionStorage.getItem("member");
-  const parseValue = JSON.parse(sessionValue);
-  console.log(parseValue.profile);
-  console.log(parseValue);
-  
-  // console.log(window.sessionStorage.getItem("member"));
+  // const user = JSON.parse(localStorage.getItem("user"));
+  // console.log(user);
+  // console.log(user.profile);
+
+  let user = useSelector((state) => {
+    console.log(state.user);
+    // console.log(JSON.parse(state.user));
+    return state.user;
+  });
+  // user = JSON.parse(user);
+
+  // console.log("토큰" + JSON.parse(user));
+  // console.log("이미지" + user.profile);
 
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
-  
-
- 
 
   const handleStudyClick = () => {
     // 내 스터디 클릭시 내 스터디그룹' 경로로 이동
     navigate("/studygroup");
-    
   };
 
   const handleScheduleClick = () => {
@@ -153,115 +153,40 @@ const MyPage = () => {
     navigate("/schedule");
   };
 
-
-  
-
-  // console.log(file);
-
-  // sessionValue.profile = file;
-
-
-  const filePath = parseValue.profile;
-  const parts = filePath.split("//"); // "/"로 문자열 분할
-
-  const uploadFolder = parts.pop(); // 배열의 마지막 요소 추출
-
-  console.log(uploadFolder);
-
-  // sessionStorage.setItem("member", JSON.stringify(sessionValue));
-
-  // console.log(sessionValue.profile);
-
-
-  
-
   const handleUpdateClick = () => {
     // 개인정보수정 버튼 클릭 시 '/update' 경로로 이동
     navigate("/update");
-    
+
     setIsOpen(false);
   };
-  
-
-  // const handleImageUpload = (e) => {
-    
-  //   const selectedFile = e.target.value;
-  //   setFile(URL.createObjectURL(selectedFile));
-      
-
-    
-      
-
-  //   console.log(file);
-  
-
-  //   // 로컬 스토리지에서 member 데이터 가져오기
-  //   const memberData = JSON.parse(sessionStorage.getItem("member"));
-
-  //   // 새로운 FormData 생성
-  //   const formData2 = new FormData();
-    
-  //   // 필드 추가
-  
-    
-  //   //방식변경필요!!//
-  //   formData2.set("password",memberData.password);
-  //   formData2.set("nickname", memberData.nickname);
-  //   formData2.set("memberNo", memberData.memberNo);
-  //   formData2.set("id", memberData.id);
-  //   formData2.set("academyName", memberData.academyName);
-  //   formData2.set("address", memberData.address);
-  //   formData2.set("phone", memberData.phone);
-  //   formData2.set("birth", memberData.birth);
-  //   formData2.set("gender", memberData.gender);
-  //   formData2.set("name", memberData.name);
-  //   formData2.set("profile", file);
-  //   // console.log(formData2.get("password"));
-  //   // console.log(formData2.get("nickname"));
-  
-
-    
-  
-
-
-
-
-   
-  // };
-
-  
 
   return (
     <MypageTest>
       <div className="maincontain">
-          <div>
-            
+        <div></div>
+
+        <div className="photo-line">
+          <div className="photo">
+            //
+            <img
+              className="profileimg"
+              src={`/upload/${user.profile.split("\\").pop()}`}
+              alt="profile"
+            />
           </div>
-        
-            <div className="photo-line">
-              <div className="photo">
-              //
-                <img
-                  className="profileimg"
-                   src={`/upload/${parseValue.profile.split("\\").pop()}`}
-                  alt="profile"
-                />
-                
-              </div>
-            </div>
-            
-        
+        </div>
+
         {/* 프로필사진 */}
 
         <div className="nickname">
-          <div className="nickname-font">내 닉네임 : {parseValue.nickname}</div>
+          <div className="nickname-font">내 닉네임 : {user.nickname}</div>
           <div className="nickname-btn"></div>
         </div>
 
         {/* 닉네임+ 수정부분 */}
 
         <div className="myId">
-          <div className="myId-font">내 아이디 : {parseValue.id}</div>
+          <div className="myId-font">내 아이디 : {user.id}</div>
           <div className="myId-btn"></div>
         </div>
 
