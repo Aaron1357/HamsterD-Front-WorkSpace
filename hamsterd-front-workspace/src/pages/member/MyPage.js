@@ -126,7 +126,7 @@ const MyPage = () => {
     window.location.reload(true); // 새로고침
   };
 
-  // const user = JSON.parse(localStorage.getItem("user"));
+  // const user =] JSON.parse(localStorage.getItem("user"));
   // console.log(user);
   // console.log(user.profile);
 

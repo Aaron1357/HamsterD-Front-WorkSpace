@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { UseSelector } from "react-redux/es/hooks/useSelector";
 const GroupReviewStyle = styled.div`
   .mainsection {
     border: 1px solid rgba(211, 157, 87);
@@ -125,6 +125,11 @@ const GroupReviewStyle = styled.div`
 `;
 
 const GroupReview = () => {
+  const user = useSelector((state) => {
+    console.log(state.user);
+    // console.log(JSON.parse(state.user));
+    return state.user;
+  });
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     // // TODO: Handle the file upload logic here
