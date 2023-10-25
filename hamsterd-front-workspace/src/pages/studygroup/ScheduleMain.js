@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -9,7 +10,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 //import { getScheduleList } from "../../api/schedule";
-import { getScheduleOfGroup } from "../../api/schedule";
+import { getScheduleOfGroup, getScheduleOfGroup2 } from "../../api/schedule";
 import { getScheduleofGroupDate } from "../../api/schedule";
 import { useNavigate } from "react-router-dom";
 import { getOneSchedule } from "../../api/schedule";
@@ -136,10 +137,35 @@ const ScheduleStyle = styled.div`
     align-items: center;
     margin: 0;
   }
-
+  .searchSchedule {
+    width: 500px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
   input {
-    width: 450px;
+    width: 350px;
     height: 30px;
+  }
+
+  .form-select-sm {
+    width: 100px;
+    font-size: 12px;
+  }
+  .searchBtn {
+    width: 50px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .fa-magnifying-glass {
+    color: gray;
+  }
+
+  .searchBtn:hover,
+  .form-select-sm:hover {
+    cursor: pointer;
   }
 `;
 
@@ -154,19 +180,26 @@ const ScheduleMain = (props) => {
   // 유저 정보(수정, 삭제 활성화 위해)
   const user = JSON.parse(localStorage.getItem("user"));
   const userid = user.id;
-  const userNo = user.memberNo;
 
   // 검색 필터
-  const [filter, setFilter] = useState();
-  const [searchKeyword, setsearchKeyword] = useState([]);
-  // 검색 관련
+  const [filter, setFilter] = useState("title");
+  const [searchKeyword, setsearchKeyword] = useState();
+
+  // page 스크롤 무한처리
+  const [page, setPage] = useState(1);
+
+  // const hasScrollbar = () => {
+  //   return document.documentElement.scrollHeight > window.innerHeight;
+  // };
+
+  // const [ref, inView] = useInView({
+  //   skip: !hasScrollbar(), // 스크롤이 없을 경우 skip
+  // });
 
   // 목록의 추가(+) 버튼 클릭 시 schedule 등록 폼으로 이동
   const onClick = async () => {
-    console.log(userid);
     const result = await showMember(userid);
     const num = result["studyGroup"]["groupNo"];
-    console.log("num : " + num);
 
     if (num == groupNo) {
       navigate("/schedule", {
@@ -180,10 +213,10 @@ const ScheduleMain = (props) => {
     }
   };
 
-  // 특정 그룹의 schedule 목록 받아오기(우측 목록용)
+  // 특정 그룹의 schedule 목록 받아오기(캘린더용 목록용)
   const [schedulesOfGroup, setschedulesOfGroup] = useState([]);
 
-  // 특정 그룹의 schedule 목록 받아오기(좌측 캘린더 표시용)
+  // 특정 그룹의 schedule 목록 받아오기(목록 표시용)
   const [schedulesOfGroup2, setschedulesOfGroup2] = useState([]);
 
   // schedule 1개 상세 조회(수정, 삭제화면 넘기기 위해)
@@ -193,8 +226,10 @@ const ScheduleMain = (props) => {
   const [newSchedules, setNewSchedules] = useState([]);
 
   // 특정 그룹 목록 받아오는 로직(groupNo 넘김) + 날짜 변경처리
+  // 목록용
   const scheduleOfGroupAPI = async () => {
     const result = await getScheduleOfGroup(groupNo);
+
     const data = result.data.map((item) => {
       const originalDate = new Date(item.scheduleDate);
 
@@ -208,8 +243,6 @@ const ScheduleMain = (props) => {
 
       const yyyymmdd = year + "-" + month + "-" + day;
 
-      console.log(item.member.nickname);
-
       return {
         scheduleNo: item.scheduleNo,
         scheduleTitle: item.scheduleTitle,
@@ -220,13 +253,22 @@ const ScheduleMain = (props) => {
     });
 
     // 우측 일정 목록(계속 나오게 무한처리)
-    setschedulesOfGroup(data);
+    setschedulesOfGroup([...schedulesOfGroup, ...data]);
     setschedulesOfGroup2(data); // 캘린더
   };
-  // 처음 화면 띄울때 1번만 그룹별 일정 목록 받아옴
+
+  // 처음 화면 띄울때 그룹별 일정 목록 받아옴
   useEffect(() => {
     scheduleOfGroupAPI();
   }, []);
+
+  // // 무한 페이징을 위한 useEffect
+  // useEffect(() => {
+  //   if (inView) {
+  //     scheduleOfGroupAPI();
+  //     setPage(page + 1);
+  //   }
+  // }, [inView]);
 
   // 캘린더용 그룹별 일정 목록
   // 특정 그룹 목록 받아오는 로직(groupNo 넘김) + 날짜 변경처리
@@ -257,10 +299,8 @@ const ScheduleMain = (props) => {
     const day = date.getDate().toString().padStart(2, "0"); // 일도 두 자리로 맞춤
 
     const yymmdd = year + month + day;
-    console.log(yymmdd); // 231023
 
     setScheduleDate(yymmdd); // api에 scheduleDate yymmdd 형태로 넘김
-    console.log(scheduleDate);
 
     scheduleOfGroupDateAPI(groupNo, yymmdd);
   };
@@ -303,10 +343,10 @@ const ScheduleMain = (props) => {
 
   // eventClick 함수
   const handleEventClick = async (info) => {
-    console.log("info.event : " + info.event.groupId);
-    console.log("groupNo : " + groupNo);
+    // console.log("info.event : " + info.event.groupId);
+    // console.log("groupNo : " + groupNo);
     const scheduleData = await getOneScheduleAPI(groupNo, info.event.groupId);
-    console.log("scheduleData : " + scheduleData);
+    // console.log("scheduleData : " + scheduleData);
 
     navigate("/schedule", {
       state: {
@@ -331,7 +371,6 @@ const ScheduleMain = (props) => {
 
     const result = await showMember(userid);
     const num = result["studyGroup"]["groupNo"];
-    console.log("num : " + num);
 
     if (num == groupNo) {
       navigate("/schedule", {
@@ -347,7 +386,6 @@ const ScheduleMain = (props) => {
 
   // 목록에서 일정 제목 클릭 시 등록(수정삭제)화면으로 이동
   const viewDetail = async (scheduleNo) => {
-    console.log("scheduleNo : " + scheduleNo);
     const scheduleData = await getOneScheduleAPI(groupNo, scheduleNo);
 
     navigate("/schedule", {
@@ -365,35 +403,101 @@ const ScheduleMain = (props) => {
   };
 
   // 검색 버튼 클릭 시 search api 적용하는 함수
+  // 우측 목록만 검색결과 나오게
   const handleSearch = async () => {
-    console.log(filter); // 검색 필터
-    console.log(groupNo);
-    console.log(searchKeyword); // 검색 내용
+    if (searchKeyword) {
+      // 제목 검색
+      if (filter === "title") {
+        const result = await getScheduleByTitle(groupNo, searchKeyword);
+        if (result.data.length !== 0) {
+          //목록에 맞게 배열 새로 만듦
+          const data = result.data.map((item) => {
+            const originalDate = new Date(item.scheduleDate);
 
-    if (filter == "title") {
-      const result = await getScheduleByTitle(groupNo, searchKeyword);
-      if (result) {
-        setschedulesOfGroup(result.data);
-        setschedulesOfGroup2(result.data);
-      } else {
-        console.log("검색 결과가 없습니다!");
+            const newDate = new Date(originalDate);
+            newDate.setDate(newDate.getDate());
+
+            const date = new Date(newDate);
+            const year = date.getFullYear().toString().slice(-4); // 년도의 마지막 두 자리를 가져옴
+            const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 +1 해주고, 두 자리로 맞춤
+            const day = date.getDate().toString().padStart(2, "0"); // 일도 두 자리로 맞춤
+
+            const yyyymmdd = year + "-" + month + "-" + day;
+
+            return {
+              scheduleNo: item.scheduleNo,
+              scheduleTitle: item.scheduleTitle,
+              scheduleContent: item.scheduleContent,
+              scheduleDate: yyyymmdd,
+              nickname: item.member.nickname,
+            };
+          });
+          setschedulesOfGroup(data);
+        } else {
+          alert("검색 결과가 없습니다!");
+        }
+
+        // 내용 검색
+      } else if (filter === "content") {
+        const result = await getScheduleByContent(groupNo, searchKeyword);
+        if (result.data.length !== 0) {
+          const data = result.data.map((item) => {
+            const originalDate = new Date(item.scheduleDate);
+
+            const newDate = new Date(originalDate);
+            newDate.setDate(newDate.getDate());
+
+            const date = new Date(newDate);
+            const year = date.getFullYear().toString().slice(-4); // 년도의 마지막 두 자리를 가져옴
+            const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 +1 해주고, 두 자리로 맞춤
+            const day = date.getDate().toString().padStart(2, "0"); // 일도 두 자리로 맞춤
+
+            const yyyymmdd = year + "-" + month + "-" + day;
+
+            return {
+              scheduleNo: item.scheduleNo,
+              scheduleTitle: item.scheduleTitle,
+              scheduleContent: item.scheduleContent,
+              scheduleDate: yyyymmdd,
+              nickname: item.member.nickname,
+            };
+          });
+          setschedulesOfGroup(data);
+        } else {
+          alert("검색 결과가 없습니다!");
+        }
+        // 작성자 검색
+      } else if (filter === "user") {
+        const result = await getScheduleByMember(searchKeyword);
+        if (result.data.length !== 0) {
+          const data = result.data.map((item) => {
+            const originalDate = new Date(item.scheduleDate);
+
+            const newDate = new Date(originalDate);
+            newDate.setDate(newDate.getDate());
+
+            const date = new Date(newDate);
+            const year = date.getFullYear().toString().slice(-4); // 년도의 마지막 두 자리를 가져옴
+            const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 +1 해주고, 두 자리로 맞춤
+            const day = date.getDate().toString().padStart(2, "0"); // 일도 두 자리로 맞춤
+
+            const yyyymmdd = year + "-" + month + "-" + day;
+
+            return {
+              scheduleNo: item.scheduleNo,
+              scheduleTitle: item.scheduleTitle,
+              scheduleContent: item.scheduleContent,
+              scheduleDate: yyyymmdd,
+              nickname: item.member.nickname,
+            };
+          });
+          setschedulesOfGroup(data);
+        } else {
+          alert("검색 결과가 없습니다!");
+        }
       }
-    } else if (filter == "content") {
-      const result = await getScheduleByContent(groupNo, searchKeyword);
-      if (result) {
-        setschedulesOfGroup(result.data);
-        setschedulesOfGroup2(result.data);
-      } else {
-        console.log("검색 결과가 없습니다!");
-      }
-    } else if (filter == "user") {
-      const result = await getScheduleByMember(searchKeyword);
-      if (result) {
-        setschedulesOfGroup(result.data);
-        setschedulesOfGroup2(result.data);
-      } else {
-        console.log("검색 결과가 없습니다!");
-      }
+    } else {
+      alert("검색어를 입력해주세요!");
     }
   };
 
@@ -428,14 +532,15 @@ const ScheduleMain = (props) => {
         <div className="schedule-list">
           {/* 일정 검색창 */}
           <div className="mb-3">
-            <form>
+            <form className="searchSchedule">
               <select
-                class="form-select form-select-sm"
+                className="form-select form-select-sm"
                 aria-label="Small select example"
                 onChange={handleFilterChange}
               >
-                <option selected>카테고리</option>
-                <option value="title">제목</option>
+                <option value="title" defaultValue>
+                  제목
+                </option>
                 <option value="content">내용</option>
                 <option value="user">작성자</option>
               </select>
@@ -446,10 +551,12 @@ const ScheduleMain = (props) => {
                 value={searchKeyword}
                 onChange={(e) => setsearchKeyword(e.target.value)}
               />
-              <FontAwesomeIcon
-                icon={faMagnifyingGlass}
-                onClick={handleSearch}
-              />
+              <div className="searchBtn">
+                <FontAwesomeIcon
+                  icon={faMagnifyingGlass}
+                  onClick={handleSearch}
+                />
+              </div>
             </form>
           </div>
 
