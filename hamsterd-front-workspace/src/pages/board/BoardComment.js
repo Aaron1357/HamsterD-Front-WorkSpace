@@ -6,11 +6,8 @@ import {
 } from "../../api/board_comment";
 import { useState, useEffect } from "react";
 import BoardInComment from "../board/BoardInComment";
-import { useParams } from "react-router-dom";
 
 const BoardComment = ({ postNo }) => {
-  const { commentNo } = useParams();
-
   //댓글 저장해서 db로 넘기는 곳
   const [comments, setComments] = useState([]);
 

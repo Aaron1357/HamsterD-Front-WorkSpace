@@ -77,7 +77,6 @@ const BoardInComment = ({ commentNo }) => {
   const openUpdateModal = async (e) => {
     console.log("수정되게 해줘");
     setSelectedInCommentIndex(e.target.closest(".inComment").id);
-    // setSelectedInCommentIndex(0);
   };
 
   return (

@@ -53,20 +53,17 @@ const Board = () => {
   const navigate = useNavigate();
 
   const formData = new FormData();
-
+  //param값 back-end로 보내주기
   const onClick = async () => {
     formData.append("title", title);
     formData.append("desc", desc);
     formData.append("securityCheck", securityCheck);
     formData.append("token", token);
-    console.log(desc);
-    console.log(img);
-    // data-type : clob <-- 한 컬럼에 html 통째로!
-    console.log(token);
+    console.log(formData);
     await addFile(formData);
     navigate("/boardList");
   };
-
+  //quill 라이브러리에 사용되는 옵션
   const toolbarOptions = [
     ["link", "image", "video"],
     [{ header: [1, 2, 3, false] }],
@@ -78,7 +75,7 @@ const Board = () => {
     //게시물에서 이미지 여러개 담을때 필요함
     ["images"],
   ];
-
+  //quill 라이브러리에 사용되는 모듈
   const modules = useMemo(
     () => ({
       toolbar: {

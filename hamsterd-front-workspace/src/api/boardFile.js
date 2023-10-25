@@ -36,7 +36,6 @@ export const updateBoardView = async (postNo) => {
 export const searchBoardList = async (page) => {
   console.log(page);
   let url = `posts?page=${page}`;
-
   try {
     const res = await instance.get(url);
     return res.data;
@@ -52,6 +51,17 @@ export const detailBoard = async (postNo) => {
     const res = await instance.get(`post/detail/${postNo}`);
     console.log("api 값 보내기 res.data" + res.data);
     console.log("api 값 보내기 res" + res);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+//검색창에 조회한 내용 전체조회
+export const searchPostTitle = async (data) => {
+  try {
+    console.log("검색창 조회 api 잘 넘어갔닝? 제발 넘어가줘" + data);
+    const res = await instance.get("post/search/postContents", data);
     return res.data;
   } catch (error) {
     console.error(error);

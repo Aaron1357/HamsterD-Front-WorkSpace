@@ -84,6 +84,7 @@ export const deleteComment = async (CommentNo) => {
   }
 };
 
+//대댓글 삭제
 export const deleteInComment = async (incono) => {
   try {
     console.log("대댓글삭제 api 넘어감");
