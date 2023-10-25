@@ -126,10 +126,6 @@ const MyPage = () => {
     window.location.reload(true); // 새로고침
   };
 
-  // const user = JSON.parse(localStorage.getItem("user"));
-  // console.log(user);
-  // console.log(user.profile);
-
   let user = useSelector((state) => {
     console.log(state.user);
     // console.log(JSON.parse(state.user));

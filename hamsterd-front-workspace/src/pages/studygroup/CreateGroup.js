@@ -34,8 +34,6 @@ const CreateGroup = () => {
     return state.user;
   });
 
-  // const user = JSON.parse(localStorage.getItem("user"));
-
   const id = user.id;
   console.log(id);
 
@@ -47,7 +45,7 @@ const CreateGroup = () => {
   const navigate = useNavigate();
 
   const onClick = async (e) => {
-    console.log(e);
+    // console.log(e);
     e.preventDefault();
     const formData = new FormData();
     formData.append("grouptitle", title);
@@ -60,14 +58,9 @@ const CreateGroup = () => {
 
     const response = await addStudyGroup(formData); // 비동기 작업 완료 대기
 
-    console.log(response);
-    console.log(response.data.groupNo);
-
     // 계정 수정 -> 감으로 수정
-    // const user = JSON.parse(localStorage.getItem("user"));
     user.studyGroup = response.data.groupNo;
-    localStorage.setItem("user", user);
-
+    // localStorage.setItem("user", user);
     //   setImage(response.data.image);
 
     console.log(user);

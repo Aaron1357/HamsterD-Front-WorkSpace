@@ -1,7 +1,8 @@
 import styled from "styled-components";
-
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { addStudyGroup } from "../../api/studygroup";
 
 const GroupReviewStyle = styled.div`
   .mainsection {
@@ -125,11 +126,9 @@ const GroupReviewStyle = styled.div`
 `;
 
 const GroupReview = () => {
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    // // TODO: Handle the file upload logic here
-    // console.log("Selected file:", file);
-  };
+  const user = useSelector((state) => {
+    return state.user;
+  });
 
   const location = useLocation();
 
@@ -138,11 +137,7 @@ const GroupReview = () => {
   const group = location.state.group;
   const manager = location.state.manager;
 
-  console.log(number);
-  console.log(manager);
-  console.log(group);
-  console.log(members);
-
+  console.log(group.groupNo);
   const [point, setPoint] = useState([]);
   const [coment, setComent] = useState([]);
 
@@ -152,21 +147,19 @@ const GroupReview = () => {
     const formData = new FormData();
     formData.append("grouppoint", point);
     formData.append("groupcoment", coment);
-    // formData.append("user", user);
+    formData.append("memberNo", user.memberNo);
+    formData.append("groupNo", group.groupNo);
     // 유저 받아서 보내기 종빈
 
     console.log("formData : " + formData);
 
     const response = await addStudyGroup(formData); // 비동기 작업 완료 대기
 
-    console.log(response);
-    console.log(response.data.groupNo);
-
     // 계정 수정 -> 감으로 수정
     // const user = JSON.parse(localStorage.getItem("user"));
     user.studyGroup = response.data.groupNo;
-    localStorage.setItem("user", user);
 
+    localStorage.setItem("user", user);
     //   setImage(response.data.image);
 
     console.log(user);
@@ -241,7 +234,7 @@ const GroupReview = () => {
                     <input
                       className="form-check-input"
                       type="radio"
-                      name="gender"
+                      name="starRating"
                       id="flexRadioDefault5"
                       value="5"
                       onChange={(e) => setPoint(e.target.value)}
@@ -257,6 +250,7 @@ const GroupReview = () => {
                     <input
                       className="form-check-input"
                       type="radio"
+                      name="starRating"
                       id="flexRadioDefault4"
                       value="4"
                       onChange={(e) => setPoint(e.target.value)}
@@ -272,7 +266,8 @@ const GroupReview = () => {
                     <input
                       className="form-check-input"
                       type="radio"
-                      id="flexRadioDefault"
+                      name="starRating"
+                      id="flexRadioDefault3"
                       value="3"
                       onChange={(e) => setPoint(e.target.value)}
                     />
@@ -287,6 +282,7 @@ const GroupReview = () => {
                     <input
                       className="form-check-input"
                       type="radio"
+                      name="starRating"
                       id="flexRadioDefault2"
                       value="2"
                       onChange={(e) => setPoint(e.target.value)}
@@ -302,6 +298,7 @@ const GroupReview = () => {
                     <input
                       className="form-check-input"
                       type="radio"
+                      name="starRating"
                       id="flexRadioDefault1"
                       value="1"
                       onChange={(e) => setPoint(e.target.value)}

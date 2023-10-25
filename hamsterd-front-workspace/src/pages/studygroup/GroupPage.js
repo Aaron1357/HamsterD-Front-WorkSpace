@@ -8,6 +8,7 @@ import ScheduleMain from "./ScheduleMain";
 import { useSelector } from "react-redux";
 import { viewManager } from "../../api/studygroup";
 import GroupComment from "./GroupComment";
+import { getType } from "@reduxjs/toolkit";
 
 const GroupPageTest = styled.div`
   .mainsection {
@@ -138,6 +139,9 @@ const GroupPageTest = styled.div`
   }
   .photo {
     width: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   #schedule {
     font-size: 25px;
@@ -147,6 +151,9 @@ const GroupPageTest = styled.div`
   #comments {
     font-size: 25px;
     font-weight: bold;
+  }
+  #nickname {
+    text-align: center;
   }
 `;
 
@@ -163,20 +170,25 @@ const GroupPage = () => {
   const members = location.state.members;
   const group = location.state.group;
   const manager = location.state.manager;
-  console.log(manager);
-  setGroupNo = number;
+
+  // setGroupNo = number;
   const [groupNo, setGroupNo] = useState(number);
-  console.log(members);
-  console.log(group);
 
   const modalRef = useRef(null);
 
   const handleClick = () => {
     // Bootstrap Modal을 JavaScript로 열기
-    const myModal = modalRef.current;
-    if (myModal) {
-      myModal.classList.add("show");
-      myModal.style.display = "block";
+
+    if (user.studyGroup.groupNo == number) {
+      alert("해당 스터디그룹에 이미 가입되어있습니다.");
+    } else if (user.studyGroup != null) {
+      alert("다른 스터디그룹에 이미 가입되어있습니다.");
+    } else {
+      const myModal = modalRef.current;
+      if (myModal) {
+        myModal.classList.add("show");
+        myModal.style.display = "block";
+      }
     }
   };
 
@@ -189,25 +201,21 @@ const GroupPage = () => {
     }
   };
 
-  const joinStudyGroup = () => {
-    if (user.studyGroup == null) {
-      alert("이미 가입한 스터디 그룹이 있습니다.");
-    } else {
-      alert("이미 가입한 스터디 그룹이 있습니다.");
-    }
-    modalClose();
-  };
+  const joinStudyGroup = () => {};
 
   const groupReview = async () => {
-    console.log("매니저" + manager);
-    navigate("/groupreview", {
-      state: {
-        data: number,
-        members: members,
-        group: group,
-        manager: manager,
-      },
-    });
+    if (user.studyGroup.groupNo != number) {
+      alert("해당 스터디그룹의 멤버만 평가할 수 있습니다.");
+    } else {
+      navigate("/groupreview", {
+        state: {
+          data: number,
+          members: members,
+          group: group,
+          manager: manager,
+        },
+      });
+    }
   };
 
   return (
@@ -226,23 +234,17 @@ const GroupPage = () => {
                 </div>
                 <div id="groupintro">
                   <div id="groupname">{group.groupName}</div>
-                  <div id="grouppoint">그룹 점수 ex 4.7점</div>
+
+                  <div id="grouppoint">
+                    그룹 점수 ex 4.7점 &nbsp;&nbsp;&nbsp;그룹인원{" "}
+                    {members.length}명
+                  </div>
                   <div className="btn">
                     <div className="App">
-                      <button
-                        type="button"
-                        id="btn1"
-                        onClick={user.groupNo === number ? null : handleClick}
-                        disabled={user.groupNo === number}
-                      >
+                      <button type="button" id="btn1" onClick={handleClick}>
                         참여하기
                       </button>
-                      <button
-                        type="button"
-                        id="btn2"
-                        onClick={user.groupNo === number ? null : groupReview}
-                        disabled={user.groupNo === number}
-                      >
+                      <button type="button" id="btn2" onClick={groupReview}>
                         평가하기
                       </button>
                     </div>
@@ -258,11 +260,11 @@ const GroupPage = () => {
                       <div className="photo">
                         <img
                           className="profileimg2"
-                          src={profile}
+                          src={`/upload/${item.profile.split("\\").pop()}`}
                           alt="Profile"
                         />
                       </div>
-                      <div>{item.nickname}</div>
+                      <div id="nickname">{item.nickname}</div>
                     </div>
                   ))}
                 </div>
