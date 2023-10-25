@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { viewManager } from "../../api/studygroup";
 import GroupComment from "./GroupComment";
 import { getType } from "@reduxjs/toolkit";
+import ReviewPage from "./ReviewPage";
 
 const GroupPageTest = styled.div`
   .mainsection {
@@ -271,7 +272,9 @@ const GroupPage = () => {
               </div>
             </div>
           </div>
-
+          <div>
+            <ReviewPage className="ReviewPage" groupNo={groupNo} />
+          </div>
           <br />
           <br />
           <div>

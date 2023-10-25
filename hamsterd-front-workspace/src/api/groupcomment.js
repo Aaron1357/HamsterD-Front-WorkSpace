@@ -21,5 +21,6 @@ export const deletegComment = async (groupCommentNo) => {
 
 // 스케줄 수정
 export const updategComment = async (data) => {
+  console.log(data);
   return await instance.put("studyGroup/gcomment", data);
 };

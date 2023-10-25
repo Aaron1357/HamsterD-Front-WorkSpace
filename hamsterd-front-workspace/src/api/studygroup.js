@@ -48,3 +48,14 @@ export const showMember = async (id) => {
 };
 
 // 스터디그룹 가입
+
+// 스터디그룹 평가 생성
+export const addGroupReview = async (data) => {
+  console.log(data);
+  return await instance.post("groupeval", data);
+};
+
+// 스터디그룹 평가 리스트 받아오기
+export const getGroupReviewList = async (groupNo) => {
+  return await instance.get(`groupeval/${groupNo}`);
+};

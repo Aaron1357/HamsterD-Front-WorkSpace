@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { addStudyGroup } from "../../api/studygroup";
+import { addGroupReview } from "../../api/studygroup";
 
 const GroupReviewStyle = styled.div`
   .mainsection {
@@ -130,6 +130,7 @@ const GroupReview = () => {
     return state.user;
   });
 
+  const navigate = useNavigate();
   const location = useLocation();
 
   const number = Number(location.state.data);
@@ -137,38 +138,23 @@ const GroupReview = () => {
   const group = location.state.group;
   const manager = location.state.manager;
 
-  console.log(group.groupNo);
-  const [point, setPoint] = useState([]);
-  const [coment, setComent] = useState([]);
-
-  const navigate = useNavigate();
+  const [point, setPoint] = useState("1");
+  const [comment, setcomment] = useState([]);
 
   const onClick = async (e) => {
+    e.preventDefault();
+
+    console.log("===================");
     const formData = new FormData();
-    formData.append("grouppoint", point);
-    formData.append("groupcoment", coment);
-    formData.append("memberNo", user.memberNo);
-    formData.append("groupNo", group.groupNo);
-    // 유저 받아서 보내기 종빈
+    formData.append("groupScore", point);
+    formData.append("review", comment);
+    formData.append("member", user.memberNo);
+    formData.append("studyGroup", group.groupNo);
+    console.log(formData);
 
-    console.log("formData : " + formData);
-
-    const response = await addStudyGroup(formData); // 비동기 작업 완료 대기
-
-    // 계정 수정 -> 감으로 수정
-    // const user = JSON.parse(localStorage.getItem("user"));
-    user.studyGroup = response.data.groupNo;
-
-    localStorage.setItem("user", user);
-    //   setImage(response.data.image);
-
-    console.log(user);
+    await addGroupReview(formData); // 비동기 작업 완료 대기
 
     navigate("/studygroup"); // 파일 업로드가 완료되면 페이지 이동
-    // } catch (error) {
-    //   // 에러 처리
-    //   console.error("파일 업로드 중 오류 발생:", error);
-    // }
   };
 
   return (
@@ -207,7 +193,7 @@ const GroupReview = () => {
               <div className="horizonline"></div>
               <div className="group-container">
                 {members.map((item, index) => (
-                  <div>
+                  <div key={item.memberNo}>
                     <div>
                       <img
                         className="profileimg2"
@@ -226,7 +212,7 @@ const GroupReview = () => {
           <br />
           <br />
           <div>
-            <form className="creategroup" method="POST" onSubmit={onClick}>
+            <form className="createreview" method="POST" onSubmit={onClick}>
               <div className="eva">
                 <label className="form-label">별점</label>
                 <div className="eva2">
@@ -235,47 +221,15 @@ const GroupReview = () => {
                       className="form-check-input"
                       type="radio"
                       name="starRating"
-                      id="flexRadioDefault5"
-                      value="5"
+                      id="flexRadioDefault1"
+                      value="1"
                       onChange={(e) => setPoint(e.target.value)}
                     />
                     <label
                       className="form-check-label"
-                      htmlFor="flexRadioDefault5"
+                      htmlFor="flexRadioDefault1"
                     >
-                      5점
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="starRating"
-                      id="flexRadioDefault4"
-                      value="4"
-                      onChange={(e) => setPoint(e.target.value)}
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="flexRadioDefault4"
-                    >
-                      4점
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="starRating"
-                      id="flexRadioDefault3"
-                      value="3"
-                      onChange={(e) => setPoint(e.target.value)}
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="flexRadioDefault3"
-                    >
-                      3점
+                      1점
                     </label>
                   </div>
                   <div className="form-check">
@@ -299,47 +253,76 @@ const GroupReview = () => {
                       className="form-check-input"
                       type="radio"
                       name="starRating"
-                      id="flexRadioDefault1"
-                      value="1"
+                      id="flexRadioDefault3"
+                      value="3"
                       onChange={(e) => setPoint(e.target.value)}
                     />
                     <label
                       className="form-check-label"
-                      htmlFor="flexRadioDefault1"
+                      htmlFor="flexRadioDefault3"
                     >
-                      1점
+                      3점
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="starRating"
+                      id="flexRadioDefault4"
+                      value="4"
+                      onChange={(e) => setPoint(e.target.value)}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="flexRadioDefault4"
+                    >
+                      4점
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="starRating"
+                      id="flexRadioDefault5"
+                      value="5"
+                      onChange={(e) => setPoint(e.target.value)}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="flexRadioDefault5"
+                    >
+                      5점
                     </label>
                   </div>
                 </div>
               </div>
               <br />
               <br />
-              <form className="creategroup">
-                <div className="mb-3">
-                  <label htmlFor="name" className="form-label">
-                    스터디그룹 평가
-                  </label>
-                  <input
-                    type="text"
-                    id="description"
-                    className="form-control"
-                    required
-                    name="name"
-                    onChange={(e) => setComent(e.target.value)}
-                  />
-                  <span className="form-text">
-                    스터디그룹에 대한 평가를 적어주세요
-                  </span>
-                </div>
-                <br />
-
+              <div className="review">
+                <label htmlFor="review" className="form-label">
+                  스터디그룹 평가
+                </label>
                 <input
-                  type="submit"
-                  id="signupbtn"
-                  className="btn btn-primary"
-                  value="스터디그룹 생성"
+                  type="text"
+                  id="description"
+                  className="form-control"
+                  required
+                  name="name"
+                  onChange={(e) => setcomment(e.target.value)}
                 />
-              </form>
+                <span className="form-text">
+                  스터디그룹에 대한 평가를 적어주세요
+                </span>
+              </div>
+              <br />
+              <input
+                type="submit"
+                id="signupbtn"
+                className="btn btn-primary"
+                value="평가 완료"
+              />
             </form>
           </div>
         </div>

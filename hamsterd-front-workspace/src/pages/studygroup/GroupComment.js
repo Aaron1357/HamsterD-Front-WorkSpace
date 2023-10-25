@@ -42,6 +42,8 @@ const GroupComment = (props) => {
       formData.append("groupNo", groupNo);
       formData.append("token", token);
 
+      console.log(formData);
+
       try {
         await addgComment(formData);
         gCommentOfGroup();
