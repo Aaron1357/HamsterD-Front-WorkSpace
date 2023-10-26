@@ -1,7 +1,8 @@
 import styled from "styled-components";
-import { addMember } from "../../api/login";
+import { addMember, findId, findNickname } from "../../api/member";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { regExpId } from "./regExp";
 
 const SignUpStyle = styled.div`
   .mainsection {
@@ -25,43 +26,105 @@ const SignUpStyle = styled.div`
 `;
 
 const SignUp = () => {
-  // const [id, setId] = useState([]);
-  // const [nickname, setNickname] = useState([]);
-  // const [password, setPw] = useState([]);
-  // const [name, setName] = useState([]);
-  // const [birth, setBirth] = useState([]);
-  // const [gender, setGender] = useState([]);
-  // const [phone, setPhone] = useState([]);
-  // const [academy, setAcademy] = useState([]);
-  // const [address, setAddr] = useState([]);
+  const [validId, setValidId] = useState(false); // id 정규식
+
+  const [idDupli, setIdDupli] = useState(false); // 아이디 중복확인
+  const [nickDupli, setNickDupli] = useState(false); // 닉네임 중복확인
+
+  const [id, setId] = useState([]);
+  const [nickname, setNickname] = useState([]);
+  const [password, setPw] = useState([]);
+  const [name, setName] = useState([]);
+  const [birth, setBirth] = useState([]);
+  const [gender, setGender] = useState([]);
+  const [phone, setPhone] = useState([]);
+  const [academy, setAcademy] = useState([]);
+  const [address, setAddr] = useState([]);
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const signup = (e) => {
     e.preventDefault();
-    const formData2 = {
-      id: e.target.id.value,
-      nickname: e.target.nickname.value,
-      password: e.target.password.value,
-      name: e.target.name.value,
-      birth: e.target.birth.value,
-      gender: e.target.gender.value,
-      phone: e.target.phone.value,
-      academy: e.target.academy.value,
-      address: e.target.address.value,
-    };
 
-    console.log(formData2.id);
+    if (idDupli && nickDupli) {
+      // 중복확인이 완료 됬을때
+      const formData2 = {
+        id: id,
+        nickname: nickname,
+        password: password,
+        name: name,
+        birth: birth,
+        gender: gender,
+        phone: phone,
+        academy: academy,
+        address: address,
+      };
 
-    addMember(formData2);
-    navigate("/");
+      console.log(formData2);
+
+      // console.log(formData2.id);
+
+      // addMember(formData2);
+      // navigate("/");
+    } else {
+      // 중복확인이 되지 않았을때
+      alert("중복확인을 먼저 해주세요!!");
+    }
+  };
+
+  const FindId = async (e) => {
+    const element = e.target;
+
+    const idInput = element.previousSibling; // 해당 태그의 형제요소 선택(아이디 input 태그)
+
+    const result = await findId(idInput.value);
+
+    console.log(result);
+
+    if (result) {
+      alert("중복된 아이디입니다!!!");
+    } else if (!result) {
+      alert("사용 가능!!");
+      setIdDupli(true);
+    }
+  };
+
+  const FindNickname = async (e) => {
+    const element = e.target;
+
+    const nameInput = element.previousSibling; // 해당 태그의 형제요소 선택(닉네임 input 태그)
+
+    const result = await findNickname(nameInput.value);
+
+    console.log(result);
+
+    if (result) {
+      alert("중복된 닉네임입니다!!!");
+    } else if (!result) {
+      alert("사용 가능!!");
+      setNickDupli(true);
+    }
+  };
+
+  const RegExpId = (e) => {
+    // 아이디 유효성 검사!!
+    const id = e.target.value;
+    console.log(regExpId(id));
+    setValidId(regExpId(id));
+  };
+
+  const RegExpPw = (e) => {
+    // 비밀번호 유효성 검사!!
+    const id = e.target.value;
+    console.log(regExpId(id));
+    setValidId(regExpId(id));
   };
 
   return (
     <SignUpStyle>
       <div className="mainsection">
         <div className="section" id="section2">
-          <form className="signup" onSubmit={handleSubmit}>
+          <form className="signup" onSubmit={signup}>
             <div className="mb-3">
               <label htmlFor="id" className="form-label">
                 아이디
@@ -73,9 +136,11 @@ const SignUp = () => {
                   className="form-control"
                   aria-describedby="passwordHelpInline"
                   name="id"
-                  // onChange={(e) => {
-                  //   setId(e.target.value);
-                  // }}
+                  onChange={(e) => {
+                    setId(e.target.value);
+                    setIdDupli(false);
+                  }}
+                  onBlur={RegExpId}
                   required
                 />
                 <button
@@ -83,10 +148,18 @@ const SignUp = () => {
                   id="signupbtn"
                   className="btn btn-primary"
                   style={{ zIndex: "0" }}
+                  onClick={FindId}
                 >
                   중복확인
                 </button>
               </div>
+              {validId ? (
+                <span style={{ color: "green" }}>사용가능!</span>
+              ) : (
+                <span style={{ color: "red" }}>
+                  3~16자리의 숫자와 영어로 입력해주세요.
+                </span>
+              )}
             </div>
 
             <div className="mb-3">
@@ -100,9 +173,10 @@ const SignUp = () => {
                   className="form-control"
                   aria-describedby="passwordHelpInline"
                   name="nickname"
-                  // onChange={(e) => {
-                  //   setNickname(e.target.value);
-                  // }}
+                  onChange={(e) => {
+                    setNickname(e.target.value);
+                    setNickDupli(false);
+                  }}
                   required
                 />
                 <button
@@ -110,6 +184,7 @@ const SignUp = () => {
                   id="signupbtn"
                   className="btn btn-primary"
                   style={{ zIndex: "0" }}
+                  onClick={FindNickname}
                 >
                   중복확인
                 </button>
@@ -126,9 +201,9 @@ const SignUp = () => {
                 className="form-control"
                 aria-describedby="passwordHelpInline"
                 name="password"
-                // onChange={(e) => {
-                //   setPw(e.target.value);
-                // }}
+                onChange={(e) => {
+                  setPw(e.target.value);
+                }}
                 required
               />
               <span id="passwordHelpInline" className="form-text">
@@ -161,9 +236,9 @@ const SignUp = () => {
                 id="name"
                 className="form-control"
                 aria-describedby="passwordHelpInline"
-                // onChange={(e) => {
-                //   setName(e.target.value);
-                // }}
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
                 required
                 name="name"
               />
@@ -178,9 +253,9 @@ const SignUp = () => {
                 id="birth"
                 type="date"
                 placeholder="생일"
-                // onChange={(e) => {
-                //   setBirth(e.target.value);
-                // }}
+                onChange={(e) => {
+                  setBirth(e.target.value);
+                }}
                 required
                 name="birth"
               />
@@ -193,14 +268,13 @@ const SignUp = () => {
                   className="form-check-input"
                   type="radio"
                   name="gender"
-                  id="flexRadioDefault1"
                   value="man"
+                  id="flexRadioDefault1"
+                  checked={gender === "man"}
                   readOnly
-                  // if (checked) {
-                  //   onChange={(e) => {
-                  //     setGender(e.target.value);
-                  //   }}
-                  // }
+                  onChange={(e) => {
+                    setGender(e.target.value);
+                  }}
                 />
                 <label className="form-check-label" htmlFor="flexRadioDefault1">
                   남자
@@ -213,8 +287,11 @@ const SignUp = () => {
                   name="gender"
                   value="woman"
                   id="flexRadioDefault2"
-                  checked
+                  checked={gender === "woman"}
                   readOnly
+                  onChange={(e) => {
+                    setGender(e.target.value);
+                  }}
                 />
                 <label className="form-check-label" htmlFor="flexRadioDefault2">
                   여자
@@ -233,6 +310,9 @@ const SignUp = () => {
                 aria-describedby="passwordHelpInline"
                 required
                 name="phone"
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                }}
               />
               <span id="passwordHelpInline" className="form-text">
                 -없이 번호만 입력해 주세요
@@ -250,6 +330,9 @@ const SignUp = () => {
                 aria-describedby="passwordHelpInline"
                 required
                 name="academyName"
+                onChange={(e) => {
+                  setAcademy(e.target.value);
+                }}
               />
               <span id="passwordHelpInline" className="form-text">
                 현재 다니고 계신 학원 명을 입력해 주세요
@@ -267,6 +350,9 @@ const SignUp = () => {
                 aria-describedby="passwordHelpInline"
                 required
                 name="address"
+                onChange={(e) => {
+                  setAddr(e.target.value);
+                }}
               />
               <span id="passwordHelpInline" className="form-text">
                 상세주소를 입력해 주세요

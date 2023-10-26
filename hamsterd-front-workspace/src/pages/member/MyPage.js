@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import profile from "../../resource/오리.jpg";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const MypageTest = styled.div`
   .maincontain {
@@ -120,19 +121,10 @@ const MypageTest = styled.div`
 `;
 
 const MyPage = () => {
-  // const logout = () => {
-  //   window.sessionStorage.clear(); // 세션 제거
-  //   window.location.reload(true); // 새로고침
-  // };
+  const user = useSelector((state) => {
+    return state.user;
+  });
 
-  // window.sessionStorage.getItem("member");
-  // const sessionValue = sessionStorage.getItem("member");
-  const session = localStorage.getItem("user");
-  console.log(session);
-  const parseValue = JSON.parse(session);
-
-  // console.log(window.sessionStorage.getItem("member"));
-  const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
 
   const handleStudyClick = () => {
@@ -149,7 +141,7 @@ const MyPage = () => {
 
   // sessionValue.profile = file;
 
-  // const filePath = parseValue.profile;
+  // const filePath = user.profile;
   // const parts = filePath.split("/"); // "/"로 문자열 분할
 
   // const uploadFolder = parts.pop(); // 배열의 마지막 요소 추출
@@ -163,8 +155,6 @@ const MyPage = () => {
   const handleUpdateClick = () => {
     // 개인정보수정 버튼 클릭 시 '/update' 경로로 이동
     navigate("/update");
-
-    setIsOpen(false);
   };
 
   // const handleImageUpload = (e) => {
@@ -204,31 +194,34 @@ const MyPage = () => {
       <div className="maincontain">
         <div></div>
 
+        {/* 프로필사진 */}
         <div className="photo-line">
           <div className="photo">
             <img
               className="profileimg"
-              // src={`/upload/${parseValue.profile.split("\\").pop()}`}
+              // src={`/upload/${user.profile.split("\\").pop()}`}
               alt="profile"
             />
           </div>
         </div>
 
-        {/* 프로필사진 */}
-
+        {/* 닉네임+ 수정부분 */}
         <div className="nickname">
-          <div className="nickname-font">내 닉네임 : {parseValue.nickname}</div>
+          <div className="nickname-font">내 닉네임 : {user.nickname}</div>
           <div className="nickname-btn"></div>
         </div>
 
-        {/* 닉네임+ 수정부분 */}
-
-        <div className="myId">
-          <div className="myId-font">내 아이디 : {parseValue.id}</div>
-          <div className="myId-btn"></div>
+        {/* 아이디 */}
+        <div className="nickname">
+          <div className="nickname-font">성명 : {user.name}</div>
+          <div className="nickname-btn"></div>
         </div>
 
         {/* 아이디+ 수정부분 */}
+        <div className="myId">
+          <div className="myId-font">내 아이디 : {user.id}</div>
+          <div className="myId-btn"></div>
+        </div>
 
         <div className="schedule-btn">
           <button type="button" id="btn1" onClick={handleStudyClick}>

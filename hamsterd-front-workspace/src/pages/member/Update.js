@@ -1,10 +1,9 @@
 import styled from "styled-components";
-// import { updateMember } from "../../api/login";
 import { putMember } from "../../store/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateMember } from "../../api/login";
+import { updateMember } from "../../api/member";
 
 const UpdateStyle = styled.div`
   .mainsection {
@@ -55,7 +54,7 @@ const Update = () => {
     return state.user;
   });
 
-  const handleSubmit = (e) => {
+  const update = (e) => {
     e.preventDefault();
 
     console.log(file);
@@ -84,8 +83,7 @@ const Update = () => {
     //   // localStorage.setItem("user", )
     // }
 
-    window.location.reload(true);
-    navigate("/mypage");
+    navigate("/");
   };
 
   const handleImageClick = () => {
@@ -113,7 +111,7 @@ const Update = () => {
     <UpdateStyle>
       <div className="mainsection">
         <div className="section" id="section2">
-          <form className="update" onSubmit={handleSubmit}>
+          <form className="update" onSubmit={update}>
             <div className="photo-line">
               <div className="photo">
                 <input
