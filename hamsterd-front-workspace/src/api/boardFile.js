@@ -15,6 +15,7 @@ export const addFile = async (data) => {
 export const updateBoard = async (data) => {
   try {
     const res = await instance.put("updatePost", data);
+    console.log(res.data);
     return res.data;
   } catch (error) {
     console.error(error);

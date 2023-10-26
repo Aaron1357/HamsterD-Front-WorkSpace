@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { updateBoardView } from "../../api/boardFile";
 import Pagination from "react-js-pagination";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 const BoardStyle = styled.div`
   .boardListHead1 {
@@ -22,13 +24,30 @@ const BoardStyle = styled.div`
     justify-content: end;
   }
 
-  .boardButton {
+  .btn-outline-dark {
     width: 160px;
     height: 40px;
+    margin-bottom: 20px;
   }
 
   #boardView :hover {
     cursor: pointer;
+  }
+
+  .boardListHead1 {
+    font-size: 20px;
+  }
+
+  .searchBar {
+    display: flex;
+    justify-content: center;
+  }
+
+  .searchIcon {
+    width: 20px;
+    height: 20px;
+    margin: 10px;
+    /* display: block; */
   }
 `;
 
@@ -93,7 +112,7 @@ const BoardList = () => {
   const [searchPost, setSearchPost] = useState("");
 
   //검색창 option 값 상태관리
-  const [searchOption, setSearchOption] = useState("");
+  const [searchOption, setSearchOption] = useState("searchPostTitle");
 
   //검색창이 작성되면 onChange
   const onChangePost = (e) => {
@@ -132,7 +151,10 @@ const BoardList = () => {
       //boardList에 total이랑 contents 따로 있어서 contents만 받아와야함
       setBoardList(res.contents);
       //Pagination에 Post전체 값 보내줘야함
-      setTotalDataCount(JSON.stringify(res.total));
+      //Pagination totalDataCount는 int형으로 넣어줘야함
+      //db에서 값 받아올때 String으로 받아와졌으므로 int로 형변환 하기
+      const jsonString = JSON.stringify(res.total);
+      setTotalDataCount(parseInt(jsonString, 10));
       console.log("페이지 나와라" + res);
       console.log(JSON.stringify(res));
       console.log("개수 나와 제발" + JSON.stringify(res.total));
@@ -169,16 +191,12 @@ const BoardList = () => {
     <BoardStyle>
       <div className="boardListHead1">
         <div className="boardListHead2">
-          <select value={searchOption} onChange={onChangeOption}>
-            <option value="searchPostTitle">제목</option>
-            <option value="searchPostContent">내용</option>
-            <option value="searchNickname">작성자</option>
-            <option value="searchCreateTime">작성일</option>
-          </select>
-          <input type="text" value={searchPost} onChange={onChangePost}></input>
-          <button onClick={searchPostClick}>조회</button>
-          <button onClick={onClick} className="boardButton">
-            게시물 작성하기
+          <button
+            type="button"
+            className="btn btn-outline-dark"
+            onClick={onClick}
+          >
+            게시물 작성
           </button>
         </div>
         <div>
@@ -227,7 +245,7 @@ const BoardList = () => {
                 // 현재 보고있는 페이지
                 activePage={page}
                 // 한페이지에 출력할 아이템수
-                itemsCountPerPage={5}
+                itemsCountPerPage={10}
                 // 총 아이템수
                 totalItemsCount={totalDataCount}
                 // 표시할 페이지수
@@ -236,6 +254,24 @@ const BoardList = () => {
                 onChange={handlePageChange}
               ></Pagination>
             </PaginationBox>
+          </div>
+          <div className="searchBar">
+            <select value={searchOption} onChange={onChangeOption}>
+              <option value="searchPostTitle">제목</option>
+              <option value="searchPostContent">내용</option>
+              {/* <option value="searchNickname">작성자</option>
+                <option value="searchCreateTime">작성일</option> */}
+            </select>
+            <input
+              type="text"
+              value={searchPost}
+              onChange={onChangePost}
+            ></input>
+            <FontAwesomeIcon
+              className="searchIcon"
+              icon={faMagnifyingGlass}
+              onClick={searchPostClick}
+            />
           </div>
         </div>
       </div>

@@ -48,6 +48,7 @@ const BoardInComment = ({ commentNo }) => {
     const result = await addInComment(data);
     console.log(commentNo);
     if (result) setSucc(true);
+    setText("");
   };
   //대댓글 추가하면 다시 화면에 띄우게 하려고 useEffect 씀
   useEffect(() => {
@@ -83,8 +84,8 @@ const BoardInComment = ({ commentNo }) => {
     <div>
       <div>
         <label>대댓글</label>
-        <input type="text" onChange={handler} />
-        <button onClick={onClick}>댓글 작성하기</button>
+        <input type="text" value={text} onChange={handler} />
+        <button onClick={onClick}>답글쓰기</button>
       </div>
       <div>
         {/* 값이 0 초기값일때는 기본 댓글만 보여짐 */}

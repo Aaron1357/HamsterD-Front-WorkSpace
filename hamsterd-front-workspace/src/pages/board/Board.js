@@ -11,6 +11,23 @@ import { useSelector } from "react-redux";
 
 const BoardStyle = styled.div`
   /* 스타일 내용 입력 */
+  .form-label {
+    font-size: 18px;
+  }
+
+  .btnn {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .form-check {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .boardForm {
+    width: 1000px;
+  }
 `;
 //이미지 업로드 시 quill에 추가
 Quill.register("modules/imageUploader", ImageUploader);
@@ -47,20 +64,31 @@ const Board = () => {
 
   //게시물 이미지 업로드시 여러개 넣을 수 있게 배열로 만들어줌
   const images = [];
-
+  //로그인 시 받았던 토큰 값 유지되는 것 넘겨주기
   const token = localStorage.getItem("token");
 
   const navigate = useNavigate();
 
   const formData = new FormData();
+  //게시판 등록하기에서 등록버튼 클릭 시 실행
   //param값 back-end로 보내주기
-  const onClick = async () => {
-    formData.append("title", title);
-    formData.append("desc", desc);
-    formData.append("securityCheck", securityCheck);
-    formData.append("token", token);
-    console.log(formData);
-    await addFile(formData);
+  const submitClick = async () => {
+    if (!title || !desc) {
+      // title 또는 desc가 빈 문자열 또는 undefined인 경우
+      alert("제목 및 내용을 작성해주세요.");
+    } else {
+      formData.append("title", title);
+      formData.append("desc", desc);
+      formData.append("securityCheck", securityCheck);
+      formData.append("token", token);
+      console.log(formData);
+      await addFile(formData);
+      navigate("/boardList");
+    }
+  };
+
+  //게시판 등록하기에서 취소버튼 클릭 시 실행
+  const cancelClick = () => {
     navigate("/boardList");
   };
   //quill 라이브러리에 사용되는 옵션
@@ -128,14 +156,14 @@ const Board = () => {
     <BoardStyle>
       <div className="head1">
         <div className="head2">
-          <form>
-            <div className="headName">게시물 등록</div>
+          <form className="boardForm">
+            {/* <div className="headName">게시물 등록</div>
             <select className="form-select" aria-label="Default select example">
-              <option selected>게시물 목록</option>
+              <option value="0">게시물 목록</option>
               <option value="1">One</option>
               <option value="2">Two</option>
               <option value="3">Three</option>
-            </select>
+            </select> */}
 
             <div className="mb-3">
               <label htmlFor="exampleFormControlInput1" className="form-label">
@@ -157,11 +185,11 @@ const Board = () => {
               <div className="form-check">
                 <input
                   className="form-check-input"
-                  type="radio"
+                  type="checkbox"
                   name="flexRadioDefault"
                   id="flexRadioDefault1"
                   value="y"
-                  checked={securityCheck === "y"}
+                  // checked={securityCheck === "y"}
                   onChange={(e) => {
                     setSecurityCheck(e.target.value);
                   }}
@@ -171,18 +199,18 @@ const Board = () => {
                 </label>
               </div>
 
-              <div className="form-check">
+              {/* <div className="form-check">
                 <input
                   className="form-check-input"
                   type="radio"
                   name="flexRadioDefault"
                   id="flexRadioDefault2"
-                  checked
+                  // checked
                 />
                 <label className="form-check-label" htmlFor="flexRadioDefault2">
                   공개
                 </label>
-              </div>
+              </div> */}
             </div>
 
             <div className="mb-3">
@@ -203,7 +231,7 @@ const Board = () => {
                 theme="snow"
               />
             </div>
-            <div className="button1">
+            {/* <div className="button1">
               <button
                 type="button"
                 className="btn btn-outline-warning"
@@ -211,25 +239,26 @@ const Board = () => {
               >
                 임시저장하기
               </button>
-            </div>
+            </div> */}
             <div className="btnn">
               <div>
                 <button
                   type="button"
-                  className="btn btn-outline-danger"
+                  className="btn btn-outline-dark"
+                  onClick={submitClick}
                   id="button2"
                 >
-                  취소하기
+                  등록하기
                 </button>
               </div>
               <div>
                 <button
                   type="button"
-                  className="btn btn-outline-dark"
-                  onClick={onClick}
+                  className="btn btn-outline-danger"
                   id="button2"
+                  onClick={cancelClick}
                 >
-                  등록하기
+                  취소하기
                 </button>
               </div>
             </div>
