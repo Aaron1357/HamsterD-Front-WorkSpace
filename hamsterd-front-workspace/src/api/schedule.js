@@ -20,13 +20,6 @@ export const getScheduleOfGroup = async (groupNo) => {
   return await instance.get(`schedule/study/${groupNo}`);
 };
 
-// 특정 그룹 스케줄 목록 받아오기("/schedule/study/{groupNo}")
-// 페이징 처리(우측 목록용)
-export const getScheduleOfGroup2 = async (page, groupNo) => {
-  let url = `schedule/study/${groupNo}?page=${page}`;
-  return await instance.get(url);
-};
-
 // 특정 그룹의 날짜별 스케줄 목록 받아오기("schedule/study/{groupNo}/{scheduleDate}")
 export const getScheduleofGroupDate = async (groupNo, scheduleDate) => {
   return await instance.get(`schedule/study/${groupNo}/${scheduleDate}`);

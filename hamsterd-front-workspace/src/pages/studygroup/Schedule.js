@@ -409,8 +409,8 @@ const Schedule = () => {
   const groupNo = location.state?.groupNo;
   const scheduleNo = location.state?.scheduleNo;
 
-  console.log("groupNo : " + groupNo);
-  console.log("scheduleNo : " + scheduleNo);
+  // console.log("groupNo : " + groupNo);
+  // console.log("scheduleNo : " + scheduleNo);
 
   const renderUpdateOrAdd = () => {
     if (groupNo && scheduleNo) {
