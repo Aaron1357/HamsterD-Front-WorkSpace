@@ -3,7 +3,6 @@ import styled from "styled-components";
 import logo from "../resource/logo.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import ModalSub from "../components/ModalSub";
-import { useNavigate } from "react-router-dom";
 import { userLogout } from "../store/userSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux/es/hooks/useSelector";

@@ -15,7 +15,7 @@ import {
 import GroupComment from "./GroupComment";
 import { getType } from "@reduxjs/toolkit";
 import ReviewPage from "./ReviewPage";
-import { showMemberbyMemberNO } from "../../api/login";
+import { showMemberbyMemberNO } from "../../api/member";
 
 const GroupPageTest = styled.div`
   .mainsection {
