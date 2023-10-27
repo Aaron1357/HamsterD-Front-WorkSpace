@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useInView } from "react-intersection-observer";
+
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -186,6 +186,7 @@ const ScheduleMain = (props) => {
   const [scheduleDate, setScheduleDate] = useState();
   const [scheduleNo, setScheduleNo] = useState(0);
 
+  console.log("scheduleMain groupNo : " + groupNo);
   // 유저 정보(수정, 삭제 활성화 위해)
   const user = JSON.parse(localStorage.getItem("user"));
   const userid = user.id;

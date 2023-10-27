@@ -42,3 +42,8 @@ export const deleteMember = async (id) => {
   console.log(id);
   return await instance.delete(`member/${id}`);
 };
+
+export const showMemberbyMemberNO = async (memberNo) => {
+  const result = await instance.get(`member/memberno/${memberNo}`);
+  return result.data;
+};

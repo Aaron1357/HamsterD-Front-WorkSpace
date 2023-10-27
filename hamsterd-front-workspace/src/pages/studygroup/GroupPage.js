@@ -13,7 +13,7 @@ import {
   viewManager,
 } from "../../api/studygroup";
 import GroupComment from "./GroupComment";
-import { getType } from "@reduxjs/toolkit";
+
 import ReviewPage from "./ReviewPage";
 import { showMemberbyMemberNO } from "../../api/member";
 
@@ -200,8 +200,13 @@ const GroupPage = () => {
   const handleClick = () => {
     // Bootstrap Modal을 JavaScript로 열기
 
+    console.log(user.studyGroup);
+    // console.log(user.studyGroup.groupNo);
+    console.log(number);
+
     if (user.studyGroup != null && user.studyGroup.groupNo == number) {
       alert("해당 스터디그룹에 이미 가입되어있습니다.");
+      
     } else if (user.studyGroup != null) {
       alert("다른 스터디그룹에 이미 가입되어있습니다.");
     } else {

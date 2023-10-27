@@ -86,7 +86,7 @@ const Test = styled.div`
 const Sub = styled.div``;
 
 const Header = () => {
-  const save = localStorage.getItem("user"); // 로컬스토리지에 user정보 호출
+  const save = JSON.parse(localStorage.getItem("user")); // 로컬스토리지에 user정보 호출
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -106,12 +106,12 @@ const Header = () => {
     return state.user;
   });
 
-  console.log(user);
+  console.log(save);
 
   useEffect(() => {
     if (Object.keys(user).length === 0 && save !== null) {
       // store에 키값(식별자)이 없으면서 로컬 스토리지에 유저정보가 존재하면 저장
-      dispatch(userSave(JSON.parse(save)));
+      dispatch(userSave(save));
     }
   }, [user]);
 
@@ -155,19 +155,12 @@ const Header = () => {
               </div>
               <div className="submenu">
                 <Link to="/groupreview">그룹평가</Link>
-                <Link to="/scheduleMain">스케쥴</Link>
               </div>
             </div>
             <div className="menu" id="social">
               <div className="submenu1">
-                <Link to="/social">소셜</Link>
+              <a onClick={logout}>로그아웃</a>
               </div>
-              <div className="submenu">
-                <a href="#">서브메뉴 1</a>
-                <a href="#">서브메뉴 2</a>
-                <a href="#">서브메뉴 3</a>
-              </div>
-              <button onClick={logout}>로그아웃</button>
             </div>
           </div>
         </div>

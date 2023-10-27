@@ -59,16 +59,18 @@ const SignUp = () => {
         birth: birth,
         gender: gender,
         phone: phone,
-        academy: academy,
+        academyName: academy,
         address: address,
+        profile:
+        "D:\\Aaron1357\\HamsterD-Front-WorkSpace\\hamsterd-front-workspace\\public\\upload\\hamster.png",
       };
 
       console.log(formData2);
 
       // console.log(formData2.id);
 
-      // addMember(formData2);
-      // navigate("/");
+       addMember(formData2);
+       navigate("/");
     } else {
       // 중복확인이 되지 않았을때
       alert("중복확인을 먼저 해주세요!!");

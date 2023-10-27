@@ -5,7 +5,7 @@ import {
   deleteComment,
 } from "../../api/board_comment";
 import { useState, useEffect } from "react";
-import BaordInComment from "../board/BoardInComment";
+import BoardInComment from "../board/BoardInComment";
 import styled from "styled-components";
 
 const BoardCommentStyle = styled.div`

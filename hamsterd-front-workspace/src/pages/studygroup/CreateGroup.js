@@ -65,7 +65,7 @@ const CreateGroup = () => {
 
     console.log(user);
 
-    navigate("/studygroup"); // 파일 업로드가 완료되면 페이지 이동
+    navigate("/"); // 파일 업로드가 완료되면 페이지 이동
     // } catch (error) {
     //   // 에러 처리
     //   console.error("파일 업로드 중 오류 발생:", error);

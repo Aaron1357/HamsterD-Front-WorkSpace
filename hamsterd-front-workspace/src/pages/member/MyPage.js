@@ -199,7 +199,7 @@ const MyPage = () => {
           <div className="photo">
             <img
               className="profileimg"
-              // src={`/upload/${user.profile.split("\\").pop()}`}
+              src={`/upload/${user.profile.split("\\").pop()}`}
               alt="profile"
             />
           </div>
