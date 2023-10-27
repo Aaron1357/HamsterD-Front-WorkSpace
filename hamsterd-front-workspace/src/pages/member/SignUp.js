@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { addMember, findId, findNickname } from "../../api/member";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { regExpId } from "./regExp";
+import { regExpId, regExpPw, ConfirmPw } from "./regExp";
 
 const SignUpStyle = styled.div`
   .mainsection {
@@ -27,6 +27,8 @@ const SignUpStyle = styled.div`
 
 const SignUp = () => {
   const [validId, setValidId] = useState(false); // id 정규식
+  const [validPw, setValidPw] = useState(false); // password 정규식
+  const [validConPw, setValidConPw] = useState(false); // password 정규식
 
   const [idDupli, setIdDupli] = useState(false); // 아이디 중복확인
   const [nickDupli, setNickDupli] = useState(false); // 닉네임 중복확인
@@ -34,6 +36,7 @@ const SignUp = () => {
   const [id, setId] = useState([]);
   const [nickname, setNickname] = useState([]);
   const [password, setPw] = useState([]);
+  const [confirmPw, setConfirmPw] = useState([]);
   const [name, setName] = useState([]);
   const [birth, setBirth] = useState([]);
   const [gender, setGender] = useState([]);
@@ -106,18 +109,22 @@ const SignUp = () => {
     }
   };
 
-  const RegExpId = (e) => {
+  const RegExpId = () => {
     // 아이디 유효성 검사!!
-    const id = e.target.value;
     console.log(regExpId(id));
     setValidId(regExpId(id));
   };
 
-  const RegExpPw = (e) => {
+  const RegExpPw = () => {
     // 비밀번호 유효성 검사!!
-    const id = e.target.value;
-    console.log(regExpId(id));
-    setValidId(regExpId(id));
+    console.log(regExpPw(password));
+    setValidPw(regExpPw(password));
+  };
+
+  const RegExpConfirmPw = () => {
+    // 비밀번호 확인 유효성 검사!!
+    console.log(ConfirmPw(password, confirmPw));
+    setValidConPw(ConfirmPw(password, confirmPw));
   };
 
   return (
@@ -201,14 +208,21 @@ const SignUp = () => {
                 className="form-control"
                 aria-describedby="passwordHelpInline"
                 name="password"
+                onBlur={RegExpPw}
                 onChange={(e) => {
                   setPw(e.target.value);
                 }}
                 required
               />
-              <span id="passwordHelpInline" className="form-text">
-                8-20자의 비밀번호를 입력하세요.
-              </span>
+              {validPw ? (
+                <span style={{ color: "green" }}>사용가능!</span>
+              ) : (
+                <span style={{ color: "red" }}>
+                  영문 대소문자, 특수문자, 숫자를 최소 1개 이상 혼합한 8글자에서
+                  20글자 사이의 비밀번호를 입력해주세요. (단, 첫번째 글자는
+                  특수문자가 올수 없습니다.)
+                </span>
+              )}
             </div>
 
             <div className="mb-3">
@@ -220,11 +234,17 @@ const SignUp = () => {
                 id="inputPassword6"
                 className="form-control"
                 aria-describedby="passwordHelpInline"
+                onChange={(e) => {
+                  setConfirmPw(e.target.value);
+                }}
+                onBlur={RegExpConfirmPw}
                 required
               />
-              <span id="passwordHelpInline" className="form-text">
-                8-20자의 비밀번호를 입력하세요.
-              </span>
+              {validConPw ? (
+                <span style={{ color: "green" }}>일치!</span>
+              ) : (
+                <span style={{ color: "red" }}>불일치!</span>
+              )}
             </div>
 
             <div className="mb-3">

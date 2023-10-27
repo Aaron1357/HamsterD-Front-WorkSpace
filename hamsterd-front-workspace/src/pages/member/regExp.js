@@ -9,10 +9,18 @@ export const regExpId = (id) => {
 
 export const regExpPw = (password) => {
   // 아이디의 정규식 패턴 (8글자에서 20글자 사이의 비밀번호)
-  const idPattern =
+  const pwPattern =
     /^(?![@#$%^&+=!])(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d@#$%^&+=!]{8,20}$/;
 
   //   console.log(idPattern.test(id));
 
-  return idPattern.test(password);
+  return pwPattern.test(password);
+};
+
+export const ConfirmPw = (password, confirmPw) => {
+  if (password === confirmPw) {
+    return true;
+  }
+
+  return false;
 };
