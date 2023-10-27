@@ -10,7 +10,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 //import { getScheduleList } from "../../api/schedule";
-import { getScheduleOfGroup, getScheduleOfGroup2 } from "../../api/schedule";
+import { getScheduleOfGroup } from "../../api/schedule";
 import { getScheduleofGroupDate } from "../../api/schedule";
 import { useNavigate } from "react-router-dom";
 import { getOneSchedule } from "../../api/schedule";
@@ -20,7 +20,6 @@ import {
   getScheduleByMember,
   getScheduleByContent,
 } from "../../api/schedule";
-import InfiniteScroll from "react-infinite-scroller";
 // css
 const ScheduleStyle = styled.div`
   .content {
@@ -47,6 +46,7 @@ const ScheduleStyle = styled.div`
     padding-bottom: 20px;
     /* border: 1px solid lightseagreen; */
   }
+
   // 테이블 영역
   .fc {
     /* border: 1px solid lightcoral; */
@@ -85,7 +85,6 @@ const ScheduleStyle = styled.div`
 
   .scheduleTable {
     height: 530px;
-    padding-top: 10px;
   }
 
   .table {
@@ -93,6 +92,13 @@ const ScheduleStyle = styled.div`
     min-width: 400px;
     --bs-table-bg: #fff0;
     font-size: 0.8rem;
+  }
+
+  .table thead {
+    background-color: #f5f5f5;
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
 
   .fc .fc-button-primary {
@@ -167,10 +173,13 @@ const ScheduleStyle = styled.div`
   .form-select-sm:hover {
     cursor: pointer;
   }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const ScheduleMain = (props) => {
-  // 추가 버튼 누르면 Schedule 페이지로 이동
   const navigate = useNavigate();
 
   const [groupNo, setGroupNo] = useState(props.groupNo);
@@ -184,17 +193,6 @@ const ScheduleMain = (props) => {
   // 검색 필터
   const [filter, setFilter] = useState("title");
   const [searchKeyword, setsearchKeyword] = useState();
-
-  // page 스크롤 무한처리
-  const [page, setPage] = useState(1);
-
-  // const hasScrollbar = () => {
-  //   return document.documentElement.scrollHeight > window.innerHeight;
-  // };
-
-  // const [ref, inView] = useInView({
-  //   skip: !hasScrollbar(), // 스크롤이 없을 경우 skip
-  // });
 
   // 목록의 추가(+) 버튼 클릭 시 schedule 등록 폼으로 이동
   const onClick = async () => {
@@ -226,7 +224,6 @@ const ScheduleMain = (props) => {
   const [newSchedules, setNewSchedules] = useState([]);
 
   // 특정 그룹 목록 받아오는 로직(groupNo 넘김) + 날짜 변경처리
-  // 목록용
   const scheduleOfGroupAPI = async () => {
     const result = await getScheduleOfGroup(groupNo);
 
@@ -252,9 +249,8 @@ const ScheduleMain = (props) => {
       };
     });
 
-    // 우측 일정 목록(계속 나오게 무한처리)
-    setschedulesOfGroup([...schedulesOfGroup, ...data]);
-    setschedulesOfGroup2(data); // 캘린더
+    setschedulesOfGroup(data);
+    setschedulesOfGroup2(data);
   };
 
   // 처음 화면 띄울때 그룹별 일정 목록 받아옴
@@ -262,18 +258,10 @@ const ScheduleMain = (props) => {
     scheduleOfGroupAPI();
   }, []);
 
-  // // 무한 페이징을 위한 useEffect
-  // useEffect(() => {
-  //   if (inView) {
-  //     scheduleOfGroupAPI();
-  //     setPage(page + 1);
-  //   }
-  // }, [inView]);
-
   // 캘린더용 그룹별 일정 목록
   // 특정 그룹 목록 받아오는 로직(groupNo 넘김) + 날짜 변경처리
   // array.map으로 새로 배열만들기(배열 내 key 이름 일치시키기 위해서)
-  const newList = schedulesOfGroup2.map((item) => {
+  const newList = schedulesOfGroup.map((item) => {
     return {
       title: item.scheduleTitle,
       date: item.scheduleDate,
@@ -294,7 +282,7 @@ const ScheduleMain = (props) => {
     //console.log(arg.date); // Mon Oct 23 2023 00:00:00 GMT+0900
 
     const date = new Date(arg.date);
-    const year = date.getFullYear().toString().slice(-2); // 년도의 마지막 두 자리를 가져옴
+    const year = date.getFullYear().toString().padStart(4); // 년도의 마지막 두 자리를 가져옴
     const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 +1 해주고, 두 자리로 맞춤
     const day = date.getDate().toString().padStart(2, "0"); // 일도 두 자리로 맞춤
 
@@ -332,7 +320,7 @@ const ScheduleMain = (props) => {
         nickname: item.member.nickname,
       };
     });
-    setschedulesOfGroup(data); // 캘린더는 전체 목록으로 두고 우측 목록만 특정 날짜의 목록으로 변경
+    setschedulesOfGroup2(data); // 캘린더는 전체 목록으로 두고 우측 목록만 특정 날짜의 목록으로 변경
   };
 
   useEffect(() => {
@@ -432,7 +420,7 @@ const ScheduleMain = (props) => {
               nickname: item.member.nickname,
             };
           });
-          setschedulesOfGroup(data);
+          setschedulesOfGroup2(data);
         } else {
           alert("검색 결과가 없습니다!");
         }
@@ -462,7 +450,7 @@ const ScheduleMain = (props) => {
               nickname: item.member.nickname,
             };
           });
-          setschedulesOfGroup(data);
+          setschedulesOfGroup2(data);
         } else {
           alert("검색 결과가 없습니다!");
         }
@@ -491,7 +479,7 @@ const ScheduleMain = (props) => {
               nickname: item.member.nickname,
             };
           });
-          setschedulesOfGroup(data);
+          setschedulesOfGroup2(data);
         } else {
           alert("검색 결과가 없습니다!");
         }
@@ -559,8 +547,10 @@ const ScheduleMain = (props) => {
               </div>
             </form>
           </div>
-
-          <div className="scheduleTable">
+          <div
+            className="scheduleTable"
+            style={{ maxHeight: "510px", overflow: "auto" }}
+          >
             <table className="table">
               <thead>
                 <tr>
@@ -582,7 +572,7 @@ const ScheduleMain = (props) => {
                 </tr>
               </thead>
               <tbody>
-                {schedulesOfGroup?.map((item, index) => (
+                {schedulesOfGroup2?.map((item, index) => (
                   <tr key={item.scheduleNo}>
                     <td scope="row">{index + 1}</td>
                     <td>{item.scheduleDate}</td>
@@ -595,6 +585,7 @@ const ScheduleMain = (props) => {
                     <td>{item.nickname}</td>
                   </tr>
                 ))}
+                {/* <div ref={ref}></div> */}
               </tbody>
             </table>
           </div>
