@@ -206,7 +206,6 @@ const GroupPage = () => {
 
     if (user.studyGroup != null && user.studyGroup.groupNo == number) {
       alert("해당 스터디그룹에 이미 가입되어있습니다.");
-      
     } else if (user.studyGroup != null) {
       alert("다른 스터디그룹에 이미 가입되어있습니다.");
     } else {
