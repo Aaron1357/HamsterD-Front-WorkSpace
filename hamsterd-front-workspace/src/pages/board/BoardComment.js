@@ -42,6 +42,10 @@ const BoardCommentStyle = styled.div`
     display: flex;
     justify-content: flex-end;
   }
+
+  .comments {
+    width: 1000px;
+  }
 `;
 
 const BoardComment = ({ postNo }) => {
@@ -93,6 +97,7 @@ const BoardComment = ({ postNo }) => {
   //댓글 수정하기 버튼
   const updateClick = async (e) => {
     setSelectedCommentIndex(e.target.closest(".comment").id);
+
     const data = {
       commentNo: e.target.closest(".comment").id,
       commentContent: updateText,
@@ -101,6 +106,7 @@ const BoardComment = ({ postNo }) => {
     await updateComment(data);
     setSelectedCommentIndex(0);
     getCommentHandler();
+    console.log(updateText);
   };
 
   //댓글 삭제버튼
@@ -122,6 +128,11 @@ const BoardComment = ({ postNo }) => {
   const handler = async (e) => {
     console.log(e.target.value);
     setText(e.target.value);
+  };
+
+  //수정할때 input란 값 추가하기
+  const updateHandler = async (e) => {
+    setUpdateText(e.target.value);
   };
 
   const inCommentClick = (e) => {
@@ -222,21 +233,43 @@ const BoardComment = ({ postNo }) => {
                   className="comment"
                 >
                   {selectedCommentIndex == item.commentNo ? (
-                    <div>
+                    <div className="comments">
                       <label className="nickname">
                         닉네임: {item?.member?.nickname}
                       </label>
-
                       <label className="commentContent">댓글 :</label>
-                      <input type="text" onChange={handler} />
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder={item?.commentContent}
+                        aria-label="Recipient's username"
+                        aria-describedby="button-addon2"
+                        onChange={updateHandler}
+                      />
+
                       <div className="content2">
                         <label>
-                          <button onClick={updateClick}>수정하기</button>
+                          <button
+                            class="btn btn-outline-secondary"
+                            type="button"
+                            id="button-addon2"
+                            onClick={updateClick}
+                          >
+                            수정하기
+                          </button>
                         </label>
                         <label>
-                          <button onClick={deleteClick}>삭제하기</button>
+                          <button
+                            class="btn btn-outline-secondary"
+                            type="button"
+                            id="button-addon2"
+                            onClick={deleteClick}
+                          >
+                            삭제하기
+                          </button>
                         </label>
                       </div>
+                      <hr />
                     </div>
                   ) : (
                     <div>
@@ -245,13 +278,30 @@ const BoardComment = ({ postNo }) => {
                         댓글: {item?.commentContent}
                       </label>
                       <div className="content2">
-                        <label>
-                          <button onClick={updateClick}>수정하기</button>
-                        </label>
-                        <label>
-                          <button onClick={deleteClick}>삭제하기</button>
-                        </label>
+                        <div className="content2">
+                          <label>
+                            <button
+                              class="btn btn-outline-secondary"
+                              type="button"
+                              id="button-addon2"
+                              onClick={updateClick}
+                            >
+                              수정하기
+                            </button>
+                          </label>
+                          <label>
+                            <button
+                              class="btn btn-outline-secondary"
+                              type="button"
+                              id="button-addon2"
+                              onClick={deleteClick}
+                            >
+                              삭제하기
+                            </button>
+                          </label>
+                        </div>
                       </div>
+                      <hr />
                     </div>
                     //수정 commentNo 일치여부 확인
                   )}

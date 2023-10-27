@@ -18,7 +18,7 @@ const BoardStyle = styled.div`
     width: 1000px;
     height: 100vh;
   }
-//
+  //
   .boardListHead2 {
     display: flex;
     justify-content: end;
@@ -135,6 +135,9 @@ const BoardList = () => {
       const result = await searchPostTitle(searchPost);
       setBoardList(result);
     }
+
+    setPage(1);
+    setSearchPost("");
   };
 
   //페이지 바뀔때 페이지 번호 바꿔주고 true로 변환
@@ -259,8 +262,6 @@ const BoardList = () => {
             <select value={searchOption} onChange={onChangeOption}>
               <option value="searchPostTitle">제목</option>
               <option value="searchPostContent">내용</option>
-              {/* <option value="searchNickname">작성자</option>
-                <option value="searchCreateTime">작성일</option> */}
             </select>
             <input
               type="text"
