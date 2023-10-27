@@ -120,6 +120,7 @@ function ModalSub(props) {
     // }
   }, [save]);
 
+  useEffect(() => {
     // modal 상태에 따라 body 고정여부
     if (isOpen) {
       document.body.style.overflow = "hidden";

@@ -103,7 +103,7 @@ const Sidebar = () => {
     return state.user;
   });
 
-  console.log(user.studyGroup);
+  // console.log(user.studyGroup);
 
   const navigate = useNavigate();
 

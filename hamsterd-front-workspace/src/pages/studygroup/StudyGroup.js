@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import profile from "../../resource/종빈22.png";
+
 import search from "../../resource/search.png";
 import { useNavigate } from "react-router-dom";
 import {
@@ -196,16 +196,17 @@ const StudyGroup = () => {
     navigate("/creategroup");
   };
 
-  const onClick = async (e) => {
-    const idex = e.target.getAttribute("groupNo"); // 선택한 스터디 그룹의 그룹넘버를 state에 담아서 navigate로 넘긴다
+  const onClick = async (e, groupNo) => {
+    // 클릭된 요소의 groupNo 값을 이용하여 원하는 작업을 수행
+    console.log(e);
 
-    const result1 = await viewMemberList(idex);
-    const result2 = await viewStudyGroup(idex);
-    const result3 = await viewManager(idex);
+    const result1 = await viewMemberList(groupNo);
+    const result2 = await viewStudyGroup(groupNo);
+    const result3 = await viewManager(groupNo);
 
     navigate("/grouppage", {
       state: {
-        data: idex,
+        data: groupNo,
         members: result1,
         group: result2,
         manager: result3,
@@ -247,58 +248,55 @@ const StudyGroup = () => {
             <div
               key={item.studyGroup.groupNo}
               id={`${item.studyGroup.groupNo}`}
-              onClick={onClick}
+              onClick={(e) => onClick(e, item?.studyGroup?.groupNo)}
+              // 여기서 item?.studyGroup?.groupNo를 인자로 전달
             >
-              <div className="profile-container">
-                <div id="profile">
-                  <img
-                    className="groupimg"
-                    src={`/upload/${item.profile.split("\\").pop()}`}
-                    alt="Profile"
-                  />
-                </div>
-                <div>
-                  <div>
-                    {console.log(item)}
-                    <div
-                      id="grouptext"
-                      groupNo={item?.studyGroup && item?.studyGroup?.groupNo}
-                      // 선택한 스터디 그룹의 그룹넘버를 value 속성에 저장
-                    >
-                      {item.nickname} 님의 스터디그룹
-                    </div>
-                  </div>
-                  <div id="academyname">{item.academyName}</div>
-                </div>
-              </div>
-              <div className="groupinfo">
-                <div className="group-container">
-                  <div id="group">
+              <div>
+                <div className="profile-container">
+                  <div id="profile">
                     <img
                       className="groupimg"
-                      src={`/upload/${
-                        item.studyGroup &&
-                        item.studyGroup.groupImage.split("\\").pop()
-                      }`}
-                      alt="Group"
+                      src={`/upload/${item.profile.split("\\").pop()}`}
+                      alt="Profile"
                     />
                   </div>
-                  <div className="groupintro" onClick={onClick}>
-                    <div className="groupname">
-                      {" "}
-                      {item.studyGroup && item.studyGroup.groupName}
+                  <div>
+                    <div>
+                      {console.log(item)}
+                      <div id="grouptext">{item.nickname} 님의 스터디그룹</div>
                     </div>
-                    <div>{item.studyGroup && item.studyGroup.groupContent}</div>
+                    <div id="academyname">{item.academyName}</div>
                   </div>
                 </div>
-                <div className="horizonline"></div>
-                <div className="group-container">
-                  <div id="grouppoint">그룹 점수 ex 4.7점</div>
+                <div className="groupinfo">
+                  <div className="group-container">
+                    <div id="group">
+                      <img
+                        className="groupimg"
+                        src={`/upload/${
+                          item.studyGroup &&
+                          item.studyGroup.groupImage.split("\\").pop()
+                        }`}
+                        alt="Group"
+                      />
+                    </div>
+                    <div className="groupintro">
+                      <div className="groupname">
+                        {item.studyGroup && item.studyGroup.groupName}
+                      </div>
+                      <div>
+                        {item.studyGroup && item.studyGroup.groupContent}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="horizonline"></div>
+                  <div className="group-container">
+                    <div id="grouppoint">그룹 점수 ex 4.7점</div>
+                  </div>
                 </div>
+                <br />
+                <br />
               </div>
-
-              <br />
-              <br />
             </div>
           ))}
           {/* 페이지네이션을 추가 */}

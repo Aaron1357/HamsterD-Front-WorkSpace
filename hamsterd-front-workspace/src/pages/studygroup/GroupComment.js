@@ -90,9 +90,15 @@ const GroupComment = (props) => {
       formData.append("groupNo", groupNo);
       formData.append("token", token);
 
-      await addgComment(formData);
-      gCommentOfGroup();
-      e.target.value = null;
+      console.log(formData);
+
+      try {
+        await addgComment(formData);
+        gCommentOfGroup();
+        e.target.value = null;
+      } catch (error) {
+        console.error("오류 발생 : ", error);
+      }
     } else {
       alert("댓글을 입력해주세요!");
     }

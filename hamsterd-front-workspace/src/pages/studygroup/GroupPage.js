@@ -6,8 +6,16 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import ScheduleMain from "./ScheduleMain";
 import { useSelector } from "react-redux";
-import { viewManager } from "../../api/studygroup";
+import {
+  fireGroup,
+  joinGroup,
+  showEval,
+  viewManager,
+} from "../../api/studygroup";
 import GroupComment from "./GroupComment";
+import { getType } from "@reduxjs/toolkit";
+import ReviewPage from "./ReviewPage";
+import { showMemberbyMemberNO } from "../../api/login";
 
 const GroupPageTest = styled.div`
   .mainsection {
@@ -45,7 +53,7 @@ const GroupPageTest = styled.div`
     );
     margin-top: 50px;
     margin-left: 50px;
-    width: 800px;
+    width: 1200px;
     height: 1000px;
   }
 
@@ -138,6 +146,9 @@ const GroupPageTest = styled.div`
   }
   .photo {
     width: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   #schedule {
     font-size: 25px;
@@ -147,6 +158,23 @@ const GroupPageTest = styled.div`
   #comments {
     font-size: 25px;
     font-weight: bold;
+  }
+  #nickname {
+    text-align: center;
+  }
+
+  .plusreview {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  #firebutton {
+    height: 30px;
+    width: 100px;
+    background-color: gray;
+    border: 0px;
+    font-weight: bold;
+    color: white;
   }
 `;
 
@@ -163,20 +191,25 @@ const GroupPage = () => {
   const members = location.state.members;
   const group = location.state.group;
   const manager = location.state.manager;
-  console.log(manager);
-  setGroupNo = number;
+
+  // setGroupNo = number;
   const [groupNo, setGroupNo] = useState(number);
-  //console.log(members);
-  //console.log(group);
 
   const modalRef = useRef(null);
 
   const handleClick = () => {
     // Bootstrap Modal을 JavaScript로 열기
-    const myModal = modalRef.current;
-    if (myModal) {
-      myModal.classList.add("show");
-      myModal.style.display = "block";
+
+    if (user.studyGroup != null && user.studyGroup.groupNo == number) {
+      alert("해당 스터디그룹에 이미 가입되어있습니다.");
+    } else if (user.studyGroup != null) {
+      alert("다른 스터디그룹에 이미 가입되어있습니다.");
+    } else {
+      const myModal = modalRef.current;
+      if (myModal) {
+        myModal.classList.add("show");
+        myModal.style.display = "block";
+      }
     }
   };
 
@@ -189,32 +222,78 @@ const GroupPage = () => {
     }
   };
 
-  const joinStudyGroup = () => {
-    if (user.studyGroup == null) {
-      alert("이미 가입한 스터디 그룹이 있습니다.");
+  const joinStudyGroup = async () => {
+    const joincheck = await showMemberbyMemberNO(user.memberNo);
+
+    console.log(joincheck);
+    if (joincheck.studyGroup == null) {
+      // 가입
+      const formData = new FormData();
+      formData.append("memberNo", user.memberNo);
+      formData.append("groupNo", number);
+
+      joinGroup(formData);
+
+      modalClose();
+      alert(group.groupName + "스터디그룹 가입 완료");
+      navigate("/studygroup");
     } else {
-      alert("이미 가입한 스터디 그룹이 있습니다.");
+      modalClose();
+      alert("스터디그룹 가입에 실패했습니다.");
     }
-    modalClose();
   };
 
   const groupReview = async () => {
-    console.log("매니저" + manager);
-    navigate("/groupreview", {
-      state: {
-        data: number,
-        members: members,
-        group: group,
-        manager: manager,
-      },
-    });
+    const check = await showEval(user.memberNo);
+
+    console.log(check.data);
+
+    if (user.studyGroup != null && user.studyGroup.groupNo != number) {
+      alert("해당 스터디그룹의 멤버만 평가할 수 있습니다.");
+    } else if (check.data != "") {
+      alert("이미 해당 스터디그룹의 평가를 완료하였습니다.");
+    } else {
+      navigate("/groupreview", {
+        state: {
+          data: number,
+          members: members,
+          group: group,
+          manager: manager,
+        },
+      });
+    }
+  };
+
+  const fireClick = async () => {
+    const joincheck = await showMemberbyMemberNO(user.memberNo);
+
+    console.log(joincheck);
+    if (
+      joincheck.studyGroup == null &&
+      joincheck.studyGroup.groupNo != user.groupNo
+    ) {
+      alert(group.groupName + " 스터디그룹에 가입되어 있지 않습니다.");
+    } else {
+      const formData = new FormData();
+      formData.append("memberNo", user.memberNo);
+      formData.append("groupNo", number);
+
+      fireGroup(formData);
+      alert(
+        user.nickname +
+          " 님, " +
+          group.groupName +
+          " 스터디그룹을 탈퇴하셨습니다."
+      );
+      navigate("/studygroup");
+    }
   };
 
   return (
     <GroupPageTest>
       <div className="mainsection">
         <div className="section">
-          <div>
+          <div className="plusreview">
             <div className="groupinfo">
               <div className="group-container">
                 <div id="group">
@@ -226,23 +305,17 @@ const GroupPage = () => {
                 </div>
                 <div id="groupintro">
                   <div id="groupname">{group.groupName}</div>
-                  <div id="grouppoint">그룹 점수 ex 4.7점</div>
+
+                  <div id="grouppoint">
+                    그룹 점수 ex 4.7점 &nbsp;&nbsp;&nbsp;그룹인원{" "}
+                    {members.length}명
+                  </div>
                   <div className="btn">
                     <div className="App">
-                      <button
-                        type="button"
-                        id="btn1"
-                        onClick={user.groupNo === number ? null : handleClick}
-                        disabled={user.groupNo === number}
-                      >
+                      <button type="button" id="btn1" onClick={handleClick}>
                         참여하기
                       </button>
-                      <button
-                        type="button"
-                        id="btn2"
-                        onClick={user.groupNo === number ? null : groupReview}
-                        disabled={user.groupNo === number}
-                      >
+                      <button type="button" id="btn2" onClick={groupReview}>
                         평가하기
                       </button>
                     </div>
@@ -258,15 +331,23 @@ const GroupPage = () => {
                       <div className="photo">
                         <img
                           className="profileimg2"
-                          src={profile}
+                          src={`/upload/${item.profile.split("\\").pop()}`}
                           alt="Profile"
                         />
                       </div>
-                      <div>{item.nickname}</div>
+                      <div id="nickname">{item.nickname}</div>
                     </div>
                   ))}
                 </div>
               </div>
+              <div>
+                <button type="button" id="firebutton" onClick={fireClick}>
+                  그룹 탈퇴
+                </button>
+              </div>
+            </div>
+            <div>
+              <ReviewPage className="ReviewPage" groupNo={groupNo} />
             </div>
           </div>
 
