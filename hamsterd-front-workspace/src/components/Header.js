@@ -154,12 +154,15 @@ const Header = () => {
                 <Link to="/studygroup">스터디그룹</Link>
               </div>
               <div className="submenu">
-                <Link to="/groupreview">그룹평가</Link>
+                <Link to="/groupreview">{""}</Link>
               </div>
             </div>
             <div className="menu" id="social">
               <div className="submenu1">
               <a onClick={logout}>로그아웃</a>
+              <div className="submenu">
+                <Link to="/groupreview">{""}</Link>
+              </div>
               </div>
             </div>
           </div>
