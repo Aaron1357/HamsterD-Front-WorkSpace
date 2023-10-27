@@ -6,10 +6,58 @@ import {
   updategComment,
 } from "../../api/groupcomment";
 import "bootstrap/dist/css/bootstrap.min.css";
+import styled from "styled-components";
+
+const CommentStyle = styled.div`
+  .inputgComment {
+    display: flex;
+  }
+  .form-control {
+    width: 552px;
+  }
+
+  .gCommentList div {
+    margin-top: 10px;
+  }
+
+  .comment {
+    display: flex;
+    flex-direction: row;
+    /* align-items: center; */
+  }
+
+  .index {
+    width: 50px;
+    padding-left: 10px;
+  }
+
+  .commentContent {
+    width: 350px;
+  }
+
+  .nickName {
+    width: 100px;
+  }
+
+  button {
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: 10%;
+    margin-left: 10px;
+    background-color: white;
+  }
+
+  .commentContentInput {
+    width: 320px;
+    border: none;
+    background-color: beige;
+  }
+`;
 
 const GroupComment = (props) => {
   // 그룹별 댓글 목록
   const [gComments, setgComments] = useState([]);
+
+  // 현재 들어온 grouppage에 해당하는 그룹넘버를 초기값으로 담음
   const [groupNo, setGroupNo] = useState(props.groupNo);
 
   // 댓글 입력값
@@ -42,13 +90,9 @@ const GroupComment = (props) => {
       formData.append("groupNo", groupNo);
       formData.append("token", token);
 
-      try {
-        await addgComment(formData);
-        gCommentOfGroup();
-        e.target.value = null;
-      } catch (error) {
-        console.error("오류 발생 : ", error);
-      }
+      await addgComment(formData);
+      gCommentOfGroup();
+      e.target.value = null;
     } else {
       alert("댓글을 입력해주세요!");
     }
@@ -56,20 +100,21 @@ const GroupComment = (props) => {
 
   // 댓글 수정 버튼
   const update = async (e) => {
-    // setSelectedCommentNo(e.target.closest(".comment").id);
-    // console.log(editComment);
-    // console.log(groupNo);
-    // const formData = new FormData();
-    // formData.append("newComment", newComment);
-    // formData.append("groupNo", groupNo);
-    // formData.append("token", token);
-    // await updategComment(formData);
-    // // gCommentOfGroup();
-    // setNewComment("");
+    if (newComment) {
+      const formData = new FormData();
+      formData.append("newComment", newComment);
+      formData.append("groupNo", groupNo);
+      formData.append("gcommentNo", selectedCommentNo);
+      formData.append("token", token);
+      await updategComment(formData);
+      gCommentOfGroup();
+      setSelectedCommentNo(0);
+    } else {
+      alert("댓글을 입력해주세요!");
+    }
   };
 
   const handler = async (e) => {
-    console.log(e.target.value);
     setNewComment(e.target.value);
   };
 
@@ -79,6 +124,10 @@ const GroupComment = (props) => {
     setSelectedCommentNo(e.target.closest(".comment").id);
   };
   console.log("selectedCommentNo : " + selectedCommentNo);
+
+  const closeTab = () => {
+    setSelectedCommentNo(0);
+  };
 
   // 댓글 삭제(아래에서 유저 정보 확인하여 일치할때만 활성화 처리)
   const minusgComment = async (gcommentNo) => {
@@ -92,9 +141,8 @@ const GroupComment = (props) => {
   };
 
   return (
-    <>
+    <CommentStyle>
       <div className="inputgComment">
-        댓글
         <input
           type="text"
           className="form-control"
@@ -106,34 +154,32 @@ const GroupComment = (props) => {
       </div>
       {/* selectedCommentNo가 0 이하인 경우 목록만 출력 */}
       {selectedCommentNo <= 0 ? (
-        <div>
+        <div className="gCommentList">
           {gComments.map((item, index) => (
             <div
               key={item.gcommentNo}
               id={`${item.gcommentNo}`}
               className="comment"
             >
-              <tr>
-                <td>{index + 1}</td>
-                <td>{item.commentContent}</td>
-                <td>{item.member.nickname}</td>
-                {/* <button onClick={openUpdate}>수정</button>
+              <div className="index">{index + 1}</div>
+              <div className="commentContent">{item.commentContent}</div>
+              <div className="nickName">{item.member.nickname}</div>
+              {/* <button onClick={openUpdate}>수정</button>
                 <button>삭제</button> */}
-                {id === item.member.id ? (
-                  <button onClick={openUpdate}>수정</button>
-                ) : null}
-                {id === item.member.id ? (
-                  <button onClick={() => minusgComment(item.gcommentNo)}>
-                    삭제
-                  </button>
-                ) : null}
-              </tr>
+              {id == item.member.id ? (
+                <button onClick={openUpdate}>수정</button>
+              ) : null}
+              {id == item.member.id ? (
+                <button onClick={() => minusgComment(item.gcommentNo)}>
+                  삭제
+                </button>
+              ) : null}
             </div>
           ))}
         </div>
       ) : (
         // 선택된 댓글과 해당 댓글 번호 같으면 input 활성화
-        <div>
+        <div className="gCommentList">
           {gComments.map((item, index) => (
             <div
               key={item.gcommentNo}
@@ -143,45 +189,43 @@ const GroupComment = (props) => {
               {/* {console.log("selected " + selectedCommentNo)}
               {console.log("item " + item.gcommentNo)} */}
               {selectedCommentNo == item.gcommentNo ? (
-                <tr>
-                  <td>{index + 1}</td>
-                  <td>
-                    <input type="text" onChange={handler} />
-                  </td>
-                  <td>{item.member.nickname}</td>
+                <div className="comment">
+                  <div className="index">{index + 1}</div>
+                  <div className="commentContent">
+                    <input
+                      type="text"
+                      className="commentContentInput"
+                      placeholder={item.commentContent}
+                      onChange={handler}
+                    />
+                  </div>
+                  <div className="nickName">{item.member.nickname}</div>
                   {/* <button onClick={update}>수정</button>
                   <button>삭제</button> */}
-                  {id === item.member.id ? (
+                  {id == item.member.id ? (
                     <button onClick={update}>수정</button>
                   ) : null}
-                  {id === item.member.id ? (
+                  {id == item.member.id ? (
                     <button onClick={() => minusgComment(item.gcommentNo)}>
                       삭제
                     </button>
                   ) : null}
-                </tr>
+                  {id == item.member.id ? (
+                    <button onClick={closeTab}>취소</button>
+                  ) : null}
+                </div>
               ) : (
-                <tr>
-                  <td>{index + 1}</td>
-                  <td>{item.commentContent}</td>
-                  <td>{item.member.nickname}</td>
-                  {/* <button onClick={update}>수정</button>
-                  <button>삭제</button> */}
-                  {id === item.member.id ? (
-                    <button onClick={update}>수정</button>
-                  ) : null}
-                  {id === item.member.id ? (
-                    <button onClick={() => minusgComment(item.gcommentNo)}>
-                      삭제
-                    </button>
-                  ) : null}
-                </tr>
+                <div className="comment">
+                  <div className="index">{index + 1}</div>
+                  <div className="commentContent">{item.commentContent}</div>
+                  <div className="nickName">{item.member.nickname}</div>
+                </div>
               )}
             </div>
           ))}
         </div>
       )}
-    </>
+    </CommentStyle>
   );
 };
 

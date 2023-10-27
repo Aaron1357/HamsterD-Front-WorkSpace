@@ -166,8 +166,8 @@ const GroupPage = () => {
   console.log(manager);
   setGroupNo = number;
   const [groupNo, setGroupNo] = useState(number);
-  console.log(members);
-  console.log(group);
+  //console.log(members);
+  //console.log(group);
 
   const modalRef = useRef(null);
 
