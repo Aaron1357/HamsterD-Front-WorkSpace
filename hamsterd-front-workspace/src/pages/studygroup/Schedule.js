@@ -7,12 +7,13 @@ import {
   faArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   addSchedule,
   deleteSchedule,
   updateSchedule,
 } from "../../api/schedule";
+import { viewMemberList, viewStudyGroup } from "../../api/studygroup";
 import { useNavigate, useLocation } from "react-router-dom";
 
 // css
@@ -131,9 +132,13 @@ const Update = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // 현재 유저의 id 받아옴(작성자 정보 비교 위해서)
+  const user = JSON.parse(localStorage.getItem("user"));
+  const id = user.id;
+
   const [schedule, setSchedule] = useState(location.state.schedule);
   const groupNo = location.state.groupNo;
-  const [scheduleNo, setScheduleNo] = useState(location.state.scheduleNo);
+  const scheduleNo = location.state.scheduleNo;
 
   const [title, setTitle] = useState(schedule.scheduleTitle);
   const [content, setContent] = useState(schedule.scheduleContent);
@@ -145,6 +150,9 @@ const Update = () => {
 
   // 수정 버튼
   const updateEvent = async () => {
+    const result1 = await viewMemberList(groupNo);
+    const result2 = await viewStudyGroup(groupNo);
+
     const token = localStorage.getItem("token");
 
     const formData = new FormData();
@@ -154,21 +162,31 @@ const Update = () => {
     formData.append("scheduleNo", location.state.scheduleNo);
     formData.append("token", token);
 
-    try {
-      await updateSchedule(formData); // 비동기 작업 완료 대기
-      navigate("/scheduleMain"); // 파일 업로드가 완료되면 페이지 이동
-    } catch (error) {
-      // 에러 처리
-      console.error("오류 발생 : ", error);
-    }
+    await updateSchedule(formData); // 비동기 작업 완료 대기
+    navigate("/grouppage", {
+      state: {
+        data: groupNo,
+        members: result1,
+        group: result2,
+      },
+    });
   };
 
   // 삭제버튼 클릭 시
   const deleteEvent = async () => {
+    const result1 = await viewMemberList(groupNo);
+    const result2 = await viewStudyGroup(groupNo);
+
     if (scheduleNo) {
       try {
         await deleteSchedule(scheduleNo); // 비동기 작업 완료 대기
-        navigate("/grouppage"); // 파일 업로드가 완료되면 페이지 이동
+        navigate("/grouppage", {
+          state: {
+            data: groupNo,
+            members: result1,
+            group: result2,
+          },
+        });
       } catch (error) {
         console.error("오류 발생 : " + error);
       }
@@ -176,81 +194,137 @@ const Update = () => {
   };
 
   // 닫기 버튼 클릭 시 grouppage 메인으로 돌아감
-  const close = () => {
-    navigate("/grouppage");
+  const close = async () => {
+    const result1 = await viewMemberList(groupNo);
+    const result2 = await viewStudyGroup(groupNo);
+
+    navigate("/grouppage", {
+      state: {
+        data: groupNo,
+        members: result1,
+        group: result2,
+      },
+    });
   };
 
   return (
-    <form className="registerSchedule" method="POST">
-      <div className="add">
-        <input
-          hidden
-          type="text"
-          className="form-control"
-          id="exampleFormControlInput1"
-          value={scheduleNo}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <div className="mb-3">
-          <input
-            type="date"
-            className="form-control"
-            id="date"
-            value={date}
-            placeholder={schedule.scheduleDate}
-            onChange={(e) => setDate(e.target.value)}
-            required
-            aria-required="true"
-          />
-        </div>
-        <FontAwesomeIcon icon={faArrowUp} onClick={updateEvent} />
-        <FontAwesomeIcon icon={faMinus} onClick={deleteEvent} />
-        <FontAwesomeIcon icon={faXmark} onClick={close} />
-      </div>
+    <>
+      {id === schedule.member.id ? (
+        <form className="registerSchedule" method="POST">
+          <div className="add">
+            <div className="mb-3">
+              <input
+                type="date"
+                className="form-control"
+                id="date"
+                value={date}
+                placeholder={schedule.scheduleDate}
+                onChange={(e) => setDate(e.target.value)}
+                required
+                aria-required="true"
+              />
+            </div>
+            <FontAwesomeIcon icon={faArrowUp} onClick={updateEvent} />
+            <FontAwesomeIcon icon={faMinus} onClick={deleteEvent} />
+            <FontAwesomeIcon icon={faXmark} onClick={close} />
+          </div>
 
-      <div className="mb-3">
-        <label htmlFor="exampleFormControlInput1" className="form-label">
-          제목
-        </label>
-        <input
-          type="text"
-          className="form-control"
-          id="exampleFormControlInput1"
-          value={title}
-          placeholder={schedule.scheduleTitle}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="exampleFormControlTextarea1" className="form-label">
-          내용
-        </label>
-        <textarea
-          className="form-control"
-          id="exampleFormControlTextarea1"
-          rows="3"
-          value={content}
-          placeholder={schedule.scheduleContent}
-          onChange={(e) => setContent(e.target.value)}
-        ></textarea>
-      </div>
-    </form>
+          <div className="mb-3">
+            <label htmlFor="exampleFormControlInput1" className="form-label">
+              제목
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="exampleFormControlInput1"
+              value={title}
+              placeholder={schedule.scheduleTitle}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="exampleFormControlTextarea1" className="form-label">
+              내용
+            </label>
+            <textarea
+              className="form-control"
+              id="exampleFormControlTextarea1"
+              rows="3"
+              value={content}
+              placeholder={schedule.scheduleContent}
+              onChange={(e) => setContent(e.target.value)}
+            ></textarea>
+          </div>
+        </form>
+      ) : (
+        <form className="registerSchedule" method="POST">
+          <div className="add">
+            <div className="mb-3">
+              <input
+                type="date"
+                className="form-control"
+                id="date"
+                value={date}
+                placeholder={schedule.scheduleDate}
+                onChange={(e) => setDate(e.target.value)}
+                required
+                aria-required="true"
+                readOnly
+              />
+            </div>
+            <FontAwesomeIcon icon={faXmark} onClick={close} />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="exampleFormControlInput1" className="form-label">
+              제목
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="exampleFormControlInput1"
+              value={title}
+              placeholder={schedule.scheduleTitle}
+              onChange={(e) => setTitle(e.target.value)}
+              readOnly
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="exampleFormControlTextarea1" className="form-label">
+              내용
+            </label>
+            <textarea
+              className="form-control"
+              id="exampleFormControlTextarea1"
+              rows="3"
+              value={content}
+              placeholder={schedule.scheduleContent}
+              onChange={(e) => setContent(e.target.value)}
+              readOnly
+            ></textarea>
+          </div>
+        </form>
+      )}
+    </>
   );
 };
 
 const Add = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [date, setDate] = useState("");
-
-  const location = useLocation();
+  const groupNo = location.state.groupNo;
 
   const token = localStorage.getItem("token");
 
-  // 추가 버튼(기존 정보 있으면 수정)
+  // 추가 버튼
   const plus = async () => {
+    const result1 = await viewMemberList(groupNo);
+    const result2 = await viewStudyGroup(groupNo);
+
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
@@ -258,18 +332,28 @@ const Add = () => {
     // 멤버 정보 담기 위해 token 같이 담아서 전송
     formData.append("token", token);
 
-    try {
-      await addSchedule(formData); // 비동기 작업 완료 대기
-      navigate("/grouppage/"); // 파일 업로드가 완료되면 페이지 이동
-    } catch (error) {
-      // 에러 처리
-      console.error("오류 발생 : ", error);
-    }
+    await addSchedule(formData); // 비동기 작업 완료 대기
+    navigate("/grouppage", {
+      state: {
+        data: groupNo,
+        members: result1,
+        group: result2,
+      },
+    });
   };
 
   // 닫기 버튼 클릭 시 grouppage 메인으로 돌아감
-  const close = () => {
-    navigate("/scheduleMain");
+  const close = async () => {
+    const result1 = await viewMemberList(groupNo);
+    const result2 = await viewStudyGroup(groupNo);
+
+    navigate("/grouppage", {
+      state: {
+        data: groupNo,
+        members: result1,
+        group: result2,
+      },
+    });
   };
 
   return (
@@ -288,7 +372,7 @@ const Add = () => {
         </div>
 
         <FontAwesomeIcon icon={faPlus} onClick={plus} />
-        <FontAwesomeIcon icon={faMinus} />
+        <FontAwesomeIcon icon={faMinus} style={{ color: "lightgray" }} />
         <FontAwesomeIcon icon={faXmark} onClick={close} />
       </div>
       <div className="mb-3">
@@ -325,8 +409,8 @@ const Schedule = () => {
   const groupNo = location.state?.groupNo;
   const scheduleNo = location.state?.scheduleNo;
 
-  console.log("groupNo : " + groupNo);
-  console.log("scheduleNo : " + scheduleNo);
+  // console.log("groupNo : " + groupNo);
+  // console.log("scheduleNo : " + scheduleNo);
 
   const renderUpdateOrAdd = () => {
     if (groupNo && scheduleNo) {

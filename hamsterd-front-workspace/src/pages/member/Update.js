@@ -1,7 +1,9 @@
 import styled from "styled-components";
-import { updateMember } from "../../api/login";
+import { putMember } from "../../store/userSlice";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { updateMember } from "../../api/member";
 
 const UpdateStyle = styled.div`
   .mainsection {
@@ -44,43 +46,48 @@ const UpdateStyle = styled.div`
 
 const Update = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  
+  const user = useSelector((state) => {
+    return state.user;
+  });
 
-  const handleSubmit = (e) => {
+  const update = (e) => {
     e.preventDefault();
 
     console.log(file);
    
-    // 로컬 스토리지에서 member 데이터 가져오기
-    const memberData = JSON.parse(sessionStorage.getItem("member"));
+    
+    
 
     // 새로운 FormData 생성
     const formData2 = new FormData();
     
     // 필드 추가
   
-    formData2.set("password", e.target.password.value);
-    formData2.set("nickname", e.target.nickname.value);
+    formData2.set("password",user.password);
+    formData2.set("nickname", user.nickname);
     formData2.set("profile", file);
 
 
     // 식별자 넣기(id)
-    formData2.set("id", memberData.id);
+    formData2.set("id", user.id);
     
 
     // console.log(formData2.get("password"));
     // console.log(formData2.get("nickname"));
    
 
-    
-    updateMember(formData2);
-    window.location.reload(true); 
-    window.sessionStorage.clear(); // 세션 제거
-    alert("수정이 완료되었습니다. 다시 로그인 해주세요!")
+    // if (putMember(formData2)) {
+    //   const result = putMember(formData2);
+    //   console.log(result);
+
+    //   // localStorage.setItem("user", )
+    // }
+
+    dispatch(putMember(formData2));
+
     navigate("/");
-    
-   
   };
 
   const handleImageClick = () => {
@@ -94,7 +101,7 @@ const Update = () => {
   // const [viewFile, setViewFile] = useState(null);
 
   const handleFileChange = (e) => {
-
+    console.log(e.target.files[0]);
     setFile(e.target.files[0]);
 
     // if (file) {
@@ -111,7 +118,7 @@ const Update = () => {
     <UpdateStyle>
       <div className="mainsection">
         <div className="section" id="section2">
-          <form className="update" onSubmit={handleSubmit}>
+          <form className="update" onSubmit={update}>
             <div className="photo-line">
               <div className="photo">
                 <input
@@ -122,7 +129,7 @@ const Update = () => {
                 />
                 <img
                   className="profileimg"
-                  src={file}
+                  src={`/upload/${user.profile.split("\\").pop()}`}
                   alt="Profile"
                   onClick={handleImageClick}
                 />

@@ -1,9 +1,15 @@
-import { searchBoardList } from "../../api/boardFile";
+import {
+  searchBoardList,
+  searchPostContent,
+  searchPostTitle,
+} from "../../api/boardFile";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { updateBoardView } from "../../api/boardFile";
 import Pagination from "react-js-pagination";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 const BoardStyle = styled.div`
   .boardListHead1 {
@@ -18,13 +24,30 @@ const BoardStyle = styled.div`
     justify-content: end;
   }
 
-  .boardButton {
+  .btn-outline-dark {
     width: 160px;
     height: 40px;
+    margin-bottom: 20px;
   }
 
   #boardView :hover {
     cursor: pointer;
+  }
+
+  .boardListHead1 {
+    font-size: 20px;
+  }
+
+  .searchBar {
+    display: flex;
+    justify-content: center;
+  }
+
+  .searchIcon {
+    width: 20px;
+    height: 20px;
+    margin: 10px;
+    /* display: block; */
   }
 `;
 
@@ -74,39 +97,85 @@ const PaginationBox = styled.div`
 const BoardList = () => {
   const [boardList, setBoardList] = useState([]);
 
-  const handlePageChange = (page) => {
-    setPage(page);
-  };
-  //페이지 처리
+  const navigate = useNavigate();
 
-  //페이지 초기 값은 1페이지
+  //페이지 번호 상태관리
   const [page, setPage] = useState(1);
 
-  // const listPerPage = 8;
+  // post 전체 데이터 개수 -> pagination에 보내줘야하는 값
+  const [totalDataCount, setTotalDataCount] = useState(0);
 
-  // const [groundList, setGroundList] = useRecoilState(groundPhotoListState);
-  // const totalPage = Math.ceil(groundList.length / listPerPage);
+  //페이지 바뀔때마다 상태관리하기
+  const [pageShow, setPageShow] = useState(false);
 
+  //검색창 value값
+  const [searchPost, setSearchPost] = useState("");
+
+  //검색창 option 값 상태관리
+  const [searchOption, setSearchOption] = useState("searchPostTitle");
+
+  //검색창이 작성되면 onChange
+  const onChangePost = (e) => {
+    setSearchPost(e.target.value);
+    console.log(e.target.value);
+  };
+
+  //option 값 변경될때마다 바꿔주는 onChange
+  const onChangeOption = (e) => {
+    setSearchOption(e.target.value);
+  };
+
+  //검색창 클릭
+  const searchPostClick = async () => {
+    console.log(searchPost);
+    if (searchOption == "searchPostContent") {
+      const result = await searchPostContent(searchPost);
+      setBoardList(result);
+    } else if (searchOption == "searchPostTitle") {
+      const result = await searchPostTitle(searchPost);
+      setBoardList(result);
+    }
+  };
+
+  //페이지 바뀔때 페이지 번호 바꿔주고 true로 변환
+  const handlePageChange = (page) => {
+    console.log("페이지바뀜");
+    setPage(page);
+    setPageShow(true);
+  };
+
+  //처음 화면 boardList
   useEffect(() => {
-    searchBoardList(page).then((res) => setBoardList(res));
-    // const res = await searchBoardList(page);
-    // setBoardList(res);
-    console.log("페이지 나와라");
-    // console.log("로컬스토리지 닉네임 " + localStorage.getItem("nickname"));
+    const fetchData = async () => {
+      const res = await searchBoardList(page);
+      //boardList에 total이랑 contents 따로 있어서 contents만 받아와야함
+      setBoardList(res.contents);
+      //Pagination에 Post전체 값 보내줘야함
+      //Pagination totalDataCount는 int형으로 넣어줘야함
+      //db에서 값 받아올때 String으로 받아와졌으므로 int로 형변환 하기
+      const jsonString = JSON.stringify(res.total);
+      setTotalDataCount(parseInt(jsonString, 10));
+      console.log("페이지 나와라" + res);
+      console.log(JSON.stringify(res));
+      console.log("개수 나와 제발" + JSON.stringify(res.total));
+    };
+    fetchData();
   }, []);
 
-  // useEffect(async () => {
-  //   const result = await searchBoardList(
-  //     `grounds?location=${location}&search=${searchInput}&offset=${
-  //       (page - 1) * listPerPage
-  //     }&count=${listPerPage}`
-  //   );
-  //   setGroundList({
-  //     length: result.data.length,
-  //     data: result.data.grounds,
-  //   });
-  // }, [page]);
-  const navigate = useNavigate();
+  //페이지 변경될때 boardList 뿌리기
+  useEffect(() => {
+    const fetchData = async () => {
+      //if 조건 걸어주지 않으면 무한루프 돌아감
+      if (pageShow == true) {
+        const res = await searchBoardList(page);
+        setBoardList(res.contents);
+      }
+    };
+    fetchData();
+    //false로 변경해야 무한루프 안돌아감
+    setPageShow(false);
+  }, [handlePageChange]);
+
   //게시판 작성하기
   const onClick = () => {
     navigate("/board");
@@ -122,8 +191,12 @@ const BoardList = () => {
     <BoardStyle>
       <div className="boardListHead1">
         <div className="boardListHead2">
-          <button onClick={onClick} className="boardButton">
-            게시물 작성하기
+          <button
+            type="button"
+            className="btn btn-outline-dark"
+            onClick={onClick}
+          >
+            게시물 작성
           </button>
         </div>
         <div>
@@ -166,23 +239,40 @@ const BoardList = () => {
               ))}
             </tbody>
           </table>
-          <tfoot>
+          <div>
             <PaginationBox>
               <Pagination
-                // totalPage={totalPage}
                 // 현재 보고있는 페이지
-                activePage={1}
+                activePage={page}
                 // 한페이지에 출력할 아이템수
-                itemsCountPerPage={2}
+                itemsCountPerPage={10}
                 // 총 아이템수
-                totalItemsCount={300}
+                totalItemsCount={totalDataCount}
                 // 표시할 페이지수
-                pageRangeDisplayed={5}
+                pageRangeDisplayed={3}
                 // 함수
                 onChange={handlePageChange}
               ></Pagination>
             </PaginationBox>
-          </tfoot>
+          </div>
+          <div className="searchBar">
+            <select value={searchOption} onChange={onChangeOption}>
+              <option value="searchPostTitle">제목</option>
+              <option value="searchPostContent">내용</option>
+              {/* <option value="searchNickname">작성자</option>
+                <option value="searchCreateTime">작성일</option> */}
+            </select>
+            <input
+              type="text"
+              value={searchPost}
+              onChange={onChangePost}
+            ></input>
+            <FontAwesomeIcon
+              className="searchIcon"
+              icon={faMagnifyingGlass}
+              onClick={searchPostClick}
+            />
+          </div>
         </div>
       </div>
     </BoardStyle>

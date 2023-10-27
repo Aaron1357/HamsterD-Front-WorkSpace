@@ -17,6 +17,7 @@ import BoardDetail from "./pages/board/BoardDetail";
 import Fire from "./pages/member/Fire";
 import Update from "./pages/member/Update";
 import BoardComment from "./pages/board/BoardComment";
+import BoardInComment from "./pages/board/BoardInComment";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -83,7 +84,16 @@ const router = createBrowserRouter([
         path: "/post/:postNo",
         element: <BoardDetail />,
         children: [
-          { path: "/post/:postNo/pcomment", element: <BoardComment /> },
+          {
+            path: "/post/:postNo/pcomment",
+            element: <BoardComment />,
+            children: [
+              {
+                path: "/post/:postNo/pcomment/:commentNo/incomment",
+                element: <BoardInComment />,
+              },
+            ],
+          },
         ],
       },
     ],
