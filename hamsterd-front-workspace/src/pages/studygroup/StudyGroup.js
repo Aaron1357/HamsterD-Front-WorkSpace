@@ -9,6 +9,7 @@ import {
   viewManager,
 } from "../../api/studygroup";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const StudyGroupTest = styled.div`
   .mainsection {
@@ -171,6 +172,10 @@ const StudyGroupTest = styled.div`
 `;
 
 const StudyGroup = () => {
+  const user = useSelector((state) => {
+    return state.user;
+  });
+
   const navigate = useNavigate();
 
   const [managerList, setManagerList] = useState([]);
@@ -184,7 +189,7 @@ const StudyGroup = () => {
     setManagerList(result.data);
   };
 
-  console.log(managerList);
+  console.log(user);
 
   useEffect(() => {
     getStudyGroupListAPI();
@@ -193,7 +198,11 @@ const StudyGroup = () => {
 
   const handleCreateGroupClick = () => {
     //생성버튼 페이지 이동
-    navigate("/creategroup");
+    if (user.studyGroup == null) {
+      navigate("/creategroup");
+    } else {
+      alert("스터디그룹에 이미 가입되어있습니다.");
+    }
   };
 
   const onClick = async (e, groupNo) => {
