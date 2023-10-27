@@ -1,7 +1,9 @@
 import styled from "styled-components";
-import { updateMember } from "../../api/login";
+import { putMember } from "../../store/userSlice";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { updateMember } from "../../api/member";
 
 const UpdateStyle = styled.div`
   .mainsection {
@@ -47,7 +49,7 @@ const Update = () => {
 
   
 
-  const handleSubmit = (e) => {
+  const update = (e) => {
     e.preventDefault();
 
     console.log(file);
@@ -73,14 +75,14 @@ const Update = () => {
     // console.log(formData2.get("nickname"));
    
 
-    
-    updateMember(formData2);
-    window.location.reload(true); 
-    window.sessionStorage.clear(); // 세션 제거
-    alert("수정이 완료되었습니다. 다시 로그인 해주세요!")
+    // if (putMember(formData2)) {
+    //   const result = putMember(formData2);
+    //   console.log(result);
+
+    //   // localStorage.setItem("user", )
+    // }
+
     navigate("/");
-    
-   
   };
 
   const handleImageClick = () => {
@@ -111,7 +113,7 @@ const Update = () => {
     <UpdateStyle>
       <div className="mainsection">
         <div className="section" id="section2">
-          <form className="update" onSubmit={handleSubmit}>
+          <form className="update" onSubmit={update}>
             <div className="photo-line">
               <div className="photo">
                 <input

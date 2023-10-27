@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { updateMember, deleteMember, login } from "../api/login";
+import { updateMember, deleteMember, login } from "../api/member";
 import { useDispatch } from "react-redux";
 
 const asyncLogin = createAsyncThunk("userSlice/asyncLogin", async (data) => {
@@ -46,7 +46,7 @@ const userSlice = createSlice({
       // console.log(action);
       localStorage.setItem("token", action.payload.token);
       localStorage.setItem("user", JSON.stringify(action.payload));
-      return action.payload;
+      return {};
     });
 
     // 유저 정상적으로 삭제 시
