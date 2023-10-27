@@ -6,10 +6,16 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import ScheduleMain from "./ScheduleMain";
 import { useSelector } from "react-redux";
-import { viewManager } from "../../api/studygroup";
+import {
+  fireGroup,
+  joinGroup,
+  showEval,
+  viewManager,
+} from "../../api/studygroup";
 import GroupComment from "./GroupComment";
 import { getType } from "@reduxjs/toolkit";
 import ReviewPage from "./ReviewPage";
+import { showMemberbyMemberNO } from "../../api/login";
 
 const GroupPageTest = styled.div`
   .mainsection {
@@ -47,7 +53,7 @@ const GroupPageTest = styled.div`
     );
     margin-top: 50px;
     margin-left: 50px;
-    width: 800px;
+    width: 1200px;
     height: 1000px;
   }
 
@@ -156,6 +162,20 @@ const GroupPageTest = styled.div`
   #nickname {
     text-align: center;
   }
+
+  .plusreview {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  #firebutton {
+    height: 30px;
+    width: 100px;
+    background-color: gray;
+    border: 0px;
+    font-weight: bold;
+    color: white;
+  }
 `;
 
 const GroupPage = () => {
@@ -180,7 +200,7 @@ const GroupPage = () => {
   const handleClick = () => {
     // Bootstrap Modal을 JavaScript로 열기
 
-    if (user.studyGroup.groupNo == number) {
+    if (user.studyGroup != null && user.studyGroup.groupNo == number) {
       alert("해당 스터디그룹에 이미 가입되어있습니다.");
     } else if (user.studyGroup != null) {
       alert("다른 스터디그룹에 이미 가입되어있습니다.");
@@ -202,11 +222,36 @@ const GroupPage = () => {
     }
   };
 
-  const joinStudyGroup = () => {};
+  const joinStudyGroup = async () => {
+    const joincheck = await showMemberbyMemberNO(user.memberNo);
+
+    console.log(joincheck);
+    if (joincheck.studyGroup == null) {
+      // 가입
+      const formData = new FormData();
+      formData.append("memberNo", user.memberNo);
+      formData.append("groupNo", number);
+
+      joinGroup(formData);
+
+      modalClose();
+      alert(group.groupName + "스터디그룹 가입 완료");
+      navigate("/studygroup");
+    } else {
+      modalClose();
+      alert("스터디그룹 가입에 실패했습니다.");
+    }
+  };
 
   const groupReview = async () => {
-    if (user.studyGroup.groupNo != number) {
+    const check = await showEval(user.memberNo);
+
+    console.log(check.data);
+
+    if (user.studyGroup != null && user.studyGroup.groupNo != number) {
       alert("해당 스터디그룹의 멤버만 평가할 수 있습니다.");
+    } else if (check.data != "") {
+      alert("이미 해당 스터디그룹의 평가를 완료하였습니다.");
     } else {
       navigate("/groupreview", {
         state: {
@@ -219,11 +264,36 @@ const GroupPage = () => {
     }
   };
 
+  const fireClick = async () => {
+    const joincheck = await showMemberbyMemberNO(user.memberNo);
+
+    console.log(joincheck);
+    if (
+      joincheck.studyGroup == null &&
+      joincheck.studyGroup.groupNo != user.groupNo
+    ) {
+      alert(group.groupName + " 스터디그룹에 가입되어 있지 않습니다.");
+    } else {
+      const formData = new FormData();
+      formData.append("memberNo", user.memberNo);
+      formData.append("groupNo", number);
+
+      fireGroup(formData);
+      alert(
+        user.nickname +
+          " 님, " +
+          group.groupName +
+          " 스터디그룹을 탈퇴하셨습니다."
+      );
+      navigate("/studygroup");
+    }
+  };
+
   return (
     <GroupPageTest>
       <div className="mainsection">
         <div className="section">
-          <div>
+          <div className="plusreview">
             <div className="groupinfo">
               <div className="group-container">
                 <div id="group">
@@ -270,11 +340,17 @@ const GroupPage = () => {
                   ))}
                 </div>
               </div>
+              <div>
+                <button type="button" id="firebutton" onClick={fireClick}>
+                  그룹 탈퇴
+                </button>
+              </div>
+            </div>
+            <div>
+              <ReviewPage className="ReviewPage" groupNo={groupNo} />
             </div>
           </div>
-          <div>
-            <ReviewPage className="ReviewPage" groupNo={groupNo} />
-          </div>
+
           <br />
           <br />
           <div>

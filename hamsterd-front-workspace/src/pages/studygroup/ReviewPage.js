@@ -16,20 +16,30 @@ const ReviewPage = (props) => {
     reviewOfGroup();
   }, [groupNo]);
 
-  console.log(review);
   return (
     <>
-      {/* <div className="inputgComment">
-        {review.map((item, index) => (
-          <div key={item.gcommentNo} id={item.gcommentNo} className="comment">
+      <div>
+        <h5 style={{ textAlign: "center", fontWeight: "bold" }}>리뷰 목록</h5>
+        <br />
+        <table style={{ textAlign: "center" }}>
+          <thead style={{ fontWeight: "bold" }}>
             <tr>
-              <td>{index + 1}</td>
-              <td>{item.commentContent}</td>
-              <td>{item.member.nickname}</td>
+              <td>평점</td>
+              <td>리뷰</td>
+              <td>닉네임</td>
             </tr>
-          </div>
-        ))}
-      </div> */}
+          </thead>
+          <tbody>
+            {review.map((item, index) => (
+              <tr key={item.groupRevNo} id={item.groupRevNo} className="review">
+                <td style={{ width: "100px" }}>별 {item.groupScore}개</td>
+                <td style={{ width: "300px" }}>{item.review}</td>
+                <td style={{ width: "100px" }}>{item.member.nickname} 님</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 };

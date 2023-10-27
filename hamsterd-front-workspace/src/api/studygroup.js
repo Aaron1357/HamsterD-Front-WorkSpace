@@ -48,14 +48,28 @@ export const showMember = async (id) => {
 };
 
 // 스터디그룹 가입
+export const joinGroup = async (data) => {
+  // console.log(data.get("memberNo"));
+  return await instance.put("studygroup/join", data);
+};
+
+// 스터디그룹 탈퇴
+export const fireGroup = async (data) => {
+  // console.log(data.get("memberNo"));
+  return await instance.put("studygroup/fire", data);
+};
 
 // 스터디그룹 평가 생성
 export const addGroupReview = async (data) => {
-  console.log(data);
   return await instance.post("groupeval", data);
 };
 
 // 스터디그룹 평가 리스트 받아오기
 export const getGroupReviewList = async (groupNo) => {
-  return await instance.get(`groupeval/${groupNo}`);
+  return await instance.get(`groupeval/groupno/${groupNo}`);
+};
+
+// 개인 스터디그룹 평가 받아오기
+export const showEval = async (id) => {
+  return await instance.get(`groupeval/memberNo/${id}`);
 };

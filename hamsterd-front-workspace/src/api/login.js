@@ -15,7 +15,7 @@ export const addMember = async (member) => {
     headers: {
       "Content-Type": `application/json`,
     },
-  });//
+  }); //
 };
 
 export const updateMember = async (member) => {
@@ -27,4 +27,10 @@ export const updateMember = async (member) => {
 export const deleteMember = async (id) => {
   console.log(id);
   return await instance.delete(`member/${id}`);
+};
+
+// 멤버넘버로 조회
+export const showMemberbyMemberNO = async (memberNo) => {
+  const result = await instance.get(`member/memberno/${memberNo}`);
+  return result.data;
 };
