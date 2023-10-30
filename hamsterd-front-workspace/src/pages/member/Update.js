@@ -7,11 +7,11 @@ import { updateMember } from "../../api/member";
 
 const UpdateStyle = styled.div`
   .mainsection {
-    border: 1px solid rgba(211, 157, 87);
+    border: 1px solid rgba(0, 90, 153, 72);
     border-radius: 20px;
     width: 1600px;
     margin-top: 30px;
-    color: rgba(211, 157, 87);
+    color: rgba(0, 90, 153, 72);
   }
   .section {
     box-shadow: var(
@@ -56,27 +56,21 @@ const Update = () => {
     e.preventDefault();
 
     console.log(file);
-   
-    
-    
 
     // 새로운 FormData 생성
     const formData2 = new FormData();
-    
+
     // 필드 추가
-  
-    formData2.set("password",user.password);
+
+    formData2.set("password", user.password);
     formData2.set("nickname", user.nickname);
     formData2.set("profile", file);
 
-
     // 식별자 넣기(id)
     formData2.set("id", user.id);
-    
 
     // console.log(formData2.get("password"));
     // console.log(formData2.get("nickname"));
-   
 
     // if (putMember(formData2)) {
     //   const result = putMember(formData2);
@@ -113,7 +107,6 @@ const Update = () => {
     // }
   };
 
-  
   return (
     <UpdateStyle>
       <div className="mainsection">
@@ -135,7 +128,7 @@ const Update = () => {
                 />
               </div>
             </div>
-            
+
             <div className="mb-3">
               <label htmlFor="password" className="form-label">
                 변경 할 비밀번호
@@ -151,7 +144,7 @@ const Update = () => {
                 />
               </div>
             </div>
-            
+
             <div className="mb-3">
               <label htmlFor="nickName" className="form-label">
                 변경 할 닉네임
@@ -167,7 +160,7 @@ const Update = () => {
                 />
               </div>
             </div>
-            
+
             <br></br>
             <button type="submit" id="updatebtn" className="btn btn-primary">
               개인정보 수정
@@ -175,8 +168,7 @@ const Update = () => {
           </form>
         </div>
       </div>
-</UpdateStyle>
-
+    </UpdateStyle>
   );
 };
 

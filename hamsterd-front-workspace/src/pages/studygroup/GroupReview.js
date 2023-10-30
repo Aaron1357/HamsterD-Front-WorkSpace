@@ -6,11 +6,11 @@ import { addGroupReview } from "../../api/studygroup";
 
 const GroupReviewStyle = styled.div`
   .mainsection {
-    border: 1px solid rgba(211, 157, 87);
+    border: 1px solid rgba(0, 90, 153, 72);
     border-radius: 20px;
     width: 1600px;
     margin-top: 30px;
-    color: rgba(211, 157, 87);
+    color: rgba(0, 90, 153, 72);
     //
   }
   .section {
