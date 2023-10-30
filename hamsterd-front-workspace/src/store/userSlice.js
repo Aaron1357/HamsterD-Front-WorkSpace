@@ -9,7 +9,6 @@ const asyncLogin = createAsyncThunk("userSlice/asyncLogin", async (data) => {
 });
 
 const putMember = createAsyncThunk("userSlice/putMember", async (data) => {
-  console.log(data);
   const result = await updateMember(data);
   // console.log(result.data);
   return result.data;

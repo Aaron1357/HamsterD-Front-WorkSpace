@@ -47,7 +47,7 @@ const Fire = () => {
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
-//
+  //
   const deleteMember = () => {
     dispatch(delMember(user.memberNo));
     navigate("/");

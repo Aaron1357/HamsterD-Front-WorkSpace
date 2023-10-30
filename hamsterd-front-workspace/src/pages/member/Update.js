@@ -47,6 +47,11 @@ const UpdateStyle = styled.div`
 const Update = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [file, setFile] = useState(null);
+  const [next, setNext] = useState([]);
+
+  const [password, setPw] = useState([]);
+  const [nickName, setNick] = useState([]);
 
   const user = useSelector((state) => {
     return state.user;
@@ -55,59 +60,45 @@ const Update = () => {
   const update = (e) => {
     e.preventDefault();
 
-    const password = e.target.elements.password.value;
-
-    console.log(password);
-
     // 새로운 FormData 생성
     const formData2 = new FormData();
 
     // 필드 추가
 
     formData2.set("password", password);
-    formData2.set("nickname", user.nickname);
+    formData2.set("nickname", nickName);
     formData2.set("profile", file);
 
     // 식별자 넣기(id)
     formData2.set("id", user.id);
 
-    // console.log(formData2.get("password"));
-    // console.log(formData2.get("nickname"));
-
-    // if (putMember(formData2)) {
-    //   const result = putMember(formData2);
-    //   console.log(result);
-
-    //   // localStorage.setItem("user", )
-    // }
-
+    // 수정된 데이터 넘기기
     dispatch(putMember(formData2));
 
     navigate("/");
   };
 
-  const handleImageClick = () => {
-    const fileInput = document.getElementById("fileInput");
+  const handleImageClick = (e) => {
+    const fileInput = e.target.previousElementSibling; // img태그 앞에 있는 형제 요소 선택(input 태그)
     if (fileInput) {
       fileInput.click(); // input 요소 클릭
     }
   };
 
-  const [file, setFile] = useState(null);
-  // const [viewFile, setViewFile] = useState(null);
-
   const handleFileChange = (e) => {
-    console.log(e.target.files[0]);
-    setFile(e.target.files[0]);
-
-    // if (file) {
-    //   const reader = new FileReader();
-    //   reader.onload = (e) => {
-    //     setViewFile(e.target.result);
-    //   };
-    //   reader.readAsDataURL(viewFile);
-    // }
+    setNext(e.target.nextElementSibling); // input 태그의 뒤에 있는 요소 선택(img 태그)
+    setFile(e.target.files[0]); // file 변수에 입력된 파일 저장
   };
+
+  useEffect(() => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        next.src = e.target.result; // 읽은 파일의 64코드를 img태그의 src속성에 대입
+      };
+      reader.readAsDataURL(file); // 파일 읽기 시도
+    }
+  }, [file]);
 
   return (
     <UpdateStyle>
@@ -122,12 +113,14 @@ const Update = () => {
                   style={{ display: "none" }}
                   onChange={handleFileChange}
                 />
-                <img
-                  className="profileimg"
-                  src={`/upload/${user.profile.split("\\").pop()}`}
-                  alt="Profile"
-                  onClick={handleImageClick}
-                />
+                {user && user.profile && (
+                  <img
+                    className="profileimg"
+                    src={`/upload/${user.profile.split("\\").pop()}`}
+                    alt="Profile"
+                    onClick={handleImageClick}
+                  />
+                )}
               </div>
             </div>
 
@@ -143,6 +136,9 @@ const Update = () => {
                   aria-describedby="passwordHelpInline"
                   name="password"
                   required
+                  onChange={(e) => {
+                    setPw(e.target.value);
+                  }}
                 />
               </div>
             </div>
@@ -159,6 +155,9 @@ const Update = () => {
                   aria-describedby="passwordHelpInline"
                   name="nickname"
                   required
+                  onChange={(e) => {
+                    setNick(e.target.value);
+                  }}
                 />
               </div>
             </div>

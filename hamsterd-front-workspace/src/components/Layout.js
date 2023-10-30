@@ -36,7 +36,7 @@ const Layout = () => {
         </div>
       </div>
     </LayoutTest>
-  );//
+  ); //
 };
 
 export default Layout;

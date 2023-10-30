@@ -90,10 +90,10 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const home = () => {
-    // 로고 //클릭시 메인페이지 이동
-    navigate("/");
-  };
+  // const home = () => {
+  //   // 로고 //클릭시 메인페이지 이동
+  //   navigate("/");
+  // };
 
   const logout = () => {
     console.log("logout!");
@@ -125,7 +125,12 @@ const Header = () => {
 
       <div className="header-section">
         <div id="logo">
-          <img className="logoimg" src={logo} alt="Logo" />
+          <img
+            className="logoimg"
+            src={logo}
+            alt="Logo"
+            onClick={() => navigate("/")}
+          />
         </div>
         <div className="realheader">
           <div className="header">
@@ -134,7 +139,7 @@ const Header = () => {
                 <Link to="/mypage">마이 페이지</Link>
               </div>
               <div className="submenu">
-                <a href="#">마이페이지</a>
+                <a href="/mypage">마이페이지</a>
                 <Link to="/update">개인정보수정</Link>
                 <Link to="/fire">탈퇴</Link>
               </div>
@@ -159,7 +164,7 @@ const Header = () => {
             </div>
             <div className="menu" id="social">
               <div className="submenu1">
-              <a onClick={logout}>로그아웃</a>
+                <a onClick={logout}>로그아웃</a>
               </div>
             </div>
           </div>

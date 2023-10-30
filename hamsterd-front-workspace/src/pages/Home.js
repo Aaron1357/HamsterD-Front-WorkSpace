@@ -8,14 +8,14 @@ const HomeTest = styled.div`
     flex-direction: column;
     justify-content: center;
     color: var(--grey-blue-60, #6b7a99);
-  }//
+  } //
   /* 하단 메인페이지 */
   .main-section {
     display: flex;
     width: 100%;
     height: 900px;
   }
-//
+  //
   .section {
     border: 1px solid var(--grey-blue-95, #edeff2);
     border-radius: 20px;
@@ -158,11 +158,6 @@ const HomeTest = styled.div`
   }
 `;
 
-
-
-
-
-
 const Home = () => {
   return (
     <HomeTest>
@@ -228,52 +223,6 @@ const Home = () => {
           </div>
         </div>
       </div>
-      {/* 스터디 그룹에 넣기
-      <div classNameName="section" id="section2">
-        <div classNameName="searchsection">
-          <form id="section2-search">
-            <input
-              type="text"
-              id="search"
-              placeholder="검색하고 싶은 그룹을 입력하세요."
-            />
-            <button>
-              <img src="resources/search.png" />
-            </button>
-          </form>
-        </div>
-        <div classNameName="content">
-          <div classNameName="container">
-            <div classNameName="title">
-              <img src="resources/로고안경.png" />
-              <h1>"N"번 그룹 정보</h1>
-            </div>
-
-            <div>
-              <h3>그룹 이름 :</h3>
-              <h3>멤버수 :</h3>
-              <h3>발자국 :</h3>
-            </div>
-            <div classNameName="infordiv">
-              <div classNameName="btn1">
-                <a href="studyGroup_search.html" id="next2">
-                  스터디그룹 평가
-                </a>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="studyGroup_search.html" id="next2">
-                  그룹 스케쥴
-                </a>
-              </div>
-              <br />
-              <br />
-              <br />
-              <a href="studyGroup_search.html" id="next">
-                스터디그룹 목록으로 돌아가기
-              </a>
-            </div>
-          </div>
-        </div>
-      </div> */}
     </HomeTest>
   );
 };

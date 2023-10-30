@@ -69,7 +69,8 @@ const StyleTest = styled.div`
 `;
 
 function ModalSub(props) {
-  // const save = localStorage.getItem("user"); // 로컬스토리지에 user정보 호출
+  const [id, setId] = useState([]);
+  const [password, setPw] = useState([]);
   const [isOpen, setIsOpen] = useState(true); // Modal 표시여부
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -104,9 +105,6 @@ function ModalSub(props) {
     // 로그인 버튼 클릭시 로그인
     e.preventDefault();
 
-    const id = e.target.elements.id.value; //아이디
-    const password = e.target.elements.password.value; //비번
-
     // 로그인 시도
     dispatch(asyncLogin({ id, password }));
     navigate("/");
@@ -139,6 +137,9 @@ function ModalSub(props) {
                 type="text"
                 placeholder="  아이디를 입력하세요.."
                 name="id"
+                onChange={(e) => {
+                  setId(e.target.value);
+                }}
               ></input>
               <br></br> <br></br>
               <input
@@ -146,6 +147,9 @@ function ModalSub(props) {
                 type="password"
                 placeholder="  비밀번호를 입력하세요.."
                 name="password"
+                onChange={(e) => {
+                  setPw(e.target.value);
+                }}
               ></input>
               <br></br>
               <br></br>
