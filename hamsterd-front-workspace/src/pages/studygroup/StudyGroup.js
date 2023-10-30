@@ -206,11 +206,7 @@ const StudyGroup = () => {
     const result1 = await viewMemberList(groupNo);
     const result2 = await viewStudyGroup(groupNo);
     const result3 = await viewManager(groupNo);
-    const avg = 0;
-
-    if ((await getGroupReviewList(groupNo)) != null) {
-      avg = await getGroupAVG(groupNo);
-    }
+    const avg = await getGroupAVG(groupNo);
 
     console.log(avg);
     navigate("/grouppage", {
