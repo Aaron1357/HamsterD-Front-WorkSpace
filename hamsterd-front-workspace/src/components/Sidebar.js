@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { viewMemberList, viewStudyGroup } from "../api/studygroup";
 import { useSelector } from "react-redux";
-
+import academy1 from "../resource/222.JPG";
+import academy2 from "../resource/22222.JPG";
+import academy3 from "../resource/ㅁㄴㅇ.JPG";
+import academy4 from "../resource/설겜아.JPG";
 const Test2 = styled.div`
   /* 로고영역 */
   #logo {
@@ -29,6 +32,7 @@ const Test2 = styled.div`
     );
 
     height: 700px;
+  
     margin-top: 3px;
     padding: 30px;
     color: rgba(211, 157, 87);
@@ -38,10 +42,11 @@ const Test2 = styled.div`
   /*사이드바 */
   #section3 {
     width: 0px;
-    min-width: 200px;
+    min-width: 400px;
     display: flex;
     flex-direction: column;
     margin: 30px 100px 0 50px;
+    height: 1000px;
   }
 
   .myimg {
@@ -61,7 +66,8 @@ const Test2 = styled.div`
   .myinfo {
     width: 100%;
     height: 100%;
-    padding-top: 30px;
+    margin-top: -40px;
+    padding-top: 0px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -69,16 +75,12 @@ const Test2 = styled.div`
   }
 
   .myinfo div {
-    border: 3px solid rgba(211, 157, 87);
-    border-radius: 10px;
-    box-shadow: var(
-      --shadows-gray-blue-3-5-b-box-shadow,
-      0px 2px 5px 0px rgba(38, 51, 77, 0.03)
-    );
+    
+   
     width: 100%;
-    height: 50px;
+    height: 100px;
     margin-bottom: 20px;
-    margin-top: 20px;
+    margin-top: 100px;
     line-height: 45px;
     display: flex;
     justify-content: center;
@@ -96,6 +98,12 @@ const Test2 = styled.div`
   }
   width: 600px;
   margin-top: -10px;
+.banner
+  {
+  width: 350px;
+  height: 110px;
+  
+  }
 `;
 
 const Sidebar = () => {
@@ -136,14 +144,19 @@ const Sidebar = () => {
         <div className="main-section">
           <div className="section" id="section3">
             <div className="myinfo">
-              <div className="mystudy" onClick={myStudyGroup}>
-                내 스터디
+              <div className="mystudy">
+              <img className="banner" src={academy3}></img>
               </div>
-
-              <div className="myweight">내 몸무게</div>
-              <div className="mycalender">내 일정</div>
-              <div className="mypost">내 게시글</div>
-              <div className="mycomment">내 댓글</div>
+              <div className="myweight">
+              <img className="banner" src={academy2}></img>
+              </div>
+              <div className="mycalender">
+                <img className="banner" src={academy1}></img>
+              </div>
+              <div className="mypost">
+              <img className="banner"  src={academy4}></img>
+              </div>
+            
             </div>
           </div>
         </div>
