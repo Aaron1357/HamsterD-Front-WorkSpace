@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import styled from "styled-components";
-import logo from "../resource/logo.jpg";
+import logo from "../resource/로고 투명.png";
 import { Link, useNavigate } from "react-router-dom";
 import ModalSub from "../components/ModalSub";
 import { userLogout } from "../store/userSlice";
@@ -33,22 +33,22 @@ const Test = styled.div`
   #logo {
     width: 400px;
     min-width: 370px;
-    margin-left: 100px;
+    margin-left: 40px;
     display: flex;
+    margin-top: 50px;
     justify-content: center;
-    height: 350px;
   }
 
   #logo img {
-    width: 600px;
-
+    width: 300px;
+    height: 67px;
     margin-left: -90px;
     border-radius: 40px;
   }
 
   .menu a {
     text-decoration: none;
-    color: rgba(211, 157, 87);
+    color: rgba(0, 90, 153, 72);
     font-family: fantasy;
   }
 
@@ -159,12 +159,15 @@ const Header = () => {
                 <Link to="/studygroup">스터디그룹</Link>
               </div>
               <div className="submenu">
-                <Link to="/groupreview">그룹평가</Link>
+                <Link to="/groupreview">{""}</Link>
               </div>
             </div>
             <div className="menu" id="social">
               <div className="submenu1">
                 <Link onClick={logout}>로그아웃</Link>
+                <div className="submenu">
+                  <Link to="/groupreview">{""}</Link>
+                </div>
               </div>
             </div>
           </div>

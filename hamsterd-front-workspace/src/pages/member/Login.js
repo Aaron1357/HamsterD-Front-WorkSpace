@@ -35,7 +35,8 @@ const Login = () => {
     navigate("/signup");
   };
   return (
-    <LoginStyle>//
+    <LoginStyle>
+      //
       <div className="mainsection">
         <div className="section" id="section2">
           <form className="Login">

@@ -43,6 +43,7 @@ export const deleteMember = async (id) => {
   return await instance.delete(`member/${id}`);
 };
 
+//memberNo으로 member정보 가져오기
 export const showMemberbyMemberNO = async (memberNo) => {
   const result = await instance.get(`member/memberno/${memberNo}`);
   return result.data;

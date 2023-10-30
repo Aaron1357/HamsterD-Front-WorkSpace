@@ -25,12 +25,12 @@ const FireTest = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 1px solid rgba(211, 157, 87);
+    border: 1px solid rgba(0, 90, 153, 72);
     border-radius: 20px;
     width: 1600px;
     height: 100vh;
     margin-top: 30px;
-    color: rgba(211, 157, 87);
+    color: rgba(0, 90, 153, 72);
   }
 
   #fireBtn {

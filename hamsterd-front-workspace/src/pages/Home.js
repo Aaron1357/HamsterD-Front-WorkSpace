@@ -162,15 +162,6 @@ const Home = () => {
   return (
     <HomeTest>
       <div className="section" id="section2">
-        <div className="searchsection">
-          <form id="section2-search">
-            <input type="text" id="search" placeholder="검색어를 입력하세요." />
-            <button>
-              <img src="resources/search.png" />
-            </button>
-          </form>
-        </div>
-
         <div className="news-section" id="news">
           <div className="news1">
             <div className="news-top" id="news-top2">

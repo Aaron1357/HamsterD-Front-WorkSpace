@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 const LayoutTest = styled.div`
   .allforone {
-    background-color: rgba(242, 242, 240);
+    background-color: rgba(251, 251, 251, 236);
     height: 200vh;
     //
   }
