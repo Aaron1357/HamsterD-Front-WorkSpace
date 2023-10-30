@@ -34,7 +34,7 @@ const ReviewPage = (props) => {
               <tr key={item.groupRevNo} id={item.groupRevNo} className="review">
                 <td style={{ width: "100px" }}>별 {item.groupScore}개</td>
                 <td style={{ width: "300px" }}>{item.review}</td>
-                <td style={{ width: "100px" }}>{item.member.nickname} 님</td>
+                <td style={{ width: "200px" }}>{item.member.nickname} 님</td>
               </tr>
             ))}
           </tbody>
