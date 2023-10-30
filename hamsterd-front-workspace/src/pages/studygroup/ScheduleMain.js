@@ -183,24 +183,30 @@ const ScheduleMain = (props) => {
   const navigate = useNavigate();
 
   const [groupNo, setGroupNo] = useState(props.groupNo);
+
+  // 특정 그룹의 schedule 목록 받아오기(캘린더용 목록용)
+  const [schedulesOfGroup, setschedulesOfGroup] = useState([]);
+
+  // 캘린더에 표시할 배열 새로 만들기 위해 변수 지정(full-calendar 라이브러리에 맞게)
+  const [newSchedules, setNewSchedules] = useState([]);
+
+  // 특정 그룹의 schedule 목록 받아오기(목록 표시용)
+  const [schedulesOfGroup2, setschedulesOfGroup2] = useState([]);
+
   const [scheduleDate, setScheduleDate] = useState();
+
   const [scheduleNo, setScheduleNo] = useState(0);
 
-  console.log("scheduleMain groupNo : " + groupNo);
-  // 유저 정보(수정, 삭제 활성화 위해)
+  // 유저 정보
   const user = JSON.parse(localStorage.getItem("user"));
-  const userid = user.id;
 
-  // 검색 필터
-  const [filter, setFilter] = useState("title");
-  const [searchKeyword, setsearchKeyword] = useState();
+
 
   // 목록의 추가(+) 버튼 클릭 시 schedule 등록 폼으로 이동
   const onClick = async () => {
-    const result = await showMember(userid);
-    const num = result["studyGroup"]["groupNo"];
+    const userGroupNo = user.studyGroup.groupNo;
 
-    if (num == groupNo) {
+    if (userGroupNo == groupNo) {
       navigate("/schedule", {
         state: {
           groupNo: groupNo,
@@ -212,19 +218,14 @@ const ScheduleMain = (props) => {
     }
   };
 
-  // 특정 그룹의 schedule 목록 받아오기(캘린더용 목록용)
-  const [schedulesOfGroup, setschedulesOfGroup] = useState([]);
 
-  // 특정 그룹의 schedule 목록 받아오기(목록 표시용)
-  const [schedulesOfGroup2, setschedulesOfGroup2] = useState([]);
 
   // schedule 1개 상세 조회(수정, 삭제화면 넘기기 위해)
   const [schedule, setSchedule] = useState();
 
-  // 캘린더에 표시할 배열 새로 만들기 위해 변수 지정(full-calendar 라이브러리에 맞게)
-  const [newSchedules, setNewSchedules] = useState([]);
 
-  // 특정 그룹 목록 받아오는 로직(groupNo 넘김) + 날짜 변경처리
+
+  // 특정 그룹 목록 받아오는 api + 날짜 변경처리
   const scheduleOfGroupAPI = async () => {
     const result = await getScheduleOfGroup(groupNo);
 
@@ -235,9 +236,9 @@ const ScheduleMain = (props) => {
       newDate.setDate(newDate.getDate());
 
       const date = new Date(newDate);
-      const year = date.getFullYear().toString().slice(-4); // 년도의 마지막 두 자리를 가져옴
-      const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 +1 해주고, 두 자리로 맞춤
-      const day = date.getDate().toString().padStart(2, "0"); // 일도 두 자리로 맞춤
+      const year = date.getFullYear().toString().slice(-4);
+      const month = (date.getMonth() + 1).toString().padStart(2, "0"); 
+      const day = date.getDate().toString().padStart(2, "0"); 
 
       const yyyymmdd = year + "-" + month + "-" + day;
 
@@ -250,8 +251,8 @@ const ScheduleMain = (props) => {
       };
     });
 
-    setschedulesOfGroup(data);
-    setschedulesOfGroup2(data);
+    setschedulesOfGroup(data); // 캘린더용
+    setschedulesOfGroup2(data); // 목록용
   };
 
   // 처음 화면 띄울때 그룹별 일정 목록 받아옴
@@ -260,7 +261,6 @@ const ScheduleMain = (props) => {
   }, []);
 
   // 캘린더용 그룹별 일정 목록
-  // 특정 그룹 목록 받아오는 로직(groupNo 넘김) + 날짜 변경처리
   // array.map으로 새로 배열만들기(배열 내 key 이름 일치시키기 위해서)
   const newList = schedulesOfGroup.map((item) => {
     return {
@@ -279,18 +279,15 @@ const ScheduleMain = (props) => {
 
   //특정 날짜 클릭시 발생하는 event 추가
   const handleDateClick = (arg) => {
-    // console.log(arg);
     //console.log(arg.date); // Mon Oct 23 2023 00:00:00 GMT+0900
 
     const date = new Date(arg.date);
-    const year = date.getFullYear().toString().padStart(4); // 년도의 마지막 두 자리를 가져옴
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 +1 해주고, 두 자리로 맞춤
-    const day = date.getDate().toString().padStart(2, "0"); // 일도 두 자리로 맞춤
-
+    const year = date.getFullYear().toString().padStart(4); 
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); 
+    const day = date.getDate().toString().padStart(2, "0"); 
     const yymmdd = year + month + day;
 
-    setScheduleDate(yymmdd); // api에 scheduleDate yymmdd 형태로 넘김
-
+    setScheduleDate(yymmdd);
     scheduleOfGroupDateAPI(groupNo, yymmdd);
   };
 
@@ -304,15 +301,12 @@ const ScheduleMain = (props) => {
       const newDate = new Date(originalDate);
       newDate.setDate(newDate.getDate());
 
-      //console.log("newDate : " + newDate);
-
       const date = new Date(newDate);
-      const year = date.getFullYear().toString().slice(-4); // 년도의 마지막 두 자리를 가져옴
-      const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 +1 해주고, 두 자리로 맞춤
-      const day = date.getDate().toString().padStart(2, "0"); // 일도 두 자리로 맞춤
+      const year = date.getFullYear().toString().slice(-4);
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
 
       const yyyymmdd = year + "-" + month + "-" + day;
-      //console.log(yyyymmdd);
       return {
         scheduleNo: item.scheduleNo,
         scheduleTitle: item.scheduleTitle,
@@ -321,7 +315,7 @@ const ScheduleMain = (props) => {
         nickname: item.member.nickname,
       };
     });
-    setschedulesOfGroup2(data); // 캘린더는 전체 목록으로 두고 우측 목록만 특정 날짜의 목록으로 변경
+    setschedulesOfGroup2(data);
   };
 
   useEffect(() => {
@@ -332,10 +326,7 @@ const ScheduleMain = (props) => {
 
   // eventClick 함수
   const handleEventClick = async (info) => {
-    // console.log("info.event : " + info.event.groupId);
-    // console.log("groupNo : " + groupNo);
     const scheduleData = await getOneScheduleAPI(groupNo, info.event.groupId);
-    // console.log("scheduleData : " + scheduleData);
 
     navigate("/schedule", {
       state: {
@@ -356,12 +347,10 @@ const ScheduleMain = (props) => {
 
   // 캘린더 상단 + 버튼 클릭시 등록 폼으로 이동(내 그룹일때만)
   const handleAddEvent = async () => {
-    console.log(userid);
 
-    const result = await showMember(userid);
-    const num = result["studyGroup"]["groupNo"];
+    const userGroupNo = user.studyGroup.groupNo;
 
-    if (num == groupNo) {
+    if (userGroupNo == groupNo) {
       navigate("/schedule", {
         state: {
           groupNo: groupNo,
@@ -386,10 +375,15 @@ const ScheduleMain = (props) => {
     });
   };
 
+  // 검색 필터
+  const [filter, setFilter] = useState("title");
+
   // 검색 필터 선택 시 필터값 처리하는 함수
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
   };
+
+  const [searchKeyword, setsearchKeyword] = useState();
 
   // 검색 버튼 클릭 시 search api 적용하는 함수
   // 우측 목록만 검색결과 나오게
@@ -399,7 +393,6 @@ const ScheduleMain = (props) => {
       if (filter === "title") {
         const result = await getScheduleByTitle(groupNo, searchKeyword);
         if (result.data.length !== 0) {
-          //목록에 맞게 배열 새로 만듦
           const data = result.data.map((item) => {
             const originalDate = new Date(item.scheduleDate);
 
@@ -407,9 +400,9 @@ const ScheduleMain = (props) => {
             newDate.setDate(newDate.getDate());
 
             const date = new Date(newDate);
-            const year = date.getFullYear().toString().slice(-4); // 년도의 마지막 두 자리를 가져옴
-            const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 +1 해주고, 두 자리로 맞춤
-            const day = date.getDate().toString().padStart(2, "0"); // 일도 두 자리로 맞춤
+            const year = date.getFullYear().toString().slice(-4); 
+            const month = (date.getMonth() + 1).toString().padStart(2, "0"); 
+            const day = date.getDate().toString().padStart(2, "0"); 
 
             const yyyymmdd = year + "-" + month + "-" + day;
 
@@ -437,9 +430,9 @@ const ScheduleMain = (props) => {
             newDate.setDate(newDate.getDate());
 
             const date = new Date(newDate);
-            const year = date.getFullYear().toString().slice(-4); // 년도의 마지막 두 자리를 가져옴
-            const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 +1 해주고, 두 자리로 맞춤
-            const day = date.getDate().toString().padStart(2, "0"); // 일도 두 자리로 맞춤
+            const year = date.getFullYear().toString().slice(-4); 
+            const month = (date.getMonth() + 1).toString().padStart(2, "0"); 
+            const day = date.getDate().toString().padStart(2, "0"); 
 
             const yyyymmdd = year + "-" + month + "-" + day;
 
@@ -466,9 +459,9 @@ const ScheduleMain = (props) => {
             newDate.setDate(newDate.getDate());
 
             const date = new Date(newDate);
-            const year = date.getFullYear().toString().slice(-4); // 년도의 마지막 두 자리를 가져옴
-            const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 +1 해주고, 두 자리로 맞춤
-            const day = date.getDate().toString().padStart(2, "0"); // 일도 두 자리로 맞춤
+            const year = date.getFullYear().toString().slice(-4); 
+            const month = (date.getMonth() + 1).toString().padStart(2, "0"); 
+            const day = date.getDate().toString().padStart(2, "0");
 
             const yyyymmdd = year + "-" + month + "-" + day;
 
@@ -510,7 +503,7 @@ const ScheduleMain = (props) => {
                   click: handleAddEvent,
                 },
               }}
-              events={newList} // 해당 날짜에 일정 표시하는 기능
+              events={newList} 
               dateClick={handleDateClick}
               eventClick={handleEventClick}
             />
@@ -558,7 +551,7 @@ const ScheduleMain = (props) => {
                   <th scope="col" width="50">
                     <FontAwesomeIcon
                       icon={faPlus}
-                      onClick={() => onClick(userid)}
+                      onClick={onClick}
                     />
                   </th>
                   <th scope="col" width="150">
@@ -586,7 +579,6 @@ const ScheduleMain = (props) => {
                     <td>{item.nickname}</td>
                   </tr>
                 ))}
-                {/* <div ref={ref}></div> */}
               </tbody>
             </table>
           </div>

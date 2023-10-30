@@ -144,10 +144,6 @@ const Update = () => {
   const [content, setContent] = useState(schedule.scheduleContent);
   const [date, setDate] = useState(schedule.scheduleDate);
 
-  // console.log("groupNo" + groupNo);
-  // console.log("scheduleNo : " + scheduleNo);
-  // 스터디그룹, 스케줄넘버(임의 지정 - scheduleMain에서 eventClick 이벤트 실행 시 groupNo, scheduleNo 넘겨받아야 함)
-
   // 수정 버튼
   const updateEvent = async () => {
     const result1 = await viewMemberList(groupNo);
@@ -162,7 +158,7 @@ const Update = () => {
     formData.append("scheduleNo", location.state.scheduleNo);
     formData.append("token", token);
 
-    await updateSchedule(formData); // 비동기 작업 완료 대기
+    await updateSchedule(formData);
     navigate("/grouppage", {
       state: {
         data: groupNo,
@@ -178,18 +174,14 @@ const Update = () => {
     const result2 = await viewStudyGroup(groupNo);
 
     if (scheduleNo) {
-      try {
-        await deleteSchedule(scheduleNo); // 비동기 작업 완료 대기
-        navigate("/grouppage", {
-          state: {
-            data: groupNo,
-            members: result1,
-            group: result2,
+      await deleteSchedule(scheduleNo);
+      navigate("/grouppage", {
+        state: {
+          data: groupNo,
+          members: result1,
+          group: result2,
           },
-        });
-      } catch (error) {
-        console.error("오류 발생 : " + error);
-      }
+      });
     }
   };
 
@@ -332,7 +324,7 @@ const Add = () => {
     // 멤버 정보 담기 위해 token 같이 담아서 전송
     formData.append("token", token);
 
-    await addSchedule(formData); // 비동기 작업 완료 대기
+    await addSchedule(formData);
     navigate("/grouppage", {
       state: {
         data: groupNo,
@@ -408,9 +400,6 @@ const Schedule = () => {
 
   const groupNo = location.state?.groupNo;
   const scheduleNo = location.state?.scheduleNo;
-
-  // console.log("groupNo : " + groupNo);
-  // console.log("scheduleNo : " + scheduleNo);
 
   const renderUpdateOrAdd = () => {
     if (groupNo && scheduleNo) {

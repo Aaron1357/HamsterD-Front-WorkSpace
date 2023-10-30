@@ -54,17 +54,15 @@ const CommentStyle = styled.div`
 `;
 
 const GroupComment = (props) => {
-  // 그룹별 댓글 목록
-  const [gComments, setgComments] = useState([]);
-
   // 현재 들어온 grouppage에 해당하는 그룹넘버를 초기값으로 담음
   const [groupNo, setGroupNo] = useState(props.groupNo);
 
-  // 댓글 입력값
-  const [newComment, setNewComment] = useState();
+  // 그룹별 댓글 목록
+  const [gComments, setgComments] = useState([]);
 
   // 유저 정보(수정, 삭제 활성화 위해)
   const token = localStorage.getItem("token");
+
   const user = JSON.parse(localStorage.getItem("user"));
   const id = user.id;
 
@@ -79,7 +77,7 @@ const GroupComment = (props) => {
 
   useEffect(() => {
     gCommentOfGroup();
-  }, [groupNo]);
+  }, []);
 
   // 댓글 작성
   const creategComment = async (e) => {
@@ -90,15 +88,10 @@ const GroupComment = (props) => {
       formData.append("groupNo", groupNo);
       formData.append("token", token);
 
-      console.log(formData);
-
-      try {
-        await addgComment(formData);
-        gCommentOfGroup();
-        e.target.value = null;
-      } catch (error) {
-        console.error("오류 발생 : ", error);
-      }
+      await addgComment(formData);
+      gCommentOfGroup();
+      e.target.value = null;
+      
     } else {
       alert("댓글을 입력해주세요!");
     }
@@ -120,6 +113,9 @@ const GroupComment = (props) => {
     }
   };
 
+  // 댓글 입력값
+  const [newComment, setNewComment] = useState();
+
   const handler = async (e) => {
     setNewComment(e.target.value);
   };
@@ -129,7 +125,6 @@ const GroupComment = (props) => {
   const openUpdate = async (e) => {
     setSelectedCommentNo(e.target.closest(".comment").id);
   };
-  console.log("selectedCommentNo : " + selectedCommentNo);
 
   const closeTab = () => {
     setSelectedCommentNo(0);
@@ -137,13 +132,9 @@ const GroupComment = (props) => {
 
   // 댓글 삭제(아래에서 유저 정보 확인하여 일치할때만 활성화 처리)
   const minusgComment = async (gcommentNo) => {
-    try {
       await deletegComment(gcommentNo);
       gCommentOfGroup();
       setNewComment("");
-    } catch (error) {
-      console.error("오류 발생 : " + error);
-    }
   };
 
   return (
@@ -170,8 +161,6 @@ const GroupComment = (props) => {
               <div className="index">{index + 1}</div>
               <div className="commentContent">{item.commentContent}</div>
               <div className="nickName">{item.member.nickname}</div>
-              {/* <button onClick={openUpdate}>수정</button>
-                <button>삭제</button> */}
               {id == item.member.id ? (
                 <button onClick={openUpdate}>수정</button>
               ) : null}
@@ -192,8 +181,6 @@ const GroupComment = (props) => {
               id={`${item.gcommentNo}`}
               className="comment"
             >
-              {/* {console.log("selected " + selectedCommentNo)}
-              {console.log("item " + item.gcommentNo)} */}
               {selectedCommentNo == item.gcommentNo ? (
                 <div className="comment">
                   <div className="index">{index + 1}</div>
@@ -206,8 +193,6 @@ const GroupComment = (props) => {
                     />
                   </div>
                   <div className="nickName">{item.member.nickname}</div>
-                  {/* <button onClick={update}>수정</button>
-                  <button>삭제</button> */}
                   {id == item.member.id ? (
                     <button onClick={update}>수정</button>
                   ) : null}
