@@ -59,13 +59,13 @@ const CreateGroup = () => {
     const response = await addStudyGroup(formData); // 비동기 작업 완료 대기
 
     // 계정 수정 -> 감으로 수정
-    user.studyGroup = response.data.groupNo;
+    // user.studyGroup = response.data.groupNo;
     // localStorage.setItem("user", user);
     //   setImage(response.data.image);
 
     console.log(user);
 
-    navigate("/"); // 파일 업로드가 완료되면 페이지 이동
+    navigate("/studygroup"); // 파일 업로드가 완료되면 페이지 이동
     // } catch (error) {
     //   // 에러 처리
     //   console.error("파일 업로드 중 오류 발생:", error);
