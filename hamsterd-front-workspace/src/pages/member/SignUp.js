@@ -6,11 +6,11 @@ import { regExpId, regExpPw, ConfirmPw } from "./regExp";
 
 const SignUpStyle = styled.div`
   .mainsection {
-    border: 1px solid rgba(211, 157, 87);
+    border: 1px solid rgba(0, 90, 153, 72);
     border-radius: 20px;
     width: 1600px;
     margin-top: 30px;
-    color: rgba(211, 157, 87);
+    color: rgba(0, 90, 153, 72);
     //
   }
   .section {
@@ -62,15 +62,15 @@ const SignUp = () => {
         academyName: academy,
         address: address,
         profile:
-        "D:\\Aaron1357\\HamsterD-Front-WorkSpace\\hamsterd-front-workspace\\public\\upload\\hamster.png",
+          "D:\\HamsterD-Front-WorkSpace\\hamsterd-front-workspace\\public\\upload\\hamster.png",
       };
 
       console.log(formData2);
 
       // console.log(formData2.id);
 
-       addMember(formData2);
-       navigate("/");
+      addMember(formData2);
+      navigate("/");
     } else {
       // 중복확인이 되지 않았을때
       alert("중복확인을 먼저 해주세요!!");
@@ -215,7 +215,6 @@ const SignUp = () => {
                   setPw(e.target.value);
                 }}
                 required
-                
               />
               {validPw ? (
                 <span style={{ color: "green" }}>사용가능!</span>

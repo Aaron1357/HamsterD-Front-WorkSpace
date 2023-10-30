@@ -9,13 +9,13 @@ const MypageTest = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 1px solid rgba(211, 157, 87);
+    border: 1px solid rgba(0, 90, 153, 72);
     border-radius: 20px;
     width: 1600px;
     margin-top: 30px;
-    color: rgba(211, 157, 87);
+    color: rgba(0, 90, 153, 72);
     // 메인콘테이너//
-  }//
+  } //
 
   .profileimg {
     justify-content: center;
@@ -54,11 +54,11 @@ const MypageTest = styled.div`
     padding-top: 10px;
     padding-bottom: 10px;
     // 닉네임 표기부분 공백
-    border: 1px solid rgba(211, 157, 87);
+    border: 1px solid rgba(0, 90, 153, 72);
     border-radius: 20px;
     width: auto;
     margin-top: 30px;
-    color: rgba(211, 157, 87);
+    color: rgba(0, 90, 153, 72);
     //닉네임 테두리
   }
 
@@ -84,10 +84,10 @@ const MypageTest = styled.div`
     padding-top: 10px;
     padding-bottom: 10px;
     // 아이디 표기부분 공백
-    border: 1px solid rgba(211, 157, 87);
+    border: 1px solid rgba(0, 90, 153, 72);
     border-radius: 20px;
     width: auto;
-    color: rgba(211, 157, 87);
+    color: rgba(0, 90, 153, 72);
     //아이디 색
   }
 

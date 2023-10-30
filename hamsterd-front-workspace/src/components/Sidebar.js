@@ -24,7 +24,8 @@ const Test2 = styled.div`
     top: -10px;
   } //
   .section {
-    border: 4px solid rgba(211, 157, 87);
+    border: 4px solid rgba(0, 90, 153, 72);
+    color: rgba(0, 90, 153, 72);
     border-radius: 20px;
     box-shadow: var(
       --shadows-gray-blue-3-5-b-box-shadow,
@@ -32,10 +33,10 @@ const Test2 = styled.div`
     );
 
     height: 700px;
-  
+
     margin-top: 3px;
     padding: 30px;
-    color: rgba(211, 157, 87);
+    color: rgba(0, 90, 153, 72);
     font-weight: bold;
   }
 
@@ -75,8 +76,6 @@ const Test2 = styled.div`
   }
 
   .myinfo div {
-    
-   
     width: 100%;
     height: 100px;
     margin-bottom: 20px;
@@ -89,20 +88,18 @@ const Test2 = styled.div`
 
   .main-page {
     width: 600px;
-    margin-top: -10px;
+    margin-top: -140px;
   }
   .btn {
-    color: rgba(211, 157, 87);
+    color: rgba(0, 90, 153, 72);
   }
   .main-page {
   }
   width: 600px;
   margin-top: -10px;
-.banner
-  {
-  width: 350px;
-  height: 110px;
-  
+  .banner {
+    width: 350px;
+    height: 110px;
   }
 `;
 
@@ -145,18 +142,17 @@ const Sidebar = () => {
           <div className="section" id="section3">
             <div className="myinfo">
               <div className="mystudy">
-              <img className="banner" src={academy3}></img>
+                <img className="banner" src={academy3}></img>
               </div>
               <div className="myweight">
-              <img className="banner" src={academy2}></img>
+                <img className="banner" src={academy2}></img>
               </div>
               <div className="mycalender">
                 <img className="banner" src={academy1}></img>
               </div>
               <div className="mypost">
-              <img className="banner"  src={academy4}></img>
+                <img className="banner" src={academy4}></img>
               </div>
-            
             </div>
           </div>
         </div>

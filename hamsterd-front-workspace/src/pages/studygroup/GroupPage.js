@@ -8,6 +8,7 @@ import ScheduleMain from "./ScheduleMain";
 import { useSelector } from "react-redux";
 import {
   fireGroup,
+  getGroupAVG,
   joinGroup,
   showEval,
   viewManager,
@@ -19,11 +20,11 @@ import { showMemberbyMemberNO } from "../../api/member";
 
 const GroupPageTest = styled.div`
   .mainsection {
-    border: 1px solid rgba(211, 157, 87);
+    border: 1px solid rgba(0, 90, 153, 72);
     border-radius: 20px;
     width: 1600px;
     margin-top: 30px;
-    color: rgba(211, 157, 87);
+    color: rgba(0, 90, 153, 72);
     //
   }
   .btn {
@@ -191,6 +192,7 @@ const GroupPage = () => {
   const members = location.state.members;
   const group = location.state.group;
   const manager = location.state.manager;
+  const avg = location.state.avg;
 
   // setGroupNo = number;
   const [groupNo, setGroupNo] = useState(number);
@@ -206,7 +208,6 @@ const GroupPage = () => {
 
     if (user.studyGroup != null && user.studyGroup.groupNo == number) {
       alert("해당 스터디그룹에 이미 가입되어있습니다.");
-      
     } else if (user.studyGroup != null) {
       alert("다른 스터디그룹에 이미 가입되어있습니다.");
     } else {
@@ -249,9 +250,8 @@ const GroupPage = () => {
   };
 
   const groupReview = async () => {
+    console.log(user.memberNo);
     const check = await showEval(user.memberNo);
-
-    console.log(check.data);
 
     if (user.studyGroup != null && user.studyGroup.groupNo != number) {
       alert("해당 스터디그룹의 멤버만 평가할 수 있습니다.");
@@ -312,7 +312,7 @@ const GroupPage = () => {
                   <div id="groupname">{group.groupName}</div>
 
                   <div id="grouppoint">
-                    그룹 점수 ex 4.7점 &nbsp;&nbsp;&nbsp;그룹인원{" "}
+                    그룹 점수 {avg}점 &nbsp;&nbsp;&nbsp;그룹인원{" "}
                     {members.length}명
                   </div>
                   <div className="btn">
@@ -328,7 +328,7 @@ const GroupPage = () => {
                 </div>
               </div>
               <div id="info">
-                <div id="info2">'그룹 소개' ex 우리는 멋진 오리에요! </div>
+                <div id="info2">그룹 소개 : {group.groupContent} </div>
                 <br />
                 <div className="group-container">
                   {members.map((item, index) => (

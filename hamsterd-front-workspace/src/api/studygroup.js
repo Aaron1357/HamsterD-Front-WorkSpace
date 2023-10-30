@@ -71,5 +71,11 @@ export const getGroupReviewList = async (groupNo) => {
 
 // 개인 스터디그룹 평가 받아오기
 export const showEval = async (id) => {
-  return await instance.get(`groupeval/memberNo/${id}`);
+  return await instance.get(`groupeval/memberno/${id}`);
+};
+
+// 스터디그룹 평가 평균값 받아오기
+export const getGroupAVG = async (groupNo) => {
+  const result = await instance.get(`groupeval/avg/${groupNo}`);
+  return result.data;
 };
