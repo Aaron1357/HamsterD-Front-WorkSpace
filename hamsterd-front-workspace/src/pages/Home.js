@@ -8,14 +8,14 @@ const HomeTest = styled.div`
     flex-direction: column;
     justify-content: center;
     color: var(--grey-blue-60, #6b7a99);
-  }//
+  } //
   /* 하단 메인페이지 */
   .main-section {
     display: flex;
     width: 100%;
     height: 900px;
   }
-//
+  //
   .section {
     border: 1px solid var(--grey-blue-95, #edeff2);
     border-radius: 20px;
@@ -158,18 +158,10 @@ const HomeTest = styled.div`
   }
 `;
 
-
-
-
-
-
 const Home = () => {
   return (
     <HomeTest>
       <div className="section" id="section2">
-       
-        
-
         <div className="news-section" id="news">
           <div className="news1">
             <div className="news-top" id="news-top2">
