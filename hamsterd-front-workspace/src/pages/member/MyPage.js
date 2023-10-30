@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import profile from "../../resource/오리.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const MypageTest = styled.div`
@@ -124,6 +124,13 @@ const MyPage = () => {
   const user = useSelector((state) => {
     return state.user;
   });
+
+  useEffect(() => {
+    if (Object.keys(user).length === 0) {
+      alert("로그인을 먼저 해주세요!!");
+      navigate("/");
+    }
+  }, [user]);
 
   const navigate = useNavigate();
 

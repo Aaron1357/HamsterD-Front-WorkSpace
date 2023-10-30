@@ -91,6 +91,13 @@ const Update = () => {
   };
 
   useEffect(() => {
+    if (Object.keys(user).length === 0) {
+      alert("로그인을 먼저 해주세요!!");
+      navigate("/");
+    }
+  }, [user]);
+
+  useEffect(() => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {

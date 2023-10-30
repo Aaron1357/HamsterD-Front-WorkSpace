@@ -77,9 +77,7 @@ function ModalSub(props) {
 
   useEffect(() => {
     setIsOpen(Object.keys(props.user).length === 0);
-  }, [Object.keys(props.user).length]);
-
-  // const user = JSON.parse(localStorage.getItem("user"));
+  }, [props.user]);
 
   useEffect(() => {
     // modal 상태에 따라 body 고정여부

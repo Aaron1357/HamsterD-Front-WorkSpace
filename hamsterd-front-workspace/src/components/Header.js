@@ -139,7 +139,7 @@ const Header = () => {
                 <Link to="/mypage">마이 페이지</Link>
               </div>
               <div className="submenu">
-                <a href="/mypage">마이페이지</a>
+                <Link to="/mypage">마이페이지</Link>
                 <Link to="/update">개인정보수정</Link>
                 <Link to="/fire">탈퇴</Link>
               </div>
@@ -164,7 +164,7 @@ const Header = () => {
             </div>
             <div className="menu" id="social">
               <div className="submenu1">
-                <a onClick={logout}>로그아웃</a>
+                <Link onClick={logout}>로그아웃</Link>
               </div>
             </div>
           </div>

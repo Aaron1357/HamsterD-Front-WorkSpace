@@ -1,6 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { updateMember, deleteMember, login } from "../api/member";
-import { useDispatch } from "react-redux";
+import { updateMember, deleteMember, login, addMember } from "../api/member";
+
+const registMember = createAsyncThunk(
+  "userSlice/registMember",
+  async (data) => {
+    const result = await addMember(data);
+    // console.log(result.data);
+    return result.data;
+  }
+);
 
 const asyncLogin = createAsyncThunk("userSlice/asyncLogin", async (data) => {
   const result = await login(data);
@@ -33,6 +41,12 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(registMember.fulfilled, (state, action) => {
+      // 회원가입 성공시
+      userLogout();
+      return {};
+    });
+
     builder.addCase(asyncLogin.fulfilled, (state, action) => {
       // 로그인 성공시 localStorage로 해당 정보 관리
       localStorage.setItem("token", action.payload.token);
@@ -58,5 +72,5 @@ const userSlice = createSlice({
 });
 
 export default userSlice;
-export { asyncLogin, putMember, delMember };
+export { asyncLogin, putMember, delMember, registMember };
 export const { userSave, userLogout } = userSlice.actions;

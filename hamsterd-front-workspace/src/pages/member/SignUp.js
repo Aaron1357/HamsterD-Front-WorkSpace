@@ -3,6 +3,8 @@ import { addMember, findId, findNickname } from "../../api/member";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { regExpId, regExpPw, ConfirmPw } from "./regExp";
+import { useDispatch } from "react-redux";
+import { registMember } from "../../store/userSlice";
 
 const SignUpStyle = styled.div`
   .mainsection {
@@ -45,6 +47,7 @@ const SignUp = () => {
   const [address, setAddr] = useState([]);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const signup = (e) => {
     e.preventDefault();
@@ -62,15 +65,11 @@ const SignUp = () => {
         academyName: academy,
         address: address,
         profile:
-        "D:\\Aaron1357\\HamsterD-Front-WorkSpace\\hamsterd-front-workspace\\public\\upload\\hamster.png",
+          "D:\\Aaron1357\\HamsterD-Front-WorkSpace\\hamsterd-front-workspace\\public\\upload\\hamster.png",
       };
 
-      console.log(formData2);
-
-      // console.log(formData2.id);
-
-       addMember(formData2);
-       navigate("/");
+      dispatch(registMember(formData2));
+      navigate("/");
     } else {
       // 중복확인이 되지 않았을때
       alert("중복확인을 먼저 해주세요!!");
@@ -215,7 +214,6 @@ const SignUp = () => {
                   setPw(e.target.value);
                 }}
                 required
-                
               />
               {validPw ? (
                 <span style={{ color: "green" }}>사용가능!</span>

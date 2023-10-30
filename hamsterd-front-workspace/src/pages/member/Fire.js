@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import React from "react";
+import React, { useEffect } from "react";
 import { delMember } from "../../store/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -45,6 +45,16 @@ const Fire = () => {
   const user = useSelector((state) => {
     return state.user;
   });
+
+  console.log(user);
+
+  useEffect(() => {
+    if (Object.keys(user).length === 0) {
+      alert("로그인을 먼저 해주세요!!");
+      navigate("/");
+    }
+  }, [user]);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   //
