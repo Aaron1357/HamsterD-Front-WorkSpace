@@ -7,8 +7,10 @@ import {
   viewMemberList,
   getManagerList,
   viewManager,
+  getGroupAVG,
 } from "../../api/studygroup";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const StudyGroupTest = styled.div`
   .mainsection {
@@ -171,12 +173,16 @@ const StudyGroupTest = styled.div`
 `;
 
 const StudyGroup = () => {
+  const user = useSelector((state) => {
+    return state.user;
+  });
+
   const navigate = useNavigate();
 
   const [managerList, setManagerList] = useState([]);
 
   const [page, setPage] = useState(1); // 페이지 번호
-  const itemsPerPage = 5; // 페이지당 항목 수
+  const itemsPerPage = 2; // 페이지당 항목 수
 
   const getStudyGroupListAPI = async () => {
     //  그룹전체API 호출
@@ -184,7 +190,7 @@ const StudyGroup = () => {
     setManagerList(result.data);
   };
 
-  console.log(managerList);
+  console.log(user);
 
   useEffect(() => {
     getStudyGroupListAPI();
@@ -193,7 +199,11 @@ const StudyGroup = () => {
 
   const handleCreateGroupClick = () => {
     //생성버튼 페이지 이동
-    navigate("/creategroup");
+    if (user.studyGroup == null) {
+      navigate("/creategroup");
+    } else {
+      alert("스터디그룹에 이미 가입되어있습니다.");
+    }
   };
 
   const onClick = async (e, groupNo) => {
@@ -203,6 +213,7 @@ const StudyGroup = () => {
     const result1 = await viewMemberList(groupNo);
     const result2 = await viewStudyGroup(groupNo);
     const result3 = await viewManager(groupNo);
+    const avg = await getGroupAVG(groupNo);
 
     navigate("/grouppage", {
       state: {
@@ -210,15 +221,21 @@ const StudyGroup = () => {
         members: result1,
         group: result2,
         manager: result3,
+        avg: avg,
       },
     });
   };
 
   // 현재 페이지에 해당하는 항목만 추출
   const displayedGroups = managerList.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
+    (page - 1) * itemsPerPage, // 현재 페이지의 첫 항목 인덱스
+    page * itemsPerPage // 현재 페이지의 마지막 항목 인덱스
   );
+
+  // 페이지 이동 버튼 클릭 시 실행될 함수
+  const handlePageClick = (pageNumber) => {
+    setPage(pageNumber);
+  };
 
   return (
     <StudyGroupTest>
@@ -234,7 +251,7 @@ const StudyGroup = () => {
               <input
                 type="text"
                 id="search"
-                placeholder=" 검색할 그룹명을 입력하세요."
+                placeholder="검색할 그룹명을 입력하세요."
               />
               <button>
                 <img className="searchimg" src={search} alt="Group" />
@@ -244,12 +261,11 @@ const StudyGroup = () => {
           <div className="horizonline"></div>
           <br />
           <br />
-          {managerList.map((item, index) => (
+          {displayedGroups.map((item, index) => (
             <div
               key={item.studyGroup.groupNo}
               id={`${item.studyGroup.groupNo}`}
               onClick={(e) => onClick(e, item?.studyGroup?.groupNo)}
-              // 여기서 item?.studyGroup?.groupNo를 인자로 전달
             >
               <div>
                 <div className="profile-container">
@@ -290,9 +306,6 @@ const StudyGroup = () => {
                     </div>
                   </div>
                   <div className="horizonline"></div>
-                  <div className="group-container">
-                    <div id="grouppoint">그룹 점수 ex 4.7점</div>
-                  </div>
                 </div>
                 <br />
                 <br />
@@ -301,12 +314,15 @@ const StudyGroup = () => {
           ))}
           {/* 페이지네이션을 추가 */}
           <div className="pagination">
-            <button onClick={() => setPage(page - 1)} disabled={page === 1}>
+            <button
+              onClick={() => handlePageClick(page - 1)}
+              disabled={page === 1}
+            >
               이전 페이지
             </button>
             <span>페이지 {page}</span>
             <button
-              onClick={() => setPage(page + 1)}
+              onClick={() => handlePageClick(page + 1)}
               disabled={page * itemsPerPage >= managerList.length}
             >
               다음 페이지
