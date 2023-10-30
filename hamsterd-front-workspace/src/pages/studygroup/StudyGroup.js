@@ -7,6 +7,7 @@ import {
   viewMemberList,
   getManagerList,
   viewManager,
+  getGroupAVG,
 } from "../../api/studygroup";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -212,6 +213,7 @@ const StudyGroup = () => {
     const result1 = await viewMemberList(groupNo);
     const result2 = await viewStudyGroup(groupNo);
     const result3 = await viewManager(groupNo);
+    const avg = await getGroupAVG(groupNo);
 
     navigate("/grouppage", {
       state: {
@@ -219,6 +221,7 @@ const StudyGroup = () => {
         members: result1,
         group: result2,
         manager: result3,
+        avg: avg,
       },
     });
   };
@@ -299,9 +302,6 @@ const StudyGroup = () => {
                     </div>
                   </div>
                   <div className="horizonline"></div>
-                  <div className="group-container">
-                    <div id="grouppoint">그룹 점수 ex 4.7점</div>
-                  </div>
                 </div>
                 <br />
                 <br />

@@ -159,7 +159,7 @@ const Header = () => {
             </div>
             <div className="menu" id="social">
               <div className="submenu1">
-              <a onClick={logout}>로그아웃</a>
+                <a onClick={logout}>로그아웃</a>
               </div>
             </div>
           </div>
