@@ -71,11 +71,15 @@ const StyleTest = styled.div`
 function ModalSub(props) {
   const [id, setId] = useState([]);
   const [password, setPw] = useState([]);
+
   const [isOpen, setIsOpen] = useState(true); // Modal 표시여부
+
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
+    // user가 없으면 modal 열기
     setIsOpen(Object.keys(props.user).length === 0);
   }, [props.user]);
 
@@ -135,6 +139,7 @@ function ModalSub(props) {
                 type="text"
                 placeholder="  아이디를 입력하세요.."
                 name="id"
+                required
                 onChange={(e) => {
                   setId(e.target.value);
                 }}
@@ -145,6 +150,7 @@ function ModalSub(props) {
                 type="password"
                 placeholder="  비밀번호를 입력하세요.."
                 name="password"
+                required
                 onChange={(e) => {
                   setPw(e.target.value);
                 }}

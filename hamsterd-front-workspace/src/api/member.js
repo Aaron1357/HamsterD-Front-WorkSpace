@@ -20,7 +20,6 @@ export const findNickname = async (nickName) => {
 };
 
 export const login = async (data) => {
-  const url = "member/signin";
   return await instance.post("member/signin", data);
 };
 

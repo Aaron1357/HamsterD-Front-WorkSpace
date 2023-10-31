@@ -1,29 +1,68 @@
 import styled from "styled-components";
-import { addMember, findId, findNickname } from "../../api/member";
+import { findId, findNickname } from "../../api/member";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { regExpId, regExpPw, ConfirmPw } from "./regExp";
 import { useDispatch } from "react-redux";
 import { registMember } from "../../store/userSlice";
+import DaumPostCode from "../../components/DaumPostCode";
 
 const SignUpStyle = styled.div`
   .mainsection {
+    display: flex;
+    justify-content: center;
     border: 1px solid rgba(0, 90, 153, 72);
     border-radius: 20px;
     width: 1600px;
     margin-top: 30px;
     color: rgba(0, 90, 153, 72);
+    padding: 80px 50px 50px 0px;
+    margin: 10px;
     //
   }
+
   .section {
     box-shadow: var(
       --shadows-gray-blue-3-5-b-box-shadow,
       0px 2px 5px 0px rgba(38, 51, 77, 0.03)
     );
-    margin-top: 80px;
-    margin-left: 200px;
-    width: 500px;
-    height: 1000px;
+    /* margin-top: 80px; */
+    /* margin-left: 200px; */
+    width: 40%;
+  }
+
+  h1 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 50px;
+  }
+
+  .signup {
+    width: 100%;
+  }
+
+  .addr-label {
+    margin-bottom: 10px;
+  }
+
+  .searchAddr {
+    display: flex;
+    align-items: center;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    // 날짜 선택기 스타일
+    border: 1px solid;
+    border-radius: 30%;
+  }
+
+  .searchAddr {
+    margin-bottom: 10px;
+  }
+
+  #signupbtn {
+    margin-top: 30px;
+    /* margin-left: 10px; */
   }
 `;
 
@@ -35,6 +74,7 @@ const SignUp = () => {
   const [idDupli, setIdDupli] = useState(false); // 아이디 중복확인
   const [nickDupli, setNickDupli] = useState(false); // 닉네임 중복확인
 
+  // 유저 정보 저장
   const [id, setId] = useState([]);
   const [nickname, setNickname] = useState([]);
   const [password, setPw] = useState([]);
@@ -43,8 +83,10 @@ const SignUp = () => {
   const [birth, setBirth] = useState([]);
   const [gender, setGender] = useState([]);
   const [phone, setPhone] = useState([]);
+  const [email, setEmail] = useState([]);
   const [academy, setAcademy] = useState([]);
-  const [address, setAddr] = useState([]);
+  const [address, setAddr] = useState([]); // api로 받아오는 주소
+  const [realAddr, setRealAddr] = useState([]); // api 주소 + 상세주소
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -63,7 +105,8 @@ const SignUp = () => {
         gender: gender,
         phone: phone,
         academyName: academy,
-        address: address,
+        address: realAddr,
+        email: email,
         profile:
           "D:\\Aaron1357\\HamsterD-Front-WorkSpace\\hamsterd-front-workspace\\public\\upload\\hamster.png",
       };
@@ -83,8 +126,6 @@ const SignUp = () => {
 
     const result = await findId(idInput.value);
 
-    console.log(result);
-
     if (result) {
       alert("중복된 아이디입니다!!!");
     } else if (!result) {
@@ -100,8 +141,6 @@ const SignUp = () => {
 
     const result = await findNickname(nameInput.value);
 
-    console.log(result);
-
     if (result) {
       alert("중복된 닉네임입니다!!!");
     } else if (!result) {
@@ -112,26 +151,34 @@ const SignUp = () => {
 
   const RegExpId = () => {
     // 아이디 유효성 검사!!
-    console.log(regExpId(id));
     setValidId(regExpId(id));
   };
 
   const RegExpPw = () => {
     // 비밀번호 유효성 검사!!
-    console.log(regExpPw(password));
     setValidPw(regExpPw(password));
   };
 
   const RegExpConfirmPw = () => {
     // 비밀번호 확인 유효성 검사!!
-    console.log(ConfirmPw(password, confirmPw));
     setValidConPw(ConfirmPw(password, confirmPw));
+  };
+
+  const handleAddressComplete = (data) => {
+    setAddr(data.address);
+  };
+
+  const handleRealAddressChange = (e) => {
+    const newValue = e.target.value;
+    const combinedValue = address + " " + newValue; // 다른 input의 값과 합치기
+    setRealAddr(combinedValue); // realAddress 설정
   };
 
   return (
     <SignUpStyle>
       <div className="mainsection">
         <div className="section" id="section2">
+          <h1>회원가입</h1>
           <form className="signup" onSubmit={signup}>
             <div className="mb-3">
               <label htmlFor="id" className="form-label">
@@ -142,7 +189,6 @@ const SignUp = () => {
                   type="text"
                   id="id"
                   className="form-control"
-                  aria-describedby="passwordHelpInline"
                   name="id"
                   onChange={(e) => {
                     setId(e.target.value);
@@ -153,7 +199,7 @@ const SignUp = () => {
                 />
                 <button
                   type="button"
-                  id="signupbtn"
+                  id="findId"
                   className="btn btn-primary"
                   style={{ zIndex: "0" }}
                   onClick={FindId}
@@ -179,7 +225,6 @@ const SignUp = () => {
                   type="text"
                   id="nickName"
                   className="form-control"
-                  aria-describedby="passwordHelpInline"
                   name="nickname"
                   onChange={(e) => {
                     setNickname(e.target.value);
@@ -189,7 +234,7 @@ const SignUp = () => {
                 />
                 <button
                   type="button"
-                  id="signupbtn"
+                  id="findNick"
                   className="btn btn-primary"
                   style={{ zIndex: "0" }}
                   onClick={FindNickname}
@@ -207,7 +252,6 @@ const SignUp = () => {
                 type="password"
                 id="inputPassword"
                 className="form-control"
-                aria-describedby="passwordHelpInline"
                 name="password"
                 onBlur={RegExpPw}
                 onChange={(e) => {
@@ -227,14 +271,13 @@ const SignUp = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="inputPassword6" className="form-label">
+              <label htmlFor="pwCheck" className="form-label">
                 비밀번호 확인
               </label>
               <input
                 type="password"
-                id="inputPassword6"
+                id="pwCheck"
                 className="form-control"
-                aria-describedby="passwordHelpInline"
                 onChange={(e) => {
                   setConfirmPw(e.target.value);
                 }}
@@ -256,7 +299,6 @@ const SignUp = () => {
                 type="text"
                 id="name"
                 className="form-control"
-                aria-describedby="passwordHelpInline"
                 onChange={(e) => {
                   setName(e.target.value);
                 }}
@@ -328,15 +370,35 @@ const SignUp = () => {
                 type="tel"
                 id="phone"
                 className="form-control"
-                aria-describedby="passwordHelpInline"
+                aria-describedby="phoneHelpInline"
                 required
                 name="phone"
                 onChange={(e) => {
                   setPhone(e.target.value);
                 }}
               />
-              <span id="passwordHelpInline" className="form-text">
+              <span id="phoneHelpInline" className="form-text">
                 -없이 번호만 입력해 주세요
+              </span>
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">
+                이메일
+              </label>
+              <input
+                type="email"
+                id="email"
+                className="form-control"
+                aria-describedby="emailHelpInline"
+                required
+                name="email"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+              />
+              <span id="emailHelpInline" className="form-text">
+                이메일를 입력해주세요.
               </span>
             </div>
 
@@ -348,36 +410,49 @@ const SignUp = () => {
                 type="text"
                 id="academyName"
                 className="form-control"
-                aria-describedby="passwordHelpInline"
+                aria-describedby="academyHelpInline"
                 required
                 name="academyName"
                 onChange={(e) => {
                   setAcademy(e.target.value);
                 }}
               />
-              <span id="passwordHelpInline" className="form-text">
+              <span id="academyHelpInline" className="form-text">
                 현재 다니고 계신 학원 명을 입력해 주세요
               </span>
             </div>
 
             <div className="mb-3">
-              <label htmlFor="addr" className="form-label">
+              <label htmlFor="addr" className="addr-label">
                 주소
               </label>
-              <input
-                type="text"
-                id="addr"
-                className="form-control"
-                aria-describedby="passwordHelpInline"
-                required
-                name="address"
-                onChange={(e) => {
-                  setAddr(e.target.value);
-                }}
-              />
-              <span id="passwordHelpInline" className="form-text">
+
+              <div className="searchAddr">
+                <input
+                  type="text"
+                  id="addr"
+                  className="form-control"
+                  required
+                  name="address"
+                  value={address}
+                  readOnly
+                />
+
+                <DaumPostCode handleAddressComplete={handleAddressComplete} />
+              </div>
+
+              <span id="addrHelpInline" className="form-text">
                 상세주소를 입력해 주세요
               </span>
+              <input
+                type="text"
+                id="realAddr"
+                className="form-control"
+                aria-describedby="addrHelpInline"
+                required
+                name="realAddr"
+                onBlur={handleRealAddressChange}
+              />
             </div>
 
             <button type="submit" id="signupbtn" className="btn btn-primary">

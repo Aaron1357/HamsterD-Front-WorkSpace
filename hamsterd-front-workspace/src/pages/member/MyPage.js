@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import profile from "../../resource/오리.jpg";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 const MypageTest = styled.div`
@@ -15,7 +14,25 @@ const MypageTest = styled.div`
     width: 1600px;
     margin-top: 30px;
     color: rgba(0, 90, 153, 72);
+    padding: 50px;
+    padding-top: 80px;
     // 메인콘테이너//
+  }
+
+  h1 {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    padding-left: 30px;
+  }
+
+  .photo-line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    margin-top: 50px; //프로필-테두리 위쪽 공간//
   }
 
   .profileimg {
@@ -25,24 +42,21 @@ const MypageTest = styled.div`
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
-    //프로필 이미지 (오리)//
-  }
-
-  .photo-line {
-    justify-content: center;
-    align-items: center;
-    width: 100px;
-    height: 100px;
-    display: flex;
-    justify-content: center;
-    margin-top: 50px; //프로필-테두리 위쪽 공간//
+    //프로필 이미지
   }
 
   .nickname {
-    justify-content: center;
-    align-items: center;
     display: flex;
     justify-content: center;
+    align-items: center;
+    padding-top: 20px; //닉네임 위쪽 공간//
+    padding-bottom: 20px; //닉네임 아래 공간//
+  }
+
+  .name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding-top: 20px; //닉네임 위쪽 공간//
     padding-bottom: 20px; //닉네임 아래 공간//
   }
@@ -58,21 +72,15 @@ const MypageTest = styled.div`
     border: 1px solid rgba(0, 90, 153, 72);
     border-radius: 20px;
     width: auto;
-    margin-top: 30px;
+    margin-top: 20px;
     color: rgba(0, 90, 153, 72);
     //닉네임 테두리
   }
 
-  .nickname-btn {
-    margin-top: 25px;
-    padding-left: 20px;
-  }
-
   .myId {
-    justify-content: center;
-    align-items: center;
     display: flex;
     justify-content: center;
+    align-items: center;
     padding-top: 20px; //아이디 위쪽 공간//
     padding-bottom: 20px; //아이디 아래 공간//
   }
@@ -92,8 +100,123 @@ const MypageTest = styled.div`
     //아이디 색
   }
 
-  .myId-btn {
+  .name {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding-top: 20px; //아이디 위쪽 공간//
+    padding-bottom: 20px; //아이디 아래 공간//
+  }
+
+  .name-font {
+    font-size: 20px;
+    font-weight: bold;
+    padding-right: 20px;
     padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    // 아이디 표기부분 공백
+    border: 1px solid rgba(0, 90, 153, 72);
+    border-radius: 20px;
+    width: auto;
+    color: rgba(0, 90, 153, 72);
+    //아이디 색
+  }
+
+  .phone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20px; //아이디 위쪽 공간//
+    padding-bottom: 20px; //아이디 아래 공간//
+  }
+
+  .phone-font {
+    font-size: 20px;
+    font-weight: bold;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    // 아이디 표기부분 공백
+    border: 1px solid rgba(0, 90, 153, 72);
+    border-radius: 20px;
+    width: auto;
+    color: rgba(0, 90, 153, 72);
+    //아이디 색
+  }
+
+  .email {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px; //아이디 위쪽 공간//
+    padding-bottom: 20px; //아이디 아래 공간//
+  }
+
+  .email-font {
+    font-size: 20px;
+    font-weight: bold;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    // 아이디 표기부분 공백
+    border: 1px solid rgba(0, 90, 153, 72);
+    border-radius: 20px;
+    width: auto;
+    color: rgba(0, 90, 153, 72);
+    //아이디 색
+  }
+
+  .gender {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px; //아이디 위쪽 공간//
+    padding-bottom: 20px; //아이디 아래 공간//
+  }
+
+  .gender-font {
+    font-size: 20px;
+    font-weight: bold;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    // 아이디 표기부분 공백
+    border: 1px solid rgba(0, 90, 153, 72);
+    border-radius: 20px;
+    width: auto;
+    color: rgba(0, 90, 153, 72);
+    //아이디 색
+  }
+
+  .address {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px; //아이디 위쪽 공간//
+    padding-bottom: 20px; //아이디 아래 공간//
+  }
+
+  .address-font {
+    font-size: 20px;
+    font-weight: bold;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    // 아이디 표기부분 공백
+    border: 1px solid rgba(0, 90, 153, 72);
+    border-radius: 20px;
+    width: auto;
+    color: rgba(0, 90, 153, 72);
+    //아이디 색
   }
 
   .schedule-btn {
@@ -152,8 +275,7 @@ const MyPage = () => {
   return (
     <MypageTest>
       <div className="maincontain">
-        <div></div>
-
+        <h1>마이페이지</h1>
         {/* 프로필사진 */}
         <div className="photo-line">
           {user && user.profile && (
@@ -169,28 +291,45 @@ const MyPage = () => {
 
         {/* 닉네임+ 수정부분 */}
         <div className="nickname">
-          <div className="nickname-font">내 닉네임 : {user.nickname}</div>
-          <div className="nickname-btn"></div>
-        </div>
-
-        {/* 아이디 */}
-        <div className="nickname">
-          <div className="nickname-font">성명 : {user.name}</div>
+          <div className="nickname-font">닉네임 : {user.nickname}</div>
           <div className="nickname-btn"></div>
         </div>
 
         {/* 아이디+ 수정부분 */}
         <div className="myId">
-          <div className="myId-font">내 아이디 : {user.id}</div>
-          <div className="myId-btn"></div>
+          <div className="myId-font">아이디 : {user.id}</div>
+        </div>
+
+        {/* 이름 */}
+        <div className="name">
+          <div className="name-font">이름 : {user.name}</div>
+        </div>
+
+        {/* 전화번호 */}
+        <div className="phone">
+          <div className="phone-font">전화번호 : {user.phone}</div>
+        </div>
+
+        {/* 이메일 */}
+        <div className="email">
+          <div className="email-font">이메일 : {user.email}</div>
+        </div>
+
+        {/* 성별 */}
+        <div className="gender">
+          <div className="gender-font">
+            성별 : {user.gender === "man" ? "남자" : "여자"}
+          </div>
+        </div>
+
+        {/* 주소 */}
+        <div className="address">
+          <div className="address-font">주소 : {user.address}</div>
         </div>
 
         <div className="schedule-btn">
           <button type="button" id="btn1" onClick={handleStudyClick}>
             나의 스터디 그룹
-          </button>{" "}
-          <button type="button" id="btn2" onClick={handleScheduleClick}>
-            나의 일정
           </button>
         </div>
 
