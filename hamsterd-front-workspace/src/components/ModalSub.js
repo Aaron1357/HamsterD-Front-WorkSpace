@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { asyncLogin } from "../store/userSlice";
+import logo from "../resource/로고 투명.png";
 
 const customStyles = {
   overlay: {
@@ -23,6 +24,7 @@ const customStyles = {
 
 const StyleTest = styled.div`
   .mainModal {
+    margin-top: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -66,6 +68,11 @@ const StyleTest = styled.div`
     margin-left: 400px;
     margin-top: -40px;
   }
+
+  .logoimg {
+    width: 200px;
+    margin: 20px 0px 20px 0px;
+  }
 `;
 
 function ModalSub(props) {
@@ -74,7 +81,6 @@ function ModalSub(props) {
 
   const [isOpen, setIsOpen] = useState(true); // Modal 표시여부
 
-  
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -122,7 +128,6 @@ function ModalSub(props) {
       <StyleTest>
         <div className="mainModal">
           <br></br>
-          <h3>HamsterD</h3>
           <div className="closebtn">
             <button
               onClick={closeTab}
@@ -131,6 +136,8 @@ function ModalSub(props) {
               aria-label="Close"
             ></button>
           </div>
+          <img className="logoimg" src={logo} alt="Logo" />
+
           <br></br>
           <form className="innerModal" onSubmit={login}>
             <div className="setControll">

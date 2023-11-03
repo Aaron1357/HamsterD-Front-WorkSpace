@@ -14,7 +14,6 @@ import BoardList from "./pages/board/BoardList";
 import Board from "./pages/board/Board";
 import SignUp from "./pages/member/SignUp";
 import BoardDetail from "./pages/board/BoardDetail";
-import Fire from "./pages/member/Fire";
 import Update from "./pages/member/Update";
 import BoardComment from "./pages/board/BoardComment";
 import BoardInComment from "./pages/board/BoardInComment";
@@ -35,10 +34,6 @@ const router = createBrowserRouter([
       {
         path: "/update",
         element: <Update />,
-      },
-      {
-        path: "/fire",
-        element: <Fire />,
       },
       {
         path: "/studygroup",

@@ -51,6 +51,7 @@ const userSlice = createSlice({
       // 로그인 성공시 localStorage로 해당 정보 관리
       localStorage.setItem("token", action.payload.token);
       localStorage.setItem("user", JSON.stringify(action.payload));
+      window.location.reload();
       return action.payload;
     });
 

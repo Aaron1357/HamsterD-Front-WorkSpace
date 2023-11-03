@@ -23,6 +23,7 @@ const GroupPageTest = styled.div`
     border: 1px solid rgba(0, 90, 153, 72);
     border-radius: 20px;
     width: 1600px;
+    height: 1300px;
     margin-top: 30px;
     color: rgba(0, 90, 153, 72);
     //

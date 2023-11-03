@@ -6,7 +6,7 @@ import ModalSub from "../components/ModalSub";
 import { userLogout } from "../store/userSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux/es/hooks/useSelector";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { userSave } from "../store/userSlice";
 
 const Test = styled.div`
@@ -14,6 +14,7 @@ const Test = styled.div`
     display: flex;
     width: 100%;
     height: 120px;
+    margin-left: 60px;
   }
   ////
   .header {
@@ -75,9 +76,16 @@ const Test = styled.div`
     justify-content: space-around;
   }
 
-  .logout {
+  /* .logout {
     margin-top: -150px;
     margin-left: 200px;
+  } */
+
+  #logout {
+    align-self: self-start;
+    .btn {
+      width: 195px;
+    }
   }
 
   /* 사이드바 CSS */
@@ -89,6 +97,7 @@ const Header = () => {
   const save = JSON.parse(localStorage.getItem("user")); // 로컬스토리지에 user정보 호출
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [logoutVisible, setVisible] = useState(true);
 
   // const home = () => {
   //   // 로고 //클릭시 메인페이지 이동
@@ -100,18 +109,23 @@ const Header = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     dispatch(userLogout());
+    navigate("/");
   };
 
   const user = useSelector((state) => {
     return state.user;
   });
 
-  console.log(save);
+  console.log(user);
 
   useEffect(() => {
     if (Object.keys(user).length === 0 && save !== null) {
       // store에 키값(식별자)이 없으면서 로컬 스토리지에 유저정보가 존재하면 저장
       dispatch(userSave(save));
+      setVisible(true); // 로그아웃 버튼 보이기
+    } else if (Object.keys(user).length === 0 && save === null) {
+      setVisible(false); // 로그아웃 버튼 안보이게
+      navigate("/");
     }
   }, [user]);
 
@@ -139,9 +153,7 @@ const Header = () => {
                 <Link to="/mypage">마이 페이지</Link>
               </div>
               <div className="submenu">
-                <Link to="/mypage">마이페이지</Link>
                 <Link to="/update">개인정보수정</Link>
-                <Link to="/fire">탈퇴</Link>
               </div>
             </div>
             <div className="menu" id="board">
@@ -162,13 +174,21 @@ const Header = () => {
                 <Link to="/groupreview">{""}</Link>
               </div>
             </div>
-            <div className="menu" id="social">
+            {/* <div className="menu" id="social">
               <div className="submenu1">
                 <Link onClick={logout}>로그아웃</Link>
                 <div className="submenu">
                   <Link to="/groupreview">{""}</Link>
                 </div>
               </div>
+            </div> */}
+
+            <div id="logout">
+              {logoutVisible && (
+                <button className="btn btn-danger" onClick={logout}>
+                  로그아웃
+                </button>
+              )}
             </div>
           </div>
         </div>

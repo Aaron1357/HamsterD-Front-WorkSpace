@@ -100,6 +100,11 @@ const Test2 = styled.div`
   .banner {
     width: 350px;
     height: 110px;
+    &:hover {
+      color: red;
+      opacity: 0.5;
+      transition: color 0.5s;
+    }
   }
 `;
 
@@ -135,6 +140,22 @@ const Sidebar = () => {
     navigate("/studygroup");
   };
 
+  const handleContactImageClick1 = () => {
+    window.open("http://www.iei.or.kr/", "_blank"); // kh 학원 이동
+  };
+
+  const handleContactImageClick2 = () => {
+    window.open("https://www.sist.co.kr/", "_blank"); // 쌍용학원 이동
+  };
+
+  const handleContactImageClick3 = () => {
+    window.open("https://megaitacademy.com/", "_blank"); // 메가스터디 이동
+  };
+
+  const handleContactImageClick4 = () => {
+    window.open("https://www.sgaedu.co.kr/", "_blank"); // SGA 게임아카데미 이동
+  };
+
   return (
     <Test2>
       <div className="main-page">
@@ -142,16 +163,32 @@ const Sidebar = () => {
           <div className="section" id="section3">
             <div className="myinfo">
               <div className="mystudy">
-                <img className="banner" src={academy3}></img>
+                <img
+                  className="banner"
+                  src={academy3}
+                  onClick={handleContactImageClick1}
+                ></img>
               </div>
               <div className="myweight">
-                <img className="banner" src={academy2}></img>
+                <img
+                  className="banner"
+                  src={academy2}
+                  onClick={handleContactImageClick2}
+                ></img>
               </div>
               <div className="mycalender">
-                <img className="banner" src={academy1}></img>
+                <img
+                  className="banner"
+                  src={academy1}
+                  onClick={handleContactImageClick3}
+                ></img>
               </div>
               <div className="mypost">
-                <img className="banner" src={academy4}></img>
+                <img
+                  className="banner"
+                  src={academy4}
+                  onClick={handleContactImageClick4}
+                ></img>
               </div>
             </div>
           </div>

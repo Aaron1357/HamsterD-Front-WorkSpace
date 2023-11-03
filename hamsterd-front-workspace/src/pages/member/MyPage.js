@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { delMember } from "../../store/userSlice";
 
 const MypageTest = styled.div`
   .maincontain {
@@ -241,9 +242,17 @@ const MypageTest = styled.div`
     font-weight: bold;
     color: white;
   }
+
+  .manage {
+    width: 250px;
+    display: flex;
+    justify-content: space-around;
+  }
 `;
 
 const MyPage = () => {
+  const dispatch = useDispatch();
+
   const user = useSelector((state) => {
     return state.user;
   });
@@ -270,6 +279,20 @@ const MyPage = () => {
   const handleUpdateClick = () => {
     // 개인정보수정 버튼 클릭 시 '/update' 경로로 이동
     navigate("/update");
+  };
+
+  const deleteMember = () => {
+    // alert (true, false)
+
+    if (window.confirm("정말로 삭제하시겠습니까??")) {
+      // 확인 버튼을 눌렀을때(true)
+      console.log("삭제가 눌림");
+      dispatch(delMember(user.memberNo));
+      navigate("/");
+    } else {
+      // 취소 버튼을 눌렀을때(false)
+      console.log("취소가 눌림");
+    }
   };
 
   return (
@@ -333,7 +356,7 @@ const MyPage = () => {
           </button>
         </div>
 
-        <div>
+        <div className="manage - member">
           <button
             type="button"
             id="update-btn"
@@ -341,6 +364,15 @@ const MyPage = () => {
             onClick={handleUpdateClick}
           >
             개인정보 수정
+          </button>
+
+          <button
+            type="button"
+            id="update-btn"
+            className="btn btn-danger"
+            onClick={deleteMember}
+          >
+            회원탈퇴
           </button>
         </div>
       </div>
