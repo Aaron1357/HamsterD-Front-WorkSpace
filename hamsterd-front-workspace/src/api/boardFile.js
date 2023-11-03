@@ -3,13 +3,9 @@ import axios from "axios";
 const instance = axios.create({
   baseURL: "http://localhost:8080/hamsterd/",
 });
-
-//작성한 게시물 값(title, content) db에 보내기
 export const addFile = async (data) => {
-  console.log(data);
-
   return await instance.post("post", data);
-};//
+};
 
 //기존 게시물에서 수정하기
 export const updateBoard = async (data) => {
@@ -25,7 +21,6 @@ export const updateBoard = async (data) => {
 //기존 게시물 조회수 업데이트하기
 export const updateBoardView = async (postNo) => {
   try {
-    console.log("게시물 조회 api들어옴");
     const res = await instance.put(`post/boardView/${postNo}`);
     return res.data;
   } catch (error) {
@@ -59,11 +54,12 @@ export const detailBoard = async (postNo) => {
 };
 
 //검색창에 조회한 postContent 내용 전체조회
-export const searchPostContent = async (data) => {
+export const searchPostContent = async (postContent, page) => {
   try {
-    console.log(data);
-    console.log("검색창 조회 api 잘 넘어갔닝? 제발 넘어가줘" + data);
-    const res = await instance.get(`post/search/postContents/${data}`);
+    console.log("검색창 postContent 조회 api 잘 넘어갔닝? 제발 넘어가줘");
+    const res = await instance.get(
+      `post/search/postContents/${postContent}/page/${page}`
+    );
     return res.data;
   } catch (error) {
     console.error(error);
@@ -71,11 +67,12 @@ export const searchPostContent = async (data) => {
 };
 
 //검색창에 조회한 postContent 내용 전체조회
-export const searchPostTitle = async (data) => {
+export const searchPostTitle = async (postTitle, page) => {
   try {
-    console.log(data);
-    console.log("검색창 조회 api 잘 넘어갔닝? 제발 넘어가줘" + data);
-    const res = await instance.get(`post/search/postTitles/${data}`);
+    console.log("검색창 postTitle 조회 api 잘 넘어갔닝? 제발 넘어가줘");
+    const res = await instance.get(
+      `post/search/postTitles/${postTitle}/page/${page}`
+    );
     return res.data;
   } catch (error) {
     console.error(error);

@@ -64,17 +64,14 @@ const Board = () => {
 
   //게시물 이미지 업로드시 여러개 넣을 수 있게 배열로 만들어줌
   const images = [];
+
   //로그인 시 받았던 토큰 값 유지되는 것 넘겨주기
+
   const token = localStorage.getItem("token");
-
   const navigate = useNavigate();
-
   const formData = new FormData();
-  //게시판 등록하기에서 등록버튼 클릭 시 실행
-  //param값 back-end로 보내주기
   const submitClick = async () => {
     if (!title || !desc) {
-      // title 또는 desc가 빈 문자열 또는 undefined인 경우
       alert("제목 및 내용을 작성해주세요.");
     } else {
       formData.append("title", title);
@@ -100,7 +97,6 @@ const Board = () => {
     [{ list: "ordered" }, { list: "bullet" }],
     [{ color: [] }, { background: [] }],
     [{ align: [] }],
-    //게시물에서 이미지 여러개 담을때 필요함
     ["images"],
   ];
   //quill 라이브러리에 사용되는 모듈
@@ -125,15 +121,11 @@ const Board = () => {
                 method: "POST",
                 body: formData,
               }
-            )//
+            )
               .then((response) => response.json())
               .then((result) => {
-                console.log(file);
                 images.push(file);
-                console.log(images);
                 setImg(images);
-                // setImages([...images, file]);
-                console.log(result);
                 resolve(result.data.url);
               })
               .catch((error) => {
@@ -157,14 +149,6 @@ const Board = () => {
       <div className="head1">
         <div className="head2">
           <form className="boardForm">
-            {/* <div className="headName">게시물 등록</div>
-            <select className="form-select" aria-label="Default select example">
-              <option value="0">게시물 목록</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
-            </select> */}
-
             <div className="mb-3">
               <label htmlFor="exampleFormControlInput1" className="form-label">
                 Title
@@ -189,7 +173,6 @@ const Board = () => {
                   name="flexRadioDefault"
                   id="flexRadioDefault1"
                   value="y"
-                  // checked={securityCheck === "y"}
                   onChange={(e) => {
                     setSecurityCheck(e.target.value);
                   }}
@@ -198,19 +181,6 @@ const Board = () => {
                   익명
                 </label>
               </div>
-
-              {/* <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="flexRadioDefault"
-                  id="flexRadioDefault2"
-                  // checked
-                />
-                <label className="form-check-label" htmlFor="flexRadioDefault2">
-                  공개
-                </label>
-              </div> */}
             </div>
 
             <div className="mb-3">

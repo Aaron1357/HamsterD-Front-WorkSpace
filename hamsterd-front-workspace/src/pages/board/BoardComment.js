@@ -26,12 +26,13 @@ const BoardCommentStyle = styled.div`
     justify-content: flex-end;
   }
 
-  .nickname {
-    padding: 10px;
+  .nickname,
+  .commentContent {
+    padding: 5px;
   }
 
-  .commentContent {
-    padding-right: 100px;
+  .nickname {
+    font-weight: bold;
   }
 
   .comment {
@@ -45,6 +46,10 @@ const BoardCommentStyle = styled.div`
 
   .comments {
     width: 1000px;
+  }
+
+  .updateComment {
+    display: flex;
   }
 `;
 
@@ -84,7 +89,7 @@ const BoardComment = ({ postNo }) => {
       const data = {
         commentContent: text,
         post: { postNo: postNo },
-        member: { memberNo: user.memberNo },
+        member: { memberNo: user.memberNo, nickname: user.nickname },
       };
       const result = await addComment(data);
       console.log(result);
@@ -134,10 +139,11 @@ const BoardComment = ({ postNo }) => {
   const updateHandler = async (e) => {
     setUpdateText(e.target.value);
   };
-
+  //댓글번호 클릭하면 대댓글컴포넌트 보여짐
   const inCommentClick = (e) => {
     setInCommentShow(true);
     setSelectedInCommentIndex(e.target.closest(".comment").id);
+    console.log(e.target.closest(".comment").id);
   };
 
   //실행되자마자 댓글 뿌리기
@@ -148,7 +154,7 @@ const BoardComment = ({ postNo }) => {
   return (
     <BoardCommentStyle>
       {/* <label>댓글</label> */}
-      <hr />
+
       <div class="input-group mb-3">
         <label></label>
         <input
@@ -181,12 +187,8 @@ const BoardComment = ({ postNo }) => {
               >
                 {console.log("댓글 뿌리기 " + item)}
 
-                <label className="nickname">
-                  닉네임: {item?.member?.nickname}
-                </label>
-                <label className="commentContent">
-                  댓글: {item?.commentContent}
-                </label>
+                <label className="nickname">{item?.member?.nickname}</label>
+                <label className="commentContent">{item?.commentContent}</label>
                 <div className="content2">
                   {item?.member?.memberNo == user?.memberNo ? (
                     <div>
@@ -213,31 +215,24 @@ const BoardComment = ({ postNo }) => {
                     </button>
                   </label>
                 </div>
+                <hr />
                 {selectedInCommentIndex == item.commentNo &&
                   inCommentShow == true && (
                     <BoardInComment commentNo={selectedInCommentIndex} />
                   )}
-                <hr />
               </div>
 
               //map뿌리는거 끝남
             ))}
           </div>
         ) : (
-          <table>
-            <tbody>
-              {comments?.map((item) => (
-                <tr
-                  key={item.commentNo}
-                  id={item.commentNo}
-                  className="comment"
-                >
-                  {selectedCommentIndex == item.commentNo ? (
-                    <div className="comments">
-                      <label className="nickname">
-                        닉네임: {item?.member?.nickname}
-                      </label>
-                      <label className="commentContent">댓글 :</label>
+          <div>
+            {comments?.map((item) => (
+              <div key={item.commentNo} id={item.commentNo} className="comment">
+                {selectedCommentIndex == item.commentNo ? (
+                  <div className="comments">
+                    <label className="nickname">{item?.member?.nickname}</label>
+                    <div className="updateComment">
                       <input
                         type="text"
                         class="form-control"
@@ -245,8 +240,28 @@ const BoardComment = ({ postNo }) => {
                         aria-label="Recipient's username"
                         aria-describedby="button-addon2"
                         onChange={updateHandler}
+                        style={{ width: "900px" }}
                       />
-
+                      <label>
+                        <button
+                          class="btn btn-outline-secondary"
+                          type="button"
+                          id="button-addon2"
+                          onClick={updateClick}
+                        >
+                          수정하기
+                        </button>
+                      </label>
+                    </div>
+                    <hr />
+                  </div>
+                ) : (
+                  <div>
+                    <label className="nickname">{item?.member?.nickname}</label>
+                    <label className="commentContent">
+                      {item?.commentContent}
+                    </label>
+                    <div className="content2">
                       <div className="content2">
                         <label>
                           <button
@@ -269,47 +284,15 @@ const BoardComment = ({ postNo }) => {
                           </button>
                         </label>
                       </div>
-                      <hr />
                     </div>
-                  ) : (
-                    <div>
-                      <label>닉네임: {item?.member?.nickname}</label>
-                      <label className="commentContent">
-                        댓글: {item?.commentContent}
-                      </label>
-                      <div className="content2">
-                        <div className="content2">
-                          <label>
-                            <button
-                              class="btn btn-outline-secondary"
-                              type="button"
-                              id="button-addon2"
-                              onClick={updateClick}
-                            >
-                              수정하기
-                            </button>
-                          </label>
-                          <label>
-                            <button
-                              class="btn btn-outline-secondary"
-                              type="button"
-                              id="button-addon2"
-                              onClick={deleteClick}
-                            >
-                              삭제하기
-                            </button>
-                          </label>
-                        </div>
-                      </div>
-                      <hr />
-                    </div>
-                    //수정 commentNo 일치여부 확인
-                  )}
-                </tr>
-                //map 뿌리는거 여기서 끝남
-              ))}
-            </tbody>
-          </table>
+                    <hr />
+                  </div>
+                  //수정 commentNo 일치여부 확인
+                )}
+              </div>
+              //map 뿌리는거 여기서 끝남
+            ))}
+          </div>
           //맨처음
         )}
       </div>
