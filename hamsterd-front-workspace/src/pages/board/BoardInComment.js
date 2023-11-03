@@ -84,8 +84,22 @@ const BoardInComment = ({ commentNo }) => {
     <div>
       <div>
         <label>대댓글</label>
-        <input type="text" value={text} onChange={handler} />
-        <button onClick={onClick}>답글쓰기</button>
+        <input
+          type="text"
+          class="form-control"
+          value={text}
+          aria-label="Recipient's username"
+          aria-describedby="button-addon2"
+          onChange={handler}
+        />
+        <button
+          class="btn btn-outline-secondary"
+          type="button"
+          id="button-addon2"
+          onClick={onClick}
+        >
+          작성하기
+        </button>
       </div>
       <div>
         {/* 값이 0 초기값일때는 기본 댓글만 보여짐 */}
@@ -131,7 +145,14 @@ const BoardInComment = ({ commentNo }) => {
                       <td>닉네임: {item?.member?.nickname}</td>
                       <td>
                         <label>댓글 :</label>
-                        <input type="text" onChange={handler} />
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder={item?.commentContent}
+                          aria-label="Recipient's username"
+                          aria-describedby="button-addon2"
+                          onChange={handler}
+                        />
                       </td>
                       <td>
                         <button onClick={updateClick}>수정하기</button>
