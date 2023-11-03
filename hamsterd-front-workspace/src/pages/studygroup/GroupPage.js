@@ -254,7 +254,7 @@ const GroupPage = () => {
     console.log(user.memberNo);
     const check = await showEval(user.memberNo);
 
-    if (user.studyGroup != null && user.studyGroup.groupNo != number) {
+    if (user.studyGroup == null || user.studyGroup.groupNo != number) {
       alert("해당 스터디그룹의 멤버만 평가할 수 있습니다.");
     } else if (check.data != "") {
       alert("이미 해당 스터디그룹의 평가를 완료하였습니다.");

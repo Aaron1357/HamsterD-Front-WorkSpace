@@ -127,6 +127,7 @@ const BoardList = () => {
     if (searchOption == "searchPostContent") {
       const result = await searchPostContent(searchPost, page);
       setBoardList(result.contents);
+      console.log(result.contents);
       const jsonString = JSON.stringify(result.total);
       setTotalDataCount(parseInt(jsonString, 10));
     } else if (searchOption == "searchPostTitle") {
