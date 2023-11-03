@@ -181,9 +181,6 @@ const StudyGroup = () => {
   const navigate = useNavigate();
 
   const [managerList, setManagerList] = useState([]);
-  const [page, setPage] = useState(1);
-  const itemsPerPage = 3; // 페이지당 항목 수 (3개로 변경)
-  const [searchText, setSearchText] = useState("");
 
   const getStudyGroupListAPI = async () => {
     const result = await getManagerList();
@@ -219,6 +216,10 @@ const StudyGroup = () => {
       },
     });
   };
+
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 3; // 페이지당 항목 수 (3개로 변경)
+  const [searchText, setSearchText] = useState("");
 
   const filteredGroups = managerList.filter((item) =>
     item.studyGroup.groupName.toLowerCase().includes(searchText.toLowerCase())
