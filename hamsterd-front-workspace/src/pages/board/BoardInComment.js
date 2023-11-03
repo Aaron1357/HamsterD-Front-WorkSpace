@@ -5,8 +5,80 @@ import {
   deleteInComment,
   updateInComment,
 } from "../../api/board_comment";
-import { useParams } from "react-router-dom";
-//BoardComment에서 값 받아옴
+import { useParams } from "react-router-dom"; //BoardComment에서 값 받아옴
+import styled from "styled-components";
+
+const BoardInCommentStyle = styled.div`
+  /* 스타일 내용 입력 */
+
+  .deleteClick,
+  .updateClick {
+    border: 0px;
+  }
+  .buttonClick {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .clickButton .form-check {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .nickname,
+  .inCommentContent,
+  .updateClick,
+  .deleteClick {
+    padding: 5px;
+  }
+
+  .nickname {
+    font-weight: bold;
+  }
+  .comment {
+    padding-left: 30px;
+    width: 1000px;
+  }
+
+  .content2 {
+    /* display: flex; */
+    /* justify-content: flex-end; */
+  }
+
+  .comments {
+    width: 1000px;
+  }
+
+  .inComment2 {
+    display: flex;
+  }
+
+  .form-control {
+    width: 900px;
+  }
+
+  .inCommentView {
+    display: flex;
+    padding-top: 10px;
+    padding-left: 30px;
+  }
+
+  .inCommentBox {
+    display: flex;
+  }
+
+  .commentContent {
+    width: 880px;
+  }
+
+  .updateButtonClick {
+    border: 0;
+    /* padding: 0px; */
+    width: 100px;
+    height: 0px;
+  }
+`;
+
 const BoardInComment = ({ commentNo }) => {
   //router에서 param값 받아옴
   const { postNo } = useParams();
@@ -26,7 +98,7 @@ const BoardInComment = ({ commentNo }) => {
   //해당 메서드 실행되면 대댓글 값 나타남
   const getInCommentHandler = async () => {
     const response = await viewInComment(postNo, commentNo);
-    console.log(response);
+
     setInComments([...response]);
   };
 
@@ -46,8 +118,11 @@ const BoardInComment = ({ commentNo }) => {
       member: { memberNo: user.memberNo },
     };
     const result = await addInComment(data);
-    console.log(commentNo);
+    console.log(result);
     if (result) setSucc(true);
+
+    await getInCommentHandler();
+
     setText("");
   };
   //대댓글 추가하면 다시 화면에 띄우게 하려고 useEffect 씀
@@ -79,111 +154,128 @@ const BoardInComment = ({ commentNo }) => {
     console.log("수정되게 해줘");
     setSelectedInCommentIndex(e.target.closest(".inComment").id);
   };
-
+  console.log(inComments);
   return (
-    <div>
-      <div>
-        <label>대댓글</label>
-        <input
-          type="text"
-          class="form-control"
-          value={text}
-          aria-label="Recipient's username"
-          aria-describedby="button-addon2"
-          onChange={handler}
-        />
-        <button
-          class="btn btn-outline-secondary"
-          type="button"
-          id="button-addon2"
-          onClick={onClick}
-        >
-          작성하기
-        </button>
-      </div>
+    <BoardInCommentStyle>
       <div>
         {/* 값이 0 초기값일때는 기본 댓글만 보여짐 */}
         {selectedInCommentIndex <= 0 ? (
-          <table>
-            <tbody>
-              {inComments?.map((item, index) => (
-                <tr
-                  key={item.inCoNo}
-                  id={`${item.inCoNo}`}
-                  className="inComment"
+          <div>
+            {console.log(inComments)}
+            {inComments?.map((item) => (
+              <div
+                key={item?.inCoNo}
+                id={`${item?.inCoNo}`}
+                className="inComment"
+              >
+                <div className="inCommentView">
+                  <label className="nickname">{item?.member?.nickname}</label>
+                  <label className="inCommentContent">{item?.inCoCon}</label>
+                </div>
+                {item?.member?.memberNo == user?.memberNo ? (
+                  <div className="content2">
+                    <div>
+                      <button className="updateClick" onClick={openUpdateModal}>
+                        수정하기
+                      </button>
+                    </div>
+                    <div>
+                      <button className="deleteClick" onClick={deleteClick}>
+                        삭제하기
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+                <hr />
+              </div>
+              //map뿌리는거 끝남
+            ))}
+            <div className="comment">
+              <label style={{ padding: "10px" }}>대댓글 작성</label>
+              <div className="inComment2">
+                <input
+                  type="text"
+                  class="form-control"
+                  value={text}
+                  aria-label="Recipient's username"
+                  aria-describedby="button-addon2"
+                  onChange={handler}
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  id="button-addon2"
+                  onClick={onClick}
                 >
-                  {console.log("대댓글 뿌리기 " + item)}
-
-                  <td>{index + 1}</td>
-                  <td>닉네임: {item?.member?.nickname}</td>
-                  <td>댓글: {item?.inCoCon}</td>
-                  <td>
-                    <button onClick={openUpdateModal}>수정하기</button>
-                  </td>
-                  <td>
-                    <button onClick={deleteClick}>삭제하기</button>
-                  </td>
-                </tr>
-
-                //map뿌리는거 끝남
-              ))}
-            </tbody>
-          </table>
+                  작성
+                </button>
+              </div>
+            </div>
+            <hr />
+          </div>
         ) : (
           //내가 선택한 댓글 넘버와 index 번호 일치 시 댓글 수정 가능
-          <table>
-            <tbody>
-              {inComments?.map((item, index) => (
-                <tr
-                  key={item.inCoNo}
-                  id={`${item.inCoNo}`}
-                  className="inComment"
-                >
-                  {selectedInCommentIndex == item.inCoNo ? (
-                    <tr>
-                      <td>{index + 1}</td>
-                      <td>닉네임: {item?.member?.nickname}</td>
-                      <td>
-                        <label>댓글 :</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          placeholder={item?.commentContent}
-                          aria-label="Recipient's username"
-                          aria-describedby="button-addon2"
-                          onChange={handler}
-                        />
-                      </td>
-                      <td>
-                        <button onClick={updateClick}>수정하기</button>
-                      </td>
-                      <td>
-                        <button onClick={deleteClick}>삭제하기</button>
-                      </td>
-                    </tr>
-                  ) : (
-                    <tr>
-                      <td>{index + 1}</td>
-                      <td>닉네임: {item?.member?.nickname}</td>
-                      <td>댓글: {item?.inCoCon}</td>
-                      <td>
-                        <button onClick={updateClick}>수정하기</button>
-                      </td>
-                      <td>
-                        <button onClick={deleteClick}>삭제하기</button>
-                      </td>
-                    </tr>
-                    //수정 commentNo 일치여부 확인
-                  )}
-                </tr>
-                //map 뿌리는거 여기서 끝남
-              ))}
-            </tbody>
-          </table>
+          <div>
+            {inComments?.map((item) => (
+              <div
+                key={item.inCoNo}
+                id={`${item.inCoNo}`}
+                className="inComment"
+              >
+                {selectedInCommentIndex == item.inCoNo ? (
+                  <div className="inCommentBox">
+                    <label className="nickname">{item?.member?.nickname}</label>
+                    <div className="commentContent">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder={item?.commentContent}
+                        aria-label="Recipient's username"
+                        aria-describedby="button-addon2"
+                        onChange={handler}
+                      />
+                    </div>
+                    <div className="content2">
+                      <button
+                        className="updateButtonClick"
+                        onClick={updateClick}
+                      >
+                        수정하기
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <label className="nicknameInComment">
+                      {item?.member?.nickname}
+                    </label>
+                    <label className="commentContent">{item?.inCoCon}</label>
+                    <div className="content2">
+                      <div>
+                        <button className="updateClick" onClick={updateClick}>
+                          수정하기
+                        </button>
+                      </div>
+                      <div>
+                        <button className="deleteClick" onClick={deleteClick}>
+                          삭제하기
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  //수정 commentNo 일치여부 확인
+                )}
+              </div>
+              //map 뿌리는거 여기서 끝남
+            ))}
+          </div>
           //맨처음
         )}
       </div>
-    </div>
+    </BoardInCommentStyle>
   );
 };
 

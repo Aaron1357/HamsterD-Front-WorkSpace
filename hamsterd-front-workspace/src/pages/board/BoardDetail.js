@@ -24,6 +24,11 @@ const BoardDetailStyle = styled.div`
   .BoardView {
     width: 1000px;
   }
+
+  .time,
+  .postUser {
+    margin: 5px;
+  }
 `;
 
 const BoardDetail = () => {
@@ -74,14 +79,17 @@ const BoardDetail = () => {
             <h2>{board.postTitle}</h2>
             <div className="header">
               {board.securityCheck === "n" ? (
-                <label className="nickname">
+                <label className="postUser">
                   작성자 : {board?.member?.nickname}
                 </label>
               ) : (
-                <label className="nickname">작성자 : 익명</label>
+                <label className="postUser">작성자 : 익명</label>
               )}
-
-              <label className="time">작성일자 : {board.createTime}</label>
+              {!board.updateTime ? (
+                <label className="time">작성일자 : {board.createTime}</label>
+              ) : (
+                <label className="time">수정일자 : {board.updateTime}</label>
+              )}
             </div>
 
             <div className="button">

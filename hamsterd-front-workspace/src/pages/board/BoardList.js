@@ -16,9 +16,10 @@ const BoardStyle = styled.div`
     display: flex;
     flex-direction: column;
     width: 1000px;
-    height: 100vh;
+
+    font-size: 20px;
   }
-  //
+
   .boardListHead2 {
     display: flex;
     justify-content: end;
@@ -34,10 +35,6 @@ const BoardStyle = styled.div`
     cursor: pointer;
   }
 
-  .boardListHead1 {
-    font-size: 20px;
-  }
-
   .searchBar {
     display: flex;
     justify-content: center;
@@ -47,7 +44,6 @@ const BoardStyle = styled.div`
     width: 20px;
     height: 20px;
     margin: 10px;
-    /* display: block; */
   }
 `;
 
@@ -117,25 +113,29 @@ const BoardList = () => {
   //검색창이 작성되면 onChange
   const onChangePost = (e) => {
     setSearchPost(e.target.value);
-    console.log(e.target.value);
+    console.log(setSearchPost);
   };
 
   //option 값 변경될때마다 바꿔주는 onChange
   const onChangeOption = (e) => {
+    console.log("값이 뭐야 ?" + e.target.value);
     setSearchOption(e.target.value);
   };
 
   //검색창 클릭
   const searchPostClick = async () => {
-    console.log(searchPost);
     if (searchOption == "searchPostContent") {
-      const result = await searchPostContent(searchPost);
-      setBoardList(result);
+      const result = await searchPostContent(searchPost, page);
+      setBoardList(result.contents);
+      const jsonString = JSON.stringify(result.total);
+      setTotalDataCount(parseInt(jsonString, 10));
     } else if (searchOption == "searchPostTitle") {
-      const result = await searchPostTitle(searchPost);
-      setBoardList(result);
+      const result = await searchPostTitle(searchPost, page);
+      setBoardList(result.title);
+      const jsonString = JSON.stringify(result.total);
+      setTotalDataCount(parseInt(jsonString, 10));
     }
-
+    //페이지 1로 초기화 해주고 검색창 input값 null값으로 처리해주기
     setPage(1);
     setSearchPost("");
   };
@@ -158,9 +158,9 @@ const BoardList = () => {
       //db에서 값 받아올때 String으로 받아와졌으므로 int로 형변환 하기
       const jsonString = JSON.stringify(res.total);
       setTotalDataCount(parseInt(jsonString, 10));
-      console.log("페이지 나와라" + res);
-      console.log(JSON.stringify(res));
-      console.log("개수 나와 제발" + JSON.stringify(res.total));
+      // console.log("페이지 나와라" + res);
+      // console.log(JSON.stringify(res));
+      // console.log("개수 나와 제발" + JSON.stringify(res.total));
     };
     fetchData();
   }, []);
@@ -168,14 +168,12 @@ const BoardList = () => {
   //페이지 변경될때 boardList 뿌리기
   useEffect(() => {
     const fetchData = async () => {
-      //if 조건 걸어주지 않으면 무한루프 돌아감
       if (pageShow == true) {
         const res = await searchBoardList(page);
         setBoardList(res.contents);
       }
     };
     fetchData();
-    //false로 변경해야 무한루프 안돌아감
     setPageShow(false);
   }, [handlePageChange]);
 
@@ -183,27 +181,27 @@ const BoardList = () => {
   const onClick = () => {
     navigate("/board");
   };
+
   //조회수 1씩 업데이트하기
   const onClickView = async (postNo) => {
     await updateBoardView(postNo);
-    console.log("조회수 1씩 업데이트 버튼 클릭 " + postNo);
     navigate(`/post/${postNo}`);
   };
 
   return (
     <BoardStyle>
-      <div className="boardListHead1">
-        <div className="boardListHead2">
-          <button
-            type="button"
-            className="btn btn-outline-dark"
-            onClick={onClick}
-          >
-            게시물 작성
-          </button>
-        </div>
-        <div>
-          <table className="table table-sm">
+      <div>
+        <div className="boardListHead1">
+          <div className="boardListHead2">
+            <button
+              type="button"
+              className="btn btn-outline-dark"
+              onClick={onClick}
+            >
+              게시물 작성
+            </button>
+          </div>
+          <table className="table table-hover">
             <thead>
               <tr>
                 <th>번호</th>
@@ -228,52 +226,39 @@ const BoardList = () => {
                       ? "익명"
                       : item?.member?.nickname}
                   </td>
-                  <td>
-                    {item?.createTime
-                      ? new Date(item?.createTime).toLocaleString("en-US", {
-                          year: "numeric",
-                          month: "2-digit",
-                          day: "2-digit",
-                        })
-                      : ""}
-                  </td>
+                  <td>{item?.createTime}</td>
                   <td>{item?.boardView}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <div>
-            <PaginationBox>
-              <Pagination
-                // 현재 보고있는 페이지
-                activePage={page}
-                // 한페이지에 출력할 아이템수
-                itemsCountPerPage={10}
-                // 총 아이템수
-                totalItemsCount={totalDataCount}
-                // 표시할 페이지수
-                pageRangeDisplayed={3}
-                // 함수
-                onChange={handlePageChange}
-              ></Pagination>
-            </PaginationBox>
-          </div>
-          <div className="searchBar">
-            <select value={searchOption} onChange={onChangeOption}>
-              <option value="searchPostTitle">제목</option>
-              <option value="searchPostContent">내용</option>
-            </select>
-            <input
-              type="text"
-              value={searchPost}
-              onChange={onChangePost}
-            ></input>
-            <FontAwesomeIcon
-              className="searchIcon"
-              icon={faMagnifyingGlass}
-              onClick={searchPostClick}
-            />
-          </div>
+
+          <PaginationBox>
+            <Pagination
+              // 현재 보고있는 페이지
+              activePage={page}
+              // 한페이지에 출력할 아이템수
+              itemsCountPerPage={5}
+              // 총 아이템수
+              totalItemsCount={totalDataCount}
+              // 표시할 페이지수
+              pageRangeDisplayed={3}
+              // 함수
+              onChange={handlePageChange}
+            ></Pagination>
+          </PaginationBox>
+        </div>
+        <div className="searchBar">
+          <select value={searchOption} onChange={onChangeOption}>
+            <option value="searchPostTitle">제목</option>
+            <option value="searchPostContent">내용</option>
+          </select>
+          <input type="text" value={searchPost} onChange={onChangePost}></input>
+          <FontAwesomeIcon
+            className="searchIcon"
+            icon={faMagnifyingGlass}
+            onClick={searchPostClick}
+          />
         </div>
       </div>
     </BoardStyle>
